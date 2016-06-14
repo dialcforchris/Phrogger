@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class Grid : MonoBehaviour
 {
-    public LayerMask unwalkableMask;
+  
     public Transform player;
     public float nodeRadius;
     public Vector2 gridWorldSize;
@@ -34,8 +34,7 @@ public class Grid : MonoBehaviour
             {
                 Vector3 worldPoint = worldBottomLeft + Vector3.right * 
                     (i * nodeDiameter + nodeRadius) + Vector3.up * (j * nodeDiameter + nodeRadius);
-                bool walkable = !(Physics2D.OverlapCircle(worldPoint, nodeRadius,unwalkableMask));
-                grid[i, j] = new Node(walkable, worldPoint,i,j);
+                grid[i, j] = new Node(worldPoint,i,j);
             }
         }
     }
@@ -78,16 +77,10 @@ public class Grid : MonoBehaviour
         {
             if (grid != null && displayGridGiz)
             {
-            //    Node playerNode = NodeFromWorldPoint(player.position);
 
                 foreach (Node n in grid)
                 {
-                    Gizmos.color = n.walkable ? Color.white : Color.red;
                    
-                  //  if (n == playerNode)
-                    {
-                        //Gizmos.color = Color.yellow;
-                    }
                     Gizmos.DrawCube(n.worldPos, Vector3.one * (nodeDiameter - .1f));
                 }
             }
