@@ -4,8 +4,12 @@ using System.Collections;
 public class Player :WorldObject
 {
     float angle;
+
+    //private members
     private int strikes = 3;
     private int score = 0;
+
+    //public members
     public int Score
     {
         get { return score; }
