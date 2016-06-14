@@ -5,6 +5,7 @@ public class Tile : MonoBehaviour
 {
     private int index;
     private List<WorldObject> objects = new List<WorldObject>();
+    [SerializeField] private EnemyNode enemyNode = null;
 
     public void Initialise(int _index)
     {
@@ -26,6 +27,13 @@ public class Tile : MonoBehaviour
         }
     }
 
-
+    public DirectionState NewDirection()
+    {
+        if(enemyNode)
+        {
+            return enemyNode.NewDirection();
+        }
+        return DirectionState.DIRECTION_COUNT;
+    }
 
 }

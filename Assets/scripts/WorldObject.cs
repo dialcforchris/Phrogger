@@ -4,9 +4,9 @@ using System.Collections;
 public class WorldObject : MonoBehaviour
 {
     //The tiles the object is associated with
-    private Tile[] tile;
+    protected Tile[] tile;
 
-    private void Awake()
+    protected virtual void Awake()
     {
 
     }
