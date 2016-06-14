@@ -1,9 +1,22 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Player : MonoBehaviour 
+public class Player :WorldObject
 {
     float angle;
+    private int strikes = 3;
+    private int score = 0;
+    public int Score
+    {
+        get { return score; }
+        set { score = value; }
+    }
+    public int Strikes
+    {
+        get { return strikes;}
+        set {strikes= value;}
+    }
+    
 	// Use this for initialization
 	void Start () 
     {
@@ -20,7 +33,13 @@ public class Player : MonoBehaviour
        if (Input.GetAxis("Horizontal")!=0)
        {
            transform.position = new Vector2(transform.position.x + Input.GetAxis("Horizontal"),transform.position.y);
-
+           angle = Input.GetAxis("Horizontal") > 0 ? 270 : 90;
        }
+       else if (Input.GetAxis("Vertical")!=0)
+       {
+           transform.position = new Vector2(transform.position.x, transform.position.y + Input.GetAxis("Vertical"));
+           angle = Input.GetAxis("Vertical") > 0 ? 0 : 180;
+       }
+       transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
     }
 }
