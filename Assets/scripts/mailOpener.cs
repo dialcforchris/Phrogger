@@ -8,60 +8,117 @@ public class mailOpener : MonoBehaviour {
     //Need to be able to open and close emails at will
     //i.e. have them be seperate events
 
-    public Image canvasFade;
-    public Animator emailAnimator;
+    public SpriteRenderer emailContent;
+    public Animator monitorAnimator,miniEmailAnimator;
+
+    public mail[] messages;
+    mail currentMail;
+    
+    [System.Serializable]
+    public struct mail
+    {
+        public Sprite image;
+        public bool isJunk;
+    }
+
+    void Awake()
+    {
+        Random.seed = System.DateTime.Now.Millisecond;
+        enterView();
+    }
+
+    public void enterView()
+    {
+        int chosen = Random.Range(0, messages.Length);
+        currentMail = messages[chosen];
+        emailContent.sprite = currentMail.image;        
+    }
 
     int emailPos=0;
-
     public void moveEmail(int dir)
     {
-        //if middle, play whichever animation for the correct direction
-
-        Debug.Log(emailPos);
-
-        if (emailPos == 0)
+        if (!monitorAnimator.GetCurrentAnimatorStateInfo(0).IsName("mail_right_reverse")
+            && !monitorAnimator.GetCurrentAnimatorStateInfo(0).IsName("mail_left_reverse")
+            && !monitorAnimator.GetCurrentAnimatorStateInfo(0).IsName("mail_left")
+            && !monitorAnimator.GetCurrentAnimatorStateInfo(0).IsName("mail_right"))
         {
-            if (dir > 0)
-                emailAnimator.Play("mail_right");
-            else
-                emailAnimator.Play("mail_left");
-
-            emailPos += dir;
-        }
-        else if (emailPos > 0)
-        {
-            Debug.Log("mail_right_reverse");
-            if (dir < 0)
+            if (emailPos == 0)
             {
-                emailAnimator.Play("mail_right_reverse");
-                emailPos = 0;
+                if (dir > 0)
+                    monitorAnimator.Play("mail_right");
+                else
+                    monitorAnimator.Play("mail_left");
+
+                emailPos += dir;
             }
-        }
-        else
-        {
-            Debug.Log("mail_left_reverse");
-            if (dir > 0)
+            else if (emailPos > 0)
             {
-                emailAnimator.Play("mail_left_reverse");
-                emailPos = 0;
+                if (dir < 0)
+                {
+                    monitorAnimator.Play("mail_right_reverse");
+                    emailPos = 0;
+                }
+            }
+            else
+            {
+                if (dir > 0)
+                {
+                    monitorAnimator.Play("mail_left_reverse");
+                    emailPos = 0;
+                }
             }
         }
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        if (Input.GetKey(KeyCode.LeftArrow))
         {
             moveEmail(-1);
         }
 
-        if (Input.GetKeyDown(KeyCode.RightArrow))
+        if (Input.GetKey(KeyCode.RightArrow))
         {
             moveEmail(1);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            if (emailPos>0)
+            {
+                //Do animation for email being destroyed
+                if (currentMail.isJunk)
+                {
+                    //Junk email put in junk pile, good job
+                    //+ points
+                }
+                else
+                {
+                    //You put a safe email in the junk pile
+                    //oooooo
+                }
+            }
+            else if (emailPos < 0)
+            {
+                monitorAnimator.Play("mail_safe");
+                miniEmailAnimator.Play("email_leave 0");
+                //Do animation for email being marked as safe
+                if (currentMail.isJunk)
+                {
+                    //You put junk in the safe pile
+                    //- points
+                }
+                else
+                {
+                    //Safe mail was marked as safe, woopee
+                    //+ points
+                }
+            }
         }
     }
 
     #region ye olde system
+    /*
     public void openMail()
     {
         //Turn game manager to paused, don't let the player move or anything like that
@@ -98,6 +155,6 @@ public class mailOpener : MonoBehaviour {
     public void closeEmail()
     {
         canvasFade.color = new Color(0, 0, 0, 0f);
-    }
+    }*/
     #endregion
 }
