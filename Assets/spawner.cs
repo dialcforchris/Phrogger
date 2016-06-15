@@ -32,6 +32,6 @@ public class spawner : MonoBehaviour
     {
         Instantiate(toSpawn, transform.position, Quaternion.identity);
         cool = 0;
-       // maxCool = Random.Range(1.5, 2.4f);
+        maxCool = Random.Range(1f, 2.4f);
     }
 }
