@@ -4,7 +4,7 @@ using System.Collections;
 public class Player :WorldObject
 {
     float angle;
-    float coolDown = 1.2f;
+    float coolDown = 0.8f;
     float maxCool = 0.6f;
     Vector2 lastPos;
     //private members
@@ -27,14 +27,13 @@ public class Player :WorldObject
 	void Start ()
     {
         lastPos = Vector2.zero;
-             //transform.position = TileManager.instance.GetTile(transform.position).transform.position;
+        transform.position = TileManager.instance.GetTile(transform.position).transform.position;
     }
 	
 	// Update is called once per frame
 	void Update () 
     {
         Movement();
-      //  MakeItBlue();
         MoveCooldown();
 	}
 
@@ -102,4 +101,5 @@ public class Player :WorldObject
         }
         return true;
     }
+   
 }

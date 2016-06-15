@@ -22,6 +22,7 @@ public class Tile : MonoBehaviour
     {
         objects.Add(_obj);
     }
+
     public void Remove(WorldObject _obj)
     {
         for(int i = 0; i < objects.Count; ++i)
@@ -40,7 +41,7 @@ public class Tile : MonoBehaviour
         }
     }
 
-    //Whether an object can move to the sam eposition as another object
+    //Whether an object can move to the same position as another object
     public virtual bool CheckMovement(WorldObject _obj)
     {
         for (int i = 0; i < objects.Count; ++i)
