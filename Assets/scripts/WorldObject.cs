@@ -5,6 +5,7 @@ public class WorldObject : MonoBehaviour
 {
     //The tiles the object is associated with
     protected Tile[] tile;
+    [SerializeField] protected SpriteRenderer spriteRenderer = null;
 
     protected virtual void Awake()
     {

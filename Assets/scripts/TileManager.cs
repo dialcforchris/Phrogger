@@ -5,11 +5,10 @@ using System.Collections.Generic;
 public class TileManager : MonoBehaviour
 {
     [SerializeField] private bool generateGrid = false;
-
     public Tile tile;
    
     Tile[,] tiles;
-   public static TileManager instance = null;
+    public static TileManager instance = null;
     [SerializeField] private int gridSizeX = 0, gridSizeY = 0;
     [SerializeField] private float size = 1;
 

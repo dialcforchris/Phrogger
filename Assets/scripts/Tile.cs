@@ -3,8 +3,8 @@ using System.Collections.Generic;
 
 public class Tile : MonoBehaviour
 {
-    private int x, y;
-    private List<WorldObject> objects = new List<WorldObject>();
+    [SerializeField] private int x, y;
+    [SerializeField] private List<WorldObject> objects = new List<WorldObject>();
     [SerializeField] private EnemyNode enemyNode = null;
 
     public void Initialise(int _x, int _y)
@@ -31,6 +31,26 @@ public class Tile : MonoBehaviour
                 objects.RemoveAt(i);
             }
         }
+    }
+    public virtual void Interaction(WorldObject _obj)
+    {
+        for(int i = 0; i < objects.Count; ++i)
+        {
+            objects[i].Interaction(_obj);
+        }
+    }
+
+    //Whether an object can move to the sam eposition as another object
+    public virtual bool CheckMovement(WorldObject _obj)
+    {
+        for (int i = 0; i < objects.Count; ++i)
+        {
+            if(!objects[i].CheckMovement(_obj))
+            {
+                return false;
+            }
+        }
+        return true;
     }
 
     public DirectionState NewDirection()
