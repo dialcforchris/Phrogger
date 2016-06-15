@@ -17,5 +17,11 @@ public class WorldObject : MonoBehaviour
 
     }
 
+    //Whether an object can move to the sam eposition as another object
+    public virtual bool CheckMovement(WorldObject _obj)
+    {
+        return true;
+    }
+
 
 }

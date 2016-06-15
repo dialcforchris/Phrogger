@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 public class TileManager : MonoBehaviour
 {
+    [SerializeField] private bool generateGrid = false;
 
     public Tile tile;
    
@@ -12,27 +13,50 @@ public class TileManager : MonoBehaviour
     [SerializeField] private int gridSizeX = 0, gridSizeY = 0;
     [SerializeField] private float size = 1;
 
+    [SerializeField] private GameObject parentObject = null;
+
     private void Awake()
     {
-       if (instance == null)
-       {
-           instance = this;
-       }
-        CreateGrid();
+        if (instance == null)
+        {
+            instance = this;
+        }
+
+        tiles = new Tile[gridSizeX, gridSizeY];
+        if (generateGrid)
+        {
+            CreateGrid();
+        }
+        
     }
   
     private void CreateGrid()
     {
-        tiles = new Tile[gridSizeX, gridSizeY];
+        GameObject _objSource = Instantiate(parentObject);
+        _objSource.name = "Tiles";
         for (int i=0;i<gridSizeX;i++)
         {
+            GameObject _obj = Instantiate(parentObject);
+            _obj.transform.SetParent(_objSource.transform);
+            _obj.name = "Column" + i.ToString();
+            float _x = ((i + (size / 2.0f)) - (gridSizeX / 2.0f)) * size;
+
             for (int j=0;j<gridSizeY;j++)
             {
-                float _x = ((i+(size/2.0f)) - (gridSizeX / 2.0f)) * size;
                 float _y = ((j+(size/2.0f)) - (gridSizeY / 2.0f)) * size;
                 tiles[i, j] = (Tile)Instantiate(tile, new Vector3(_x,_y,0), Quaternion.identity);
-                tiles[i, j].Initialise((j * gridSizeY) + i);
+                tiles[i, j].transform.SetParent(_obj.transform);
+                tiles[i, j].name = "Row" + j.ToString();
+                tiles[i, j].Initialise(i, j);
             }
+        }
+    }
+
+    public void CreateTileReference(int _x, int _y, Tile _tile)
+    {
+        if (!generateGrid)
+        {
+            tiles[_x, _y] = _tile;
         }
     }
 
@@ -44,58 +68,5 @@ public class TileManager : MonoBehaviour
         int _y = (int)(((_pos.y / size) + (gridSizeY / 2.0f)) - (size / 2.0f));
         return tiles[_x, _y];
     }
-
-    //public Tile GetTile(Vector3 _pos)
-    //{
-    //    return tiles[_pos.x, _pos.y];
-    //}
-
-    //public Node NodeFromWorldPoint(Vector2 _worldPos)
-    //{
-    //    float percentX = (_worldPos.x + gridWorldSize.x / 2) / gridWorldSize.x;
-    //    float percentY = (_worldPos.y + gridWorldSize.y / 2) / gridWorldSize.y;
-    //    percentX = Mathf.Clamp01(percentX);
-    //    percentY = Mathf.Clamp01(percentY);
-    //    int x = Mathf.RoundToInt((gridSizeX - 1) * percentX);
-    //    int y = Mathf.RoundToInt((gridSizeY - 1) * percentY);
-    //    return grid[x, y];
-    //}
-    //public List<Node> GetNeighbours(Node _current)
-    //{
-    //    List<Node> neighbours = new List<Node>();
-    //    for (int i=-1;i<=1;i++)
-    //    {
-    //        for (int j=-1;j<=1;j++)
-    //        {
-    //            if (i==0&&j==0)
-    //            {
-    //                continue;
-    //            }
-    //            int checkX = _current.gridX + i;
-    //            int checkY = _current.gridY + j;
-    //            if (checkX >=0&&checkX<gridSizeX && checkY>=0&&checkY<gridSizeY)
-    //            {
-
-    //                neighbours.Add(grid[checkX, checkY]);
-    //            }
-    //        }
-    //    }
-    //    return neighbours;
-    //}
-    //void OnDrawGizmos()
-    //{
-    //    Gizmos.DrawWireCube(transform.position, new Vector3(gridWorldSize.x, gridWorldSize.y, 1));
-    //    {
-    //        if (grid != null && displayGridGiz)
-    //        {
-
-    //            foreach (Node n in grid)
-    //            {
-                   
-    //                Gizmos.DrawCube(n.worldPos, Vector3.one * (nodeDiameter - .1f));
-    //            }
-    //        }
-    //    }
-    //}
 }
 

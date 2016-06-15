@@ -3,13 +3,19 @@ using System.Collections.Generic;
 
 public class Tile : MonoBehaviour
 {
-    private int index;
+    private int x, y;
     private List<WorldObject> objects = new List<WorldObject>();
     [SerializeField] private EnemyNode enemyNode = null;
 
-    public void Initialise(int _index)
+    public void Initialise(int _x, int _y)
     {
-        index = _index;
+        x = _x;
+        y = _y;
+    }
+
+    private void Start()
+    {
+        TileManager.instance.CreateTileReference(x, y, this);
     }
 
     public void Place(WorldObject _obj)

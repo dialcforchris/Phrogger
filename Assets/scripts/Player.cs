@@ -58,7 +58,7 @@ public class Player :WorldObject
         Tile tile = TileManager.instance.GetTile(transform.position);
         if (tile)
         {
-            tile.GetComponentInChildren<SpriteRenderer>().color = Color.blue;
+            //tile.GetComponentInChildren<SpriteRenderer>().color = Color.blue;
         }
     }
     bool MoveCooldown()
