@@ -19,6 +19,11 @@ public class Tile : MonoBehaviour
         TileManager.instance.CreateTileReference(x, y, this);
     }
 
+    private void Update()
+    {
+        spriteRenderer.color = Color.white;
+    }
+
     public void Place(WorldObject _obj)
     {
         objects.Add(_obj);
@@ -69,9 +74,17 @@ public class Tile : MonoBehaviour
         return x.ToString() + ":" + y.ToString();
     }
 
-    public void UpdateSprite(Sprite _sprite)
+    public void UpdateSprite(Sprite _sprite, bool _xFlip, bool _yFlip)
     {
         spriteRenderer.sprite = _sprite;
+        if(_xFlip)
+        {
+            spriteRenderer.flipX = !spriteRenderer.flipX;
+        }
+        if (_yFlip)
+        {
+            spriteRenderer.flipY = !spriteRenderer.flipY;
+        }
     }
 
 }

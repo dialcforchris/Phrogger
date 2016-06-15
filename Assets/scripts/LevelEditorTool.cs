@@ -4,7 +4,7 @@ using System.Collections;
 public enum EditorToolBehavior
 {
     SPAWN,
-    TILE_SPRITE
+    TILE_SPRITE,
 }
 
 public class LevelEditorTool : MonoBehaviour
@@ -67,23 +67,36 @@ public class LevelEditorTool : MonoBehaviour
             switch (toolBehavior)
             {
                 case EditorToolBehavior.SPAWN:
+                {
+                    if (Input.GetKeyDown(KeyCode.Space))
                     {
-                        if (Input.GetKeyDown(KeyCode.Space))
-                        {
-                            WorldObject _obj = (WorldObject)Instantiate(spawn, transform.position, Quaternion.identity);
-                            Tile _tile = TileManager.instance.GetTile(transform.position);
-                            _obj.name = spawnName + _tile.IndexName();
-                            _obj.transform.SetParent(spawnParent.transform);
-                            _tile.Place(_obj);
-                        }
-                        break;
+                        WorldObject _obj = (WorldObject)Instantiate(spawn, transform.position, Quaternion.identity);
+                        Tile _tile = TileManager.instance.GetTile(transform.position);
+                        _obj.name = spawnName + _tile.IndexName();
+                        _obj.transform.SetParent(spawnParent.transform);
+                        _tile.Place(_obj);
                     }
+                    break;
+                }
                 case EditorToolBehavior.TILE_SPRITE:
+                {
+                    if (Input.GetKeyDown(KeyCode.Space))
                     {
                         Tile _tile = TileManager.instance.GetTile(transform.position);
-                        _tile.UpdateSprite(tileSprite);
-                        break;
+                        _tile.UpdateSprite(tileSprite, false, false);
                     }
+                    if (Input.GetKeyDown(KeyCode.N))
+                    {
+                        Tile _tile = TileManager.instance.GetTile(transform.position);
+                        _tile.UpdateSprite(tileSprite, true, false);
+                    }
+                    if (Input.GetKeyDown(KeyCode.M))
+                    {
+                        Tile _tile = TileManager.instance.GetTile(transform.position);
+                        _tile.UpdateSprite(tileSprite, false, true);
+                    }
+                    break;
+                }
             }
         }
     }
