@@ -5,8 +5,7 @@ using System.Collections.Generic;
 public class TileManager : MonoBehaviour
 {
     [SerializeField] private bool generateGrid = false;
-    public Tile tile;
-   
+    [SerializeField] private Tile tile = null;
     Tile[,] tiles;
     public static TileManager instance = null;
     [SerializeField] private int gridSizeX = 0, gridSizeY = 0;

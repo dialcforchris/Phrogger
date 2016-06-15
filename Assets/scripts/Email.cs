@@ -1,19 +1,6 @@
 ﻿using UnityEngine;
 
-public class Email : MonoBehaviour, IPoolable<Email>
+public class Email : MonoBehaviour
 {
-    #region IPoolable
-    public PoolData<Email> poolData { get; set; }
-    #endregion
-
-    public void Initialise()
-    {
-        gameObject.SetActive(true);
-    }
-
-    public void Reset()
-    {
-        poolData.ReturnPool(this);
-        gameObject.SetActive(false);
-    }
+    //Once upon a time there was code here, it was moved
 }

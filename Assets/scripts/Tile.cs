@@ -3,9 +3,10 @@ using System.Collections.Generic;
 
 public class Tile : MonoBehaviour
 {
+    [SerializeField] private SpriteRenderer spriteRenderer = null;
     [SerializeField] private int x, y;
     [SerializeField] private List<WorldObject> objects = new List<WorldObject>();
-    [SerializeField] private EnemyNode enemyNode = null;
+    [SerializeField] private WorkerDirectionNode enemyNode = null;
 
     public void Initialise(int _x, int _y)
     {
@@ -61,6 +62,16 @@ public class Tile : MonoBehaviour
             return enemyNode.NewDirection();
         }
         return DirectionState.DIRECTION_COUNT;
+    }
+
+    public string IndexName()
+    {
+        return x.ToString() + ":" + y.ToString();
+    }
+
+    public void UpdateSprite(Sprite _sprite)
+    {
+        spriteRenderer.sprite = _sprite;
     }
 
 }

@@ -17,7 +17,7 @@ public struct DirectionChance
     [Range(0.0f, 100.0f)]public float chance;
 }
 
-public class EnemyNode : MonoBehaviour
+public class WorkerDirectionNode : MonoBehaviour
 {
     //[SerializeField] private DirectionChance[] directionChances = null;
 
