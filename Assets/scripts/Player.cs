@@ -31,6 +31,11 @@ public class Player :WorldObject
 	void Update () 
     {
         Movement();
+        Tile tile = TileManager.instance.GetTile(transform.position);
+        if (tile)
+        {
+            tile.GetComponentInChildren<SpriteRenderer>().color = Color.blue;
+        }
 	}
     void Movement()
     {

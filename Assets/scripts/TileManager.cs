@@ -6,28 +6,23 @@ public class TileManager : MonoBehaviour
 {
 
     public Tile tile;
-    //public float nodeRadius;
-    //public Vector2 gridWorldSize;
-    //public bool displayGridGiz;
+   
     Tile[,] tiles;
-    //float nodeDiameter;
+   public static TileManager instance = null;
     [SerializeField] private int gridSizeX = 0, gridSizeY = 0;
     [SerializeField] private float size = 1;
 
     private void Awake()
     {
-        //nodeDiameter = nodeRadius * 2;
-        //gridSizeX = Mathf.RoundToInt(gridWorldSize.x / nodeDiameter);
-        //gridSizeY = Mathf.RoundToInt(gridWorldSize.y / nodeDiameter);
+       if (instance == null)
+       {
+           instance = this;
+       }
         CreateGrid();
     }
-    //public int MaxSize
-    //{
-    //    get { return gridSizeX * gridSizeY; }   
-    //}
+  
     private void CreateGrid()
     {
-        //Vector3 worldBottomLeft = transform.position - Vector3.right * gridWorldSize.x / 2 - Vector3.up * gridWorldSize.y/2;
         tiles = new Tile[gridSizeX, gridSizeY];
         for (int i=0;i<gridSizeX;i++)
         {
@@ -35,12 +30,22 @@ public class TileManager : MonoBehaviour
             {
                 float _x = ((i+(size/2.0f)) - (gridSizeX / 2.0f)) * size;
                 float _y = ((j+(size/2.0f)) - (gridSizeY / 2.0f)) * size;
-                //Vector3 worldPoint = worldBottomLeft + Vector3.right * 
-                //    (i * nodeDiameter + nodeRadius) + Vector3.up * (j * nodeDiameter + nodeRadius);
                 tiles[i, j] = (Tile)Instantiate(tile, new Vector3(_x,_y,0), Quaternion.identity);
                 tiles[i, j].Initialise((j * gridSizeY) + i);
             }
         }
+    }
+
+    public Tile GetTile(Vector2 _pos)
+    {
+        foreach (Tile t in tiles)
+        {
+            if (Vector2.Distance(_pos, t.transform.position)<0.5f)
+            {
+                return t;
+            }
+        }
+        return null;
     }
 
     //public Tile GetTile(Vector3 _pos)
