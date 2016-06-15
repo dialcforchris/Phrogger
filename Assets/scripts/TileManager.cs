@@ -38,14 +38,11 @@ public class TileManager : MonoBehaviour
 
     public Tile GetTile(Vector2 _pos)
     {
-        foreach (Tile t in tiles)
-        {
-            if (Vector2.Distance(_pos, t.transform.position)<0.5f)
-            {
-                return t;
-            }
-        }
-        return null;
+        _pos.x = Mathf.Floor(_pos.x) + 0.5f;
+        _pos.y = Mathf.Floor(_pos.y) + 0.5f;
+        int _x = (int)(((_pos.x / size) + (gridSizeX / 2.0f)) - (size / 2.0f));
+        int _y = (int)(((_pos.y / size) + (gridSizeY / 2.0f)) - (size / 2.0f));
+        return tiles[_x, _y];
     }
 
     //public Tile GetTile(Vector3 _pos)
