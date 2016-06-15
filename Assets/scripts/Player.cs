@@ -4,7 +4,8 @@ using System.Collections;
 public class Player :WorldObject
 {
     float angle;
-    float coolDown = 0.5f;
+    float coolDown = 0.6f;
+    float maxCool = 0.6f;
     //private members
     private int strikes = 3;
     private int score = 0;
@@ -31,9 +32,10 @@ public class Player :WorldObject
 	void Update () 
     {
         Movement();
-        MakeItBlue();
+      //  MakeItBlue();
         MoveCooldown();
 	}
+
     void Movement()
     {
         float move = 0;
@@ -53,6 +55,7 @@ public class Player :WorldObject
        }
        transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
     }
+
     void MakeItBlue()
     {
         Tile tile = TileManager.instance.GetTile(transform.position);
@@ -63,7 +66,7 @@ public class Player :WorldObject
     }
     bool MoveCooldown()
     {
-        if (coolDown<0.5f)
+        if (coolDown<maxCool)
         {
             coolDown += Time.deltaTime;
             return false;
