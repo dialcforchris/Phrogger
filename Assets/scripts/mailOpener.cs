@@ -86,6 +86,7 @@ public class mailOpener : MonoBehaviour {
         {
             if (emailPos>0)
             {
+                monitorAnimator.Play("mail_junk");
                 //Do animation for email being destroyed
                 if (currentMail.isJunk)
                 {
