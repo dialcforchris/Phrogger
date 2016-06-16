@@ -6,15 +6,23 @@ public class Worker : WorldObject, IPoolable<Worker>
     #region IPoolable
     public PoolData<Worker> poolData { get; set; }
     #endregion
-    public string m;
+
     private bool isSetup = false;
     [SerializeField] private SpriteRenderer hairSpriteRenderer = null;
     [SerializeField] private Animator animator = null;
     [SerializeField] private AnimationOverride animOverride= null;
 
+    private Vector3 direction;
+    private float speed = 0.0f;
+
     private void Awake()
     {
-        SetupWorker(m, null);
+   
+    }
+
+    public bool GetIsSetup()
+    {
+        return isSetup;
     }
 
     public void SetupWorker(string _animName, Sprite _hairSprite)
@@ -26,12 +34,18 @@ public class Worker : WorldObject, IPoolable<Worker>
         }
     }
 
-    public void Initialise()
+    public void Initialise(Vector3 _direction, float _speed)
     {
+        direction = _direction;
         gameObject.SetActive(true);
     }
 
     private void Update()
+    {
+        transform.position += direction * Time.deltaTime * speed;
+    }
+
+    private void LateUpdate()
     {
         animOverride.UpdateSprite();
     }
@@ -46,6 +60,11 @@ public class Worker : WorldObject, IPoolable<Worker>
     public override bool CheckMovement(WorldObject _obj)
     {
         return true;
+    }
+
+    public override void Remove()
+    {
+        Reset();
     }
 
     public void Reset()

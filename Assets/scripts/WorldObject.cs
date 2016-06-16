@@ -18,4 +18,9 @@ public class WorldObject : MonoBehaviour
     {
         return true;
     }
+
+    public virtual void Remove()
+    {
+
+    }
 }

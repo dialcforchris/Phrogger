@@ -1,15 +1,15 @@
 fileFormatVersion: 2
 guid: 5606795e1801bc54f97ca3c0e655e95b
-timeCreated: 1466075773
-licenseType: Free
+timeCreated: 1466077817
+licenseType: Pro
 TextureImporter:
   fileIDToRecycleName:
-    21300000: people sheet Red_0
-    21300002: people sheet Red_1
-    21300004: people sheet Red_2
-    21300006: people sheet Red_3
-    21300008: people sheet Red_4
-    21300010: people sheet Red_5
+    21300000: 0
+    21300002: 1
+    21300004: 2
+    21300006: 3
+    21300008: 4
+    21300010: 5
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -56,7 +56,7 @@ TextureImporter:
   buildTargetSettings: []
   spriteSheet:
     sprites:
-    - name: people sheet Red_0
+    - name: 0
       rect:
         serializedVersion: 2
         x: 0
@@ -64,7 +64,7 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline:
       - - {x: 10, y: 29}
@@ -79,7 +79,7 @@ TextureImporter:
         - {x: 20, y: -11}
         - {x: 21, y: -10}
         - {x: 21, y: 29}
-    - name: people sheet Red_1
+    - name: 1
       rect:
         serializedVersion: 2
         x: 64
@@ -87,7 +87,7 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline:
       - - {x: 8, y: 10}
@@ -98,7 +98,7 @@ TextureImporter:
         - {x: 17, y: -11}
         - {x: 17, y: 1}
         - {x: 15, y: 7}
-    - name: people sheet Red_2
+    - name: 2
       rect:
         serializedVersion: 2
         x: 128
@@ -106,7 +106,7 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline:
       - - {x: -18, y: 16}
@@ -117,7 +117,7 @@ TextureImporter:
         - {x: 19, y: -18}
         - {x: 19, y: -3}
         - {x: 10, y: 16}
-    - name: people sheet Red_3
+    - name: 3
       rect:
         serializedVersion: 2
         x: 192
@@ -125,7 +125,7 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline:
       - - {x: -13, y: 11}
@@ -136,7 +136,7 @@ TextureImporter:
         - {x: 17, y: -10}
         - {x: 17, y: 4}
         - {x: 12, y: 11}
-    - name: people sheet Red_4
+    - name: 4
       rect:
         serializedVersion: 2
         x: 256
@@ -144,7 +144,7 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline:
       - - {x: -14, y: 11}
@@ -154,7 +154,7 @@ TextureImporter:
         - {x: 19, y: -10}
         - {x: 19, y: 7}
         - {x: 14, y: 11}
-    - name: people sheet Red_5
+    - name: 5
       rect:
         serializedVersion: 2
         x: 320
@@ -162,7 +162,7 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline:
       - - {x: -7, y: 16}

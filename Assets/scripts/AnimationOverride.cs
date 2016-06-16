@@ -11,10 +11,16 @@ public class AnimationOverride : MonoBehaviour
     {
         subSprites = Resources.LoadAll<Sprite>("Workers/" + _spriteSheet);
         spriteRenderer.sprite = subSprites[0];
+        Debug.Log(subSprites.Length);
     }
 
     public void UpdateSprite()
     {
+        if(subSprites == null)
+        {
+            return;
+        }
+
         string spriteName = spriteRenderer.sprite.name;
         
         Sprite newSprite = Array.Find(subSprites, item => item.name == spriteName);
