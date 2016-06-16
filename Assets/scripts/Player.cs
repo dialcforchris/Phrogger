@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Player :WorldObject
+public class Player : WorldObject
 {
     float angle;
     float coolDown = 0.6f;
@@ -14,6 +14,8 @@ public class Player :WorldObject
     private float verti;
     Animator ani;
     PlayerState state;
+    float deathCool = 0;
+    float maxDeathcool = 3;
 
     //public members
     public int Score
@@ -23,18 +25,18 @@ public class Player :WorldObject
     }
     public int Strikes
     {
-        get { return strikes;}
-        set {strikes= value;}
+        get { return strikes; }
+        set { strikes = value; }
     }
     private void Awake()
     {
         tiles = new Tile[1];
     }
-    
 
 
-	// Use this for initialization
-	void Start ()
+
+    // Use this for initialization
+    void Start()
     {
         lastPos = Vector2.zero;
         ani = GetComponent<Animator>();
@@ -42,11 +44,11 @@ public class Player :WorldObject
     }
 
     private bool doOnce = true;
-	
-	// Update is called once per frame
-	void Update () 
+
+    // Update is called once per frame
+    void Update()
     {
-        if(doOnce)
+        if (doOnce)
         {
             Initialise();
             doOnce = false;
@@ -56,11 +58,10 @@ public class Player :WorldObject
             ConvertToPos();
             Movement();
             MoveCooldown();
-            Die();
         }
-       
-       
-	}
+        DeathCooler();
+
+    }
 
     void Movement()
     {
@@ -114,26 +115,29 @@ public class Player :WorldObject
             }
         }
         transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
-        if (Input.GetAxis("Horizontal")==0)
+        if (Input.GetAxis("Horizontal") == 0)
         {
             lastPos.x = 0;
         }
-        if (Input.GetAxis("Vertical")==0)
+        if (Input.GetAxis("Vertical") == 0)
         {
             lastPos.y = 0;
         }
 
         ani.SetBool("PlayerWalk", ((Input.GetAxis("Vertical") != 0 || Input.GetAxis("Horizontal") != 0) && !MoveCooldown()) ? true : false);
-        
+
     }
 
     public override void Remove()
     {
-        //THIS IS CALLED WHEN OFF SCREEN OR DIES
-        transform.position = new Vector3(0.5f,10.0f,0.0f);
-        tiles[0].Remove(this);
-        tiles[0] = null;
-        Initialise();
+        if (state == PlayerState.ACTIVE)
+        {//THIS IS CALLED WHEN OFF SCREEN OR DIES
+            transform.position = new Vector3(0.5f, 10.0f, 0.0f);
+            tiles[0].Remove(this);
+            tiles[0] = null;
+            Initialise();
+        
+        }
     }
 
     void MakeItBlue()
@@ -145,7 +149,7 @@ public class Player :WorldObject
     }
     bool MoveCooldown()
     {
-        if (coolDown<maxCool)
+        if (coolDown < maxCool)
         {
             coolDown += Time.deltaTime;
             return false;
@@ -166,24 +170,20 @@ public class Player :WorldObject
             verti -= verti * 2;
         }
     }
-  public void Die()
+    public void Die()
     {
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-            state = PlayerState.DEAD;
-            ani.SetTrigger("Dead");
-            strikes -= 1;
-        }
+        state = PlayerState.DEAD;
+        ani.SetBool("Dead",true);
+        strikes -= 1;
     }
-  public override void Interaction(WorldObject _obj)
-  {
-      if (_obj.tag == "Worker")
-      {
-            Remove();
-          //Die();
-      }
-      
-  }
+    public override void Interaction(WorldObject _obj)
+    {
+        if (_obj.tag == "Worker")
+        {
+            Die();
+        }
+
+    }
 
     private void Initialise()
     {
@@ -191,7 +191,24 @@ public class Player :WorldObject
         _tile.Place(this);
         tiles[0] = _tile;
     }
-  
+
+    void DeathCooler()
+    {
+        if (state == PlayerState.DEAD)
+        {
+            if (deathCool < maxDeathcool)
+            {
+                deathCool += Time.deltaTime;
+            }
+            else
+            {
+                ani.SetBool("Dead", false);
+                state = PlayerState.ACTIVE;
+                deathCool = 0;
+                Remove();
+            }
+        }
+    }
 }
 
 
