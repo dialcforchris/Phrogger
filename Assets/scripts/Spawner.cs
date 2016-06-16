@@ -12,6 +12,8 @@ public class Spawner : WorldObject
     [SerializeField] private bool isLeft = false;
     [SerializeField] private float laneSpeed = 5.0f;
 
+    [SerializeField] private bool isActive = false;
+
 	void Awake ()
     {
         spawnCooldown = Random.Range(minSpawnCooldown, maxSpawnCooldown);
@@ -20,10 +22,13 @@ public class Spawner : WorldObject
 
 	private void Update ()
     {
-        cooldown = cooldown + Time.deltaTime < spawnCooldown ? cooldown + Time.deltaTime : spawnCooldown;
-        if(cooldown == spawnCooldown)
+        if (isActive)
         {
-            Spawn();
+            cooldown = cooldown + Time.deltaTime < spawnCooldown ? cooldown + Time.deltaTime : spawnCooldown;
+            if (cooldown == spawnCooldown)
+            {
+                Spawn();
+            }
         }
 	}
 

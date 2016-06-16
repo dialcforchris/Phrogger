@@ -9,7 +9,7 @@ public class WorkerManager : MonoBehaviour
     private ObjectPool<Worker> workerPool = null;
     [SerializeField] private Worker workerPrefab = null;
 
-    [SerializeField] private Sprite[] bodySprites = null;
+    [SerializeField] private string[] bodySprites = null;
     [SerializeField] private Sprite[] hairSprites = null;
 
     private void Awake()
@@ -23,7 +23,7 @@ public class WorkerManager : MonoBehaviour
         Worker _worker = workerPool.GetPooledObject();
         if (!_worker.GetIsSetup())
         {
-            _worker.SetupWorker(bodySprites[Random.Range(0, bodySprites.Length - 1)].name, hairSprites[Random.Range(0, hairSprites.Length - 1)]);
+            _worker.SetupWorker(bodySprites[Random.Range(0, bodySprites.Length)], null/*hairSprites[Random.Range(0, hairSprites.Length - 1)]*/);
         }
         return _worker;
     }

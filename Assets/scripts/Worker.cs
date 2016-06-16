@@ -13,7 +13,7 @@ public class Worker : WorldObject, IPoolable<Worker>
     [SerializeField] private AnimationOverride animOverride= null;
 
     private Vector3 direction;
-    private float speed = 0.0f;
+    private float speed = 5.0f;
 
     private void Awake()
     {
@@ -37,6 +37,8 @@ public class Worker : WorldObject, IPoolable<Worker>
     public void Initialise(Vector3 _direction, float _speed)
     {
         direction = _direction;
+        transform.rotation = Quaternion.Euler(new Vector3(0, 0, _direction == Vector3.left ? 90.0f : 270.0f));
+        speed = _speed;
         gameObject.SetActive(true);
     }
 

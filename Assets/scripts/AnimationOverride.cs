@@ -11,7 +11,6 @@ public class AnimationOverride : MonoBehaviour
     {
         subSprites = Resources.LoadAll<Sprite>("Workers/" + _spriteSheet);
         spriteRenderer.sprite = subSprites[0];
-        Debug.Log(subSprites.Length);
     }
 
     public void UpdateSprite()
