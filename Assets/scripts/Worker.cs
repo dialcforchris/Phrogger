@@ -15,9 +15,9 @@ public class Worker : WorldObject, IPoolable<Worker>
     private Vector3 direction;
     private float speed = 5.0f;
 
-    private void Awake()
+    protected override void Start()
     {
-        tiles = new Tile[1];
+        //Override to prevent base start getting called
     }
 
     public bool GetIsSetup()
@@ -39,9 +39,7 @@ public class Worker : WorldObject, IPoolable<Worker>
         direction = _direction;
         transform.rotation = Quaternion.Euler(new Vector3(0, 0, _direction == Vector3.left ? 90.0f : 270.0f));
         speed = _speed;
-        Tile _tile = TileManager.instance.GetTile(transform.position);
-        _tile.Place(this);
-        tiles[0] = _tile;
+        AddToWorld();
         gameObject.SetActive(true);
     }
 
@@ -51,9 +49,8 @@ public class Worker : WorldObject, IPoolable<Worker>
         Tile _tile = TileManager.instance.GetTile(transform.position);
         if (_tile != tiles[0])
         {
-            tiles[0].Remove(this);
-            _tile.Place(this);
-            tiles[0] = _tile;
+            RemoveFromWorld();
+            AddToWorld();
             _tile.Interaction(this);
         }
     }
@@ -69,21 +66,15 @@ public class Worker : WorldObject, IPoolable<Worker>
 
     }
 
-    //Whether an object can move to the sam eposition as another object
+    //Whether an object can move to the same position as another object
     public override bool CheckMovement(WorldObject _obj)
     {
         return true;
     }
 
-    public override void Remove()
-    {
-        Reset();
-    }
-
     public void Reset()
     {
-        tiles[0].Remove(this);
-        tiles[0] = null;
+        RemoveFromWorld();
         poolData.ReturnPool(this);
         gameObject.SetActive(false);
     }

@@ -11,7 +11,7 @@ public enum KillBoxAffects
 
 public class KillBox : WorldObject
 {
-    [SerializeField] private  KillBoxAffects killBoxAffects;
+    [SerializeField] private  KillBoxAffects killBoxAffects = KillBoxAffects.EVERYTHING;
 
     public override void Interaction(WorldObject _obj)
     {
@@ -20,17 +20,24 @@ public class KillBox : WorldObject
             case KillBoxAffects.PLAYER:
                 if (_obj.tag == "Player")
                 {
-                    _obj.Remove();
+                    ((Player)_obj).Die();
                 }
                 break;
             case KillBoxAffects.WORKER:
                 if(_obj.tag == "Worker")
                 {
-                    _obj.Remove();
+                    ((Worker)_obj).Reset();
                 }
                 break;
             case KillBoxAffects.EVERYTHING:
-                _obj.Remove();
+                if (_obj.tag == "Player")
+                {
+                    ((Player)_obj).Die();
+                }
+                else if (_obj.tag == "Worker")
+                {
+                    ((Worker)_obj).Reset();
+                }
                 break;
             default:
                 break;

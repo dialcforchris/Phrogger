@@ -4,8 +4,36 @@ using System.Collections;
 public class WorldObject : MonoBehaviour
 {
     //The tiles the object is associated with
-    protected Tile[] tiles;
+    [SerializeField] protected Tile[] tiles;
     [SerializeField] protected SpriteRenderer spriteRenderer = null;
+
+    protected virtual void Awake()
+    {
+        tiles = new Tile[1];
+    }
+
+    protected virtual void Start()
+    {
+        AddToWorld();
+    }
+
+    public virtual void AddToWorld()
+    {
+        if (name == "Outer4")
+        {
+            int b = 2;
+        }
+        Tile _tile = TileManager.instance.GetTile(transform.position);
+        _tile.Place(this);
+        tiles[0] = _tile;
+        
+    }
+
+    public virtual void RemoveFromWorld()
+    {
+        tiles[0].Remove(this);
+        tiles[0] = null;
+    }
 
     //The behavior of an object when something tries to interact with it
     public virtual void Interaction(WorldObject _obj)
@@ -19,8 +47,8 @@ public class WorldObject : MonoBehaviour
         return true;
     }
 
-    public virtual void Remove()
+    public Tile GetTile(int _index)
     {
-
+        return tiles[_index];
     }
 }

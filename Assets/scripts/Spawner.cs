@@ -14,8 +14,9 @@ public class Spawner : WorldObject
 
     [SerializeField] private bool isActive = false;
 
-	void Awake ()
+	protected override void Awake ()
     {
+        base.Awake();
         spawnCooldown = Random.Range(minSpawnCooldown, maxSpawnCooldown);
 	}
 	
@@ -33,7 +34,7 @@ public class Spawner : WorldObject
 	}
 
 
-    void Spawn()
+    private void Spawn()
     {
         Worker _worker = WorkerManager.instance.GetPooledWorker();
         _worker.transform.position = transform.position;

@@ -6,14 +6,16 @@ public class Player : WorldObject
     float angle;
     float coolDown = 0.6f;
     float maxCool = 0.4f;
-    Vector2 lastPos;
+    private Vector2 lastPos = Vector2.zero;
     //private members
     private int strikes = 3;
     private int score = 0;
     private float hori;
     private float verti;
-    Animator ani;
-    PlayerState state;
+
+    [SerializeField] private Animator anim = null;
+    private PlayerState state = PlayerState.ACTIVE;
+
     float deathCool = 0;
     float maxDeathcool = 3;
 
@@ -28,31 +30,22 @@ public class Player : WorldObject
         get { return strikes; }
         set { strikes = value; }
     }
-    private void Awake()
+
+    protected override void Awake()
     {
-        tiles = new Tile[1];
+        base.Awake();
     }
 
-
-
-    // Use this for initialization
-    void Start()
+    protected override void Start()
     {
-        lastPos = Vector2.zero;
-        ani = GetComponent<Animator>();
-        state = PlayerState.ACTIVE;
+        base.Start();
     }
 
-    private bool doOnce = true;
+    
 
     // Update is called once per frame
     void Update()
     {
-        if (doOnce)
-        {
-            Initialise();
-            doOnce = false;
-        }
         if (state == PlayerState.ACTIVE)
         {
             ConvertToPos();
@@ -60,7 +53,6 @@ public class Player : WorldObject
             MoveCooldown();
         }
         DeathCooler();
-
     }
 
     void Movement()
@@ -79,9 +71,8 @@ public class Player : WorldObject
                     if (_tile.CheckMovement(this))
                     {
                         transform.position = _tile.transform.position;
-                        tiles[0].Remove(this);
-                        _tile.Place(this);
-                        tiles[0] = _tile;
+                        RemoveFromWorld();
+                        AddToWorld();
                         _tile.Interaction(this);
                     }
 
@@ -102,9 +93,8 @@ public class Player : WorldObject
                     if (_tile.CheckMovement(this))
                     {
                         transform.position = _tile.transform.position;
-                        tiles[0].Remove(this);
-                        _tile.Place(this);
-                        tiles[0] = _tile;
+                        RemoveFromWorld();
+                        AddToWorld();
                         _tile.Interaction(this);
                     }
 
@@ -124,29 +114,10 @@ public class Player : WorldObject
             lastPos.y = 0;
         }
 
-        ani.SetBool("PlayerWalk", ((Input.GetAxis("Vertical") != 0 || Input.GetAxis("Horizontal") != 0) && !MoveCooldown()) ? true : false);
+        anim.SetBool("PlayerWalk", ((Input.GetAxis("Vertical") != 0 || Input.GetAxis("Horizontal") != 0) && !MoveCooldown()) ? true : false);
 
     }
 
-    public override void Remove()
-    {
-        if (state == PlayerState.ACTIVE)
-        {//THIS IS CALLED WHEN OFF SCREEN OR DIES
-            transform.position = new Vector3(0.5f, 10.0f, 0.0f);
-            tiles[0].Remove(this);
-            tiles[0] = null;
-            Initialise();
-        
-        }
-    }
-
-    void MakeItBlue()
-    {
-        Tile tile = TileManager.instance.GetTile(transform.position);
-        if (tile)
-        {
-        }
-    }
     bool MoveCooldown()
     {
         if (coolDown < maxCool)
@@ -156,6 +127,7 @@ public class Player : WorldObject
         }
         return true;
     }
+
     //movement related function
     void ConvertToPos()
     {
@@ -170,26 +142,21 @@ public class Player : WorldObject
             verti -= verti * 2;
         }
     }
+
     public void Die()
     {
         state = PlayerState.DEAD;
-        ani.SetBool("Dead",true);
+        anim.SetBool("Dead", true);
+        //Rather than this leave behind a corpse call remove from world, move position then add to world immediately
         strikes -= 1;
     }
+
     public override void Interaction(WorldObject _obj)
     {
         if (_obj.tag == "Worker")
         {
             Die();
         }
-
-    }
-
-    private void Initialise()
-    {
-        Tile _tile = TileManager.instance.GetTile(transform.position);
-        _tile.Place(this);
-        tiles[0] = _tile;
     }
 
     void DeathCooler()
@@ -202,10 +169,12 @@ public class Player : WorldObject
             }
             else
             {
-                ani.SetBool("Dead", false);
+                anim.SetBool("Dead", false);
                 state = PlayerState.ACTIVE;
                 deathCool = 0;
-                Remove();
+                transform.position = new Vector3(0.5f, 10.0f, 0.0f);
+                RemoveFromWorld();
+                AddToWorld();
             }
         }
     }

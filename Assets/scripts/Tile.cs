@@ -13,14 +13,9 @@ public class Tile : MonoBehaviour
         y = _y;
     }
 
-    private void Start()
+    public void Awake()
     {
-        TileManager.instance.CreateTileReference(x, y, this);
-    }
-
-    private void Update()
-    {
-        spriteRenderer.color = Color.white;
+        objects.Clear();
     }
 
     public void Place(WorldObject _obj)
