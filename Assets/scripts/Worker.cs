@@ -15,6 +15,8 @@ public class Worker : WorldObject, IPoolable<Worker>
     private Vector3 direction;
     private float speed = 5.0f;
 
+    [SerializeField] private Transform pivots = null;
+
     private void Awake()
     {
    
@@ -44,7 +46,11 @@ public class Worker : WorldObject, IPoolable<Worker>
 
     private void Update()
     {
-        transform.position += direction * Time.deltaTime * speed;
+        //foreach (Transform t in pivots)
+        //{
+        //    Tile _t = TileManager.instance.GetTile(t.position);
+        //    transform.position += direction * Time.deltaTime * speed;
+        //}
     }
 
     private void LateUpdate()
