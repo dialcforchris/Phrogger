@@ -6,10 +6,26 @@ public class Worker : WorldObject, IPoolable<Worker>
     #region IPoolable
     public PoolData<Worker> poolData { get; set; }
     #endregion
+
+    private bool isSetup = false;
+    [SerializeField] private SpriteRenderer hairSpriteRenderer = null;
+    [SerializeField] private Animator animator = null;
+    [SerializeField] private AnimationOverride animOverride= null;
+
     private void Awake()
     {
 
     }
+
+    public void SetupWorker(string _animName, Sprite _hairSprite)
+    {
+        if(!isSetup)
+        {
+            hairSpriteRenderer.sprite = _hairSprite;
+            animOverride.SetSpriteSheet(_animName);
+        }
+    }
+
     public void Initialise()
     {
         gameObject.SetActive(true);
