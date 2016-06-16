@@ -6,7 +6,7 @@ public class Worker : WorldObject, IPoolable<Worker>
     #region IPoolable
     public PoolData<Worker> poolData { get; set; }
     #endregion
-
+    public string m;
     private bool isSetup = false;
     [SerializeField] private SpriteRenderer hairSpriteRenderer = null;
     [SerializeField] private Animator animator = null;
@@ -14,14 +14,14 @@ public class Worker : WorldObject, IPoolable<Worker>
 
     private void Awake()
     {
-
+        SetupWorker(m, null);
     }
 
     public void SetupWorker(string _animName, Sprite _hairSprite)
     {
         if(!isSetup)
         {
-            hairSpriteRenderer.sprite = _hairSprite;
+            //hairSpriteRenderer.sprite = _hairSprite;
             animOverride.SetSpriteSheet(_animName);
         }
     }
@@ -30,6 +30,12 @@ public class Worker : WorldObject, IPoolable<Worker>
     {
         gameObject.SetActive(true);
     }
+
+    private void Update()
+    {
+        animOverride.UpdateSprite();
+    }
+
     //The behavior of an object when something tries to interact with it
     public override void Interaction(WorldObject _obj)
     {
