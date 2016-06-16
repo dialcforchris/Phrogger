@@ -29,7 +29,7 @@ public class Worker : WorldObject, IPoolable<Worker>
     {
         if(!isSetup)
         {
-            //hairSpriteRenderer.sprite = _hairSprite;
+            hairSpriteRenderer.sprite = _hairSprite;
             animOverride.SetSpriteSheet(_animName);
         }
     }

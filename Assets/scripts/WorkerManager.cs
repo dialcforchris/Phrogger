@@ -23,7 +23,7 @@ public class WorkerManager : MonoBehaviour
         Worker _worker = workerPool.GetPooledObject();
         if (!_worker.GetIsSetup())
         {
-            _worker.SetupWorker(bodySprites[Random.Range(0, bodySprites.Length)], null/*hairSprites[Random.Range(0, hairSprites.Length - 1)]*/);
+            _worker.SetupWorker(bodySprites[Random.Range(0, bodySprites.Length)],hairSprites[Random.Range(0, hairSprites.Length)]);
         }
         return _worker;
     }

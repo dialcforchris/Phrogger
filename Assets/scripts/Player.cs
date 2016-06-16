@@ -111,7 +111,6 @@ public class Player :WorldObject
         Tile tile = TileManager.instance.GetTile(transform.position);
         if (tile)
         {
-            //tile.GetComponentInChildren<SpriteRenderer>().color = Color.blue;
         }
     }
     bool MoveCooldown()
@@ -148,7 +147,10 @@ public class Player :WorldObject
     }
   public override void Interaction(WorldObject _obj)
   {
-      Tile t = TileManager.instance.GetTile(transform.position);
+      if (_obj.tag == "Worker")
+      {
+          Die();
+      }
       
   }
 
