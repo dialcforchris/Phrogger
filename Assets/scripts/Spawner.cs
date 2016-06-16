@@ -3,8 +3,8 @@ using System.Collections;
 
 public class Spawner : WorldObject
 {
-    [SerializeField] private float cooldown = 0.0f;
-    [SerializeField] private float spawnCooldown;
+    private float cooldown = 0.0f;
+    private float spawnCooldown;
 
     [SerializeField] private float minSpawnCooldown = 1.5f;
     [SerializeField] private float maxSpawnCooldown = 2.4f;
