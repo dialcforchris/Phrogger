@@ -146,6 +146,12 @@ public class Player :WorldObject
             strikes -= 1;
         }
     }
+  public override void Interaction(WorldObject _obj)
+  {
+      Tile t = TileManager.instance.GetTile(transform.position);
+      
+  }
+
 }
 enum PlayerState
 {
