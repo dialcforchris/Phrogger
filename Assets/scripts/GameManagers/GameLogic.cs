@@ -8,6 +8,7 @@ public class GameLogic : MonoBehaviour
 
     float roundTimer = 60;
     float currentRoundTimer = 0;
+    public Player player;
 
     private static GameLogic theGameLogic = null;
     public static GameLogic instance
@@ -41,6 +42,7 @@ public class GameLogic : MonoBehaviour
         {
             currentRoundTimer = 0;
             currentRound++;
+            player.Die();
             RoundCount();
         }
     }

@@ -13,6 +13,7 @@ public class Player :WorldObject
     private float hori;
     private float verti;
     Animator ani;
+    PlayerState state;
 
     //public members
     public int Score
@@ -31,16 +32,21 @@ public class Player :WorldObject
     {
         lastPos = Vector2.zero;
         ani = GetComponent<Animator>();
-     //   transform.position = TileManager.instance.GetTile(transform.position).transform.position;
+        state = PlayerState.ACTIVE;
     }
 	
 	// Update is called once per frame
 	void Update () 
     {
-        ConvertToPos();
-        Movement();
-        MoveCooldown();
-        Die();
+        if (state == PlayerState.ACTIVE)
+        {
+            ConvertToPos();
+            Movement();
+            MoveCooldown();
+            Die();
+        }
+       
+       
 	}
 
     void Movement()
@@ -131,11 +137,18 @@ public class Player :WorldObject
             verti -= verti * 2;
         }
     }
-  void Die()
+  public void Die()
     {
-      if (Input.GetKeyDown(KeyCode.Q))
-      {
-          ani.SetTrigger("Dead");
-      }
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            state = PlayerState.DEAD;
+            ani.SetTrigger("Dead");
+            strikes -= 1;
+        }
     }
+}
+enum PlayerState
+{
+    ACTIVE,
+    DEAD,
 }
