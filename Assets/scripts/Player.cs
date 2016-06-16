@@ -29,7 +29,7 @@ public class Player :WorldObject
 	void Start ()
     {
         lastPos = Vector2.zero;
-        transform.position = TileManager.instance.GetTile(transform.position).transform.position;
+        //transform.position = TileManager.instance.GetTile(transform.position).transform.position;
     }
 	
 	// Update is called once per frame

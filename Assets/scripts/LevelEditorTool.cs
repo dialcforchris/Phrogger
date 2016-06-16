@@ -83,17 +83,7 @@ public class LevelEditorTool : MonoBehaviour
                     if (Input.GetKeyDown(KeyCode.Space))
                     {
                         Tile _tile = TileManager.instance.GetTile(transform.position);
-                        _tile.UpdateSprite(tileSprite, false, false);
-                    }
-                    if (Input.GetKeyDown(KeyCode.N))
-                    {
-                        Tile _tile = TileManager.instance.GetTile(transform.position);
-                        _tile.UpdateSprite(tileSprite, true, false);
-                    }
-                    if (Input.GetKeyDown(KeyCode.M))
-                    {
-                        Tile _tile = TileManager.instance.GetTile(transform.position);
-                        _tile.UpdateSprite(tileSprite, false, true);
+                        _tile.UpdateSprite(tileSprite);
                     }
                     break;
                 }

@@ -6,7 +6,6 @@ public class Tile : MonoBehaviour
     [SerializeField] private SpriteRenderer spriteRenderer = null;
     [SerializeField] private int x, y;
     [SerializeField] private List<WorldObject> objects = new List<WorldObject>();
-    [SerializeField] private WorkerDirectionNode enemyNode = null;
 
     public void Initialise(int _x, int _y)
     {
@@ -60,31 +59,14 @@ public class Tile : MonoBehaviour
         return true;
     }
 
-    public DirectionState NewDirection()
-    {
-        if(enemyNode)
-        {
-            return enemyNode.NewDirection();
-        }
-        return DirectionState.DIRECTION_COUNT;
-    }
-
     public string IndexName()
     {
         return x.ToString() + ":" + y.ToString();
     }
 
-    public void UpdateSprite(Sprite _sprite, bool _xFlip, bool _yFlip)
+    public void UpdateSprite(Sprite _sprite)
     {
         spriteRenderer.sprite = _sprite;
-        if(_xFlip)
-        {
-            spriteRenderer.flipX = !spriteRenderer.flipX;
-        }
-        if (_yFlip)
-        {
-            spriteRenderer.flipY = !spriteRenderer.flipY;
-        }
     }
 
 }
