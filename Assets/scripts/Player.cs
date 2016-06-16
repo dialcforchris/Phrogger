@@ -11,7 +11,8 @@ public class Player :WorldObject
     private int strikes = 3;
     private int score = 0;
     private float hori;
-    private float veri;
+    private float verti;
+    Animator ani;
 
     //public members
     public int Score
@@ -29,7 +30,8 @@ public class Player :WorldObject
 	void Start ()
     {
         lastPos = Vector2.zero;
-        transform.position = TileManager.instance.GetTile(transform.position).transform.position;
+        ani = GetComponent<Animator>();
+     //   transform.position = TileManager.instance.GetTile(transform.position).transform.position;
     }
 	
 	// Update is called once per frame
@@ -45,7 +47,8 @@ public class Player :WorldObject
     {
         float moveX = 0;
         float moveY = 0;
-        if (hori > veri)
+
+        if (hori > verti)
         {
             if (Input.GetAxis("Horizontal") != 0 && MoveCooldown())
             {
@@ -92,6 +95,9 @@ public class Player :WorldObject
         {
             lastPos.y = 0;
         }
+
+        ani.SetBool("PlayerWalk", ((Input.GetAxis("Vertical") != 0 || Input.GetAxis("Horizontal") != 0) && !MoveCooldown()) ? true : false);
+        
     }
 
     void MakeItBlue()
@@ -114,14 +120,14 @@ public class Player :WorldObject
     void ConvertToPos()
     {
         hori = Input.GetAxis("Horizontal");
-        veri = Input.GetAxis("Vertical");
+        verti = Input.GetAxis("Vertical");
         if (hori<0)
         {
             hori -= hori * 2;
         }
-        if (veri<0)
+        if (verti<0)
             {
-            veri -= veri*2;
+            verti -= verti*2;
         }
             }
   
