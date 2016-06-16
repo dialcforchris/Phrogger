@@ -15,11 +15,9 @@ public class Worker : WorldObject, IPoolable<Worker>
     private Vector3 direction;
     private float speed = 5.0f;
 
-    [SerializeField] private Transform pivots = null;
-
     private void Awake()
     {
-   
+        tiles = new Tile[1];
     }
 
     public bool GetIsSetup()
@@ -41,16 +39,23 @@ public class Worker : WorldObject, IPoolable<Worker>
         direction = _direction;
         transform.rotation = Quaternion.Euler(new Vector3(0, 0, _direction == Vector3.left ? 90.0f : 270.0f));
         speed = _speed;
+        Tile _tile = TileManager.instance.GetTile(transform.position);
+        _tile.Place(this);
+        tiles[0] = _tile;
         gameObject.SetActive(true);
     }
 
     private void Update()
     {
-        //foreach (Transform t in pivots)
-        //{
-        //    Tile _t = TileManager.instance.GetTile(t.position);
-        //    transform.position += direction * Time.deltaTime * speed;
-        //}
+        transform.position += direction * Time.deltaTime * speed;
+        Tile _tile = TileManager.instance.GetTile(transform.position);
+        if (_tile != tiles[0])
+        {
+            tiles[0].Remove(this);
+            _tile.Place(this);
+            tiles[0] = _tile;
+            _tile.Interaction(this);
+        }
     }
 
     private void LateUpdate()
@@ -77,6 +82,8 @@ public class Worker : WorldObject, IPoolable<Worker>
 
     public void Reset()
     {
+        tiles[0].Remove(this);
+        tiles[0] = null;
         poolData.ReturnPool(this);
         gameObject.SetActive(false);
     }

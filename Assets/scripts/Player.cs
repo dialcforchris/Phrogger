@@ -26,7 +26,13 @@ public class Player :WorldObject
         get { return strikes;}
         set {strikes= value;}
     }
+    private void Awake()
+    {
+        tiles = new Tile[1];
+    }
     
+
+
 	// Use this for initialization
 	void Start ()
     {
@@ -34,10 +40,17 @@ public class Player :WorldObject
         ani = GetComponent<Animator>();
         state = PlayerState.ACTIVE;
     }
+
+    private bool doOnce = true;
 	
 	// Update is called once per frame
 	void Update () 
     {
+        if(doOnce)
+        {
+            Initialise();
+            doOnce = false;
+        }
         if (state == PlayerState.ACTIVE)
         {
             ConvertToPos();
@@ -65,6 +78,10 @@ public class Player :WorldObject
                     if (_tile.CheckMovement(this))
                     {
                         transform.position = _tile.transform.position;
+                        tiles[0].Remove(this);
+                        _tile.Place(this);
+                        tiles[0] = _tile;
+                        _tile.Interaction(this);
                     }
 
                     angle = Input.GetAxis("Horizontal") > 0 ? 270 : 90;
@@ -84,6 +101,10 @@ public class Player :WorldObject
                     if (_tile.CheckMovement(this))
                     {
                         transform.position = _tile.transform.position;
+                        tiles[0].Remove(this);
+                        _tile.Place(this);
+                        tiles[0] = _tile;
+                        _tile.Interaction(this);
                     }
 
                     angle = Input.GetAxis("Vertical") > 0 ? 0 : 180;
@@ -104,6 +125,15 @@ public class Player :WorldObject
 
         ani.SetBool("PlayerWalk", ((Input.GetAxis("Vertical") != 0 || Input.GetAxis("Horizontal") != 0) && !MoveCooldown()) ? true : false);
         
+    }
+
+    public override void Remove()
+    {
+        //THIS IS CALLED WHEN OFF SCREEN OR DIES
+        transform.position = new Vector3(0.5f,10.0f,0.0f);
+        tiles[0].Remove(this);
+        tiles[0] = null;
+        Initialise();
     }
 
     void MakeItBlue()
@@ -149,12 +179,22 @@ public class Player :WorldObject
   {
       if (_obj.tag == "Worker")
       {
-          Die();
+            Remove();
+          //Die();
       }
       
   }
 
+    private void Initialise()
+    {
+        Tile _tile = TileManager.instance.GetTile(transform.position);
+        _tile.Place(this);
+        tiles[0] = _tile;
+    }
+  
 }
+
+
 enum PlayerState
 {
     ACTIVE,

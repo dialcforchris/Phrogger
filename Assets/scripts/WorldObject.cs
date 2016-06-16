@@ -4,7 +4,7 @@ using System.Collections;
 public class WorldObject : MonoBehaviour
 {
     //The tiles the object is associated with
-    protected Tile[] tile;
+    protected Tile[] tiles;
     [SerializeField] protected SpriteRenderer spriteRenderer = null;
 
     //The behavior of an object when something tries to interact with it
