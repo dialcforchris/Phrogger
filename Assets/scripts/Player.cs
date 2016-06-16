@@ -40,7 +40,7 @@ public class Player :WorldObject
         ConvertToPos();
         Movement();
         MoveCooldown();
-      
+        Die();
 	}
 
     void Movement()
@@ -117,18 +117,25 @@ public class Player :WorldObject
         }
         return true;
     }
+    //movement related function
     void ConvertToPos()
     {
         hori = Input.GetAxis("Horizontal");
         verti = Input.GetAxis("Vertical");
-        if (hori<0)
+        if (hori < 0)
         {
             hori -= hori * 2;
         }
-        if (verti<0)
-            {
-            verti -= verti*2;
+        if (verti < 0)
+        {
+            verti -= verti * 2;
         }
-            }
-  
+    }
+  void Die()
+    {
+      if (Input.GetKeyDown(KeyCode.Q))
+      {
+          ani.SetTrigger("Dead");
+      }
+    }
 }

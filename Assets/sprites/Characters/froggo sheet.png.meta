@@ -1,12 +1,13 @@
 fileFormatVersion: 2
 guid: 57507d006bcb6ed4c98f9e38c92921a4
-timeCreated: 1466069199
+timeCreated: 1466072775
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
     21300000: froggo sheet_0
     21300002: froggo sheet_1
     21300004: froggo sheet_2
+    21300006: froggo sheet_3
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -47,7 +48,7 @@ TextureImporter:
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 64
   alphaIsTransparency: 1
   textureType: 8
   buildTargetSettings: []
@@ -56,51 +57,63 @@ TextureImporter:
     - name: froggo sheet_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 64
-        height: 64
+        x: 3
+        y: 7
+        width: 50
+        height: 50
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline:
-      - - {x: 29, y: 27}
-        - {x: -25, y: 27}
-        - {x: -25, y: -27}
-        - {x: -14, y: -27}
-        - {x: -14, y: -25}
-        - {x: -1, y: -27}
-        - {x: 29, y: -27}
+      - - {x: -25, y: 25}
+        - {x: -25, y: -25}
+        - {x: 25, y: -25}
+        - {x: 25, y: 25}
     - name: froggo sheet_1
       rect:
         serializedVersion: 2
-        x: 64
-        y: 0
-        width: 64
-        height: 64
+        x: 68
+        y: 5
+        width: 50
+        height: 55
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline:
-      - - {x: -24, y: 30}
-        - {x: -24, y: -29}
-        - {x: 30, y: -29}
-        - {x: 30, y: 30}
+      - - {x: -25, y: 27.5}
+        - {x: -25, y: -27.5}
+        - {x: 25, y: -27.5}
+        - {x: 25, y: 27.5}
     - name: froggo sheet_2
       rect:
         serializedVersion: 2
-        x: 128
-        y: 0
-        width: 64
-        height: 64
+        x: 135
+        y: 2
+        width: 50
+        height: 60
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline:
-      - - {x: -21, y: 32}
-        - {x: -21, y: -32}
-        - {x: 32, y: -32}
-        - {x: 32, y: 32}
+      - - {x: -25, y: 30}
+        - {x: -25, y: -30}
+        - {x: 25, y: -30}
+        - {x: 25, y: 30}
+    - name: froggo sheet_3
+      rect:
+        serializedVersion: 2
+        x: 194
+        y: 2
+        width: 55
+        height: 60
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -27.5, y: 30}
+        - {x: -27.5, y: -30}
+        - {x: 27.5, y: -30}
+        - {x: 27.5, y: 30}
     outline: []
   spritePackingTag: 
   userData: 
