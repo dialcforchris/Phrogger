@@ -4,6 +4,7 @@ public enum GameStates
 {
     STATE_GAMEPLAY = 0,
     STATE_PAUSE,
+    STATE_EMAIL,
     GAMESTATES_COUNT
 }
 
@@ -27,6 +28,7 @@ public class GameStateManager : MonoBehaviour
             DontDestroyOnLoad(gameObject);
             states[(int)GameStates.STATE_GAMEPLAY] = new GameplayState();
             states[(int)GameStates.STATE_PAUSE] = new PauseState();
+            states[(int)GameStates.STATE_EMAIL] = new EmailState();
         }
     }
 

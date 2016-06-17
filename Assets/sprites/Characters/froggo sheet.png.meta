@@ -1,7 +1,7 @@
 fileFormatVersion: 2
 guid: 57507d006bcb6ed4c98f9e38c92921a4
-timeCreated: 1466072775
-licenseType: Free
+timeCreated: 1466152122
+licenseType: Pro
 TextureImporter:
   fileIDToRecycleName:
     21300000: froggo sheet_0
@@ -57,33 +57,33 @@ TextureImporter:
     - name: froggo sheet_0
       rect:
         serializedVersion: 2
-        x: 3
-        y: 7
+        x: 7
+        y: 2
         width: 50
-        height: 50
+        height: 60
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline:
-      - - {x: -25, y: 25}
-        - {x: -25, y: -25}
-        - {x: 25, y: -25}
-        - {x: 25, y: 25}
+      - - {x: -25, y: 27}
+        - {x: -25, y: -27}
+        - {x: 25, y: -27}
+        - {x: 25, y: 27}
     - name: froggo sheet_1
       rect:
         serializedVersion: 2
-        x: 68
-        y: 5
+        x: 71
+        y: 2
         width: 50
-        height: 55
+        height: 60
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline:
-      - - {x: -25, y: 27.5}
-        - {x: -25, y: -27.5}
-        - {x: 25, y: -27.5}
-        - {x: 25, y: 27.5}
+      - - {x: -25, y: 30}
+        - {x: -25, y: -29}
+        - {x: 25, y: -29}
+        - {x: 25, y: 30}
     - name: froggo sheet_2
       rect:
         serializedVersion: 2
@@ -92,7 +92,7 @@ TextureImporter:
         width: 50
         height: 60
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline:
       - - {x: -25, y: 30}
@@ -102,18 +102,18 @@ TextureImporter:
     - name: froggo sheet_3
       rect:
         serializedVersion: 2
-        x: 194
+        x: 198
         y: 2
         width: 55
         height: 60
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      alignment: 9
+      pivot: {x: 0.48, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline:
-      - - {x: -27.5, y: 30}
-        - {x: -27.5, y: -30}
-        - {x: 27.5, y: -30}
-        - {x: 27.5, y: 30}
+      - - {x: -26.399994, y: 30}
+        - {x: -26.399994, y: -30}
+        - {x: 28.600006, y: -30}
+        - {x: 28.600006, y: 30}
     outline: []
   spritePackingTag: 
   userData: 

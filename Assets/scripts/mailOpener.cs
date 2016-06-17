@@ -1,19 +1,24 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using System.Collections.Generic;
 using DG.Tweening;
 
 public class mailOpener : MonoBehaviour {
+
+    public static mailOpener instance;
 
     //Need to be able to open and close emails at will
     //i.e. have them be seperate events
 
     public SpriteRenderer emailContent;
     public Animator monitorAnimator,miniEmailAnimator;
+    public Camera monitorCamera;
 
-    public mail[] messages;
+    public List<mail> messages; //All the possible emails the player might have to deal with
     mail currentMail;
     
+    //An email object, might need variables for score and such in the future
     [System.Serializable]
     public struct mail
     {
@@ -23,139 +28,132 @@ public class mailOpener : MonoBehaviour {
 
     void Awake()
     {
+        instance = this;
+        //Always remember to seed your random :)
         Random.seed = System.DateTime.Now.Millisecond;
+
+        //Purly for testing reasosns, remove at a later date
         enterView();
     }
 
     public void enterView()
     {
-        int chosen = Random.Range(0, messages.Length);
+        //should probably change game manager state to email viewing
+        if (GameStateManager.instance)
+        GameStateManager.instance.ChangeState(GameStates.STATE_EMAIL);
+
+        //Change cameras over
+        Camera.main.enabled = false;
+        monitorCamera.enabled = true;
+
+        //Intro animation
+        monitorAnimator.Play("mail_intro");
+
+        //Choose a random email to display
+        int chosen = Random.Range(0, messages.Count);
         currentMail = messages[chosen];
-        emailContent.sprite = currentMail.image;        
+
+        //Remove this email from the list so we can't get it twice
+        messages.Remove(currentMail);
+        emailContent.sprite = currentMail.image;
     }
 
-    int emailPos=0;
+    public void exitView()
+    {
+        GameStateManager.instance.ChangeState(GameStates.STATE_GAMEPLAY);
+
+        //Change cameras over
+        Camera.main.enabled = true;
+        monitorCamera.enabled = false;
+    }
+
+    int emailPos = 0;
     public void moveEmail(int dir)
     {
-        if (!monitorAnimator.GetCurrentAnimatorStateInfo(0).IsName("mail_right_reverse")
-            && !monitorAnimator.GetCurrentAnimatorStateInfo(0).IsName("mail_left_reverse")
-            && !monitorAnimator.GetCurrentAnimatorStateInfo(0).IsName("mail_left")
-            && !monitorAnimator.GetCurrentAnimatorStateInfo(0).IsName("mail_right"))
+        if (emailPos == 0) //Email is in the middle of the screen
         {
-            if (emailPos == 0)
-            {
-                if (dir > 0)
-                    monitorAnimator.Play("mail_right");
-                else
-                    monitorAnimator.Play("mail_left");
-
-                emailPos += dir;
-            }
-            else if (emailPos > 0)
-            {
-                if (dir < 0)
-                {
-                    monitorAnimator.Play("mail_right_reverse");
-                    emailPos = 0;
-                }
-            }
+            if (dir > 0)
+                monitorAnimator.Play("mail_right");
             else
+                monitorAnimator.Play("mail_left");
+
+            emailPos += dir;
+        }
+        else if (emailPos > 0) //Email currently sits at the right of the screen
+        {
+            if (dir < 0)//Move left
             {
-                if (dir > 0)
-                {
-                    monitorAnimator.Play("mail_left_reverse");
-                    emailPos = 0;
-                }
+                monitorAnimator.Play("mail_right_reverse");
+                emailPos = 0;//Email is back in the middle now
+            }
+        }
+        else //Email must be at the left hand side of the monitor
+        {
+            if (dir > 0)//Move right
+            {
+                monitorAnimator.Play("mail_left_reverse");
+                emailPos = 0;//Email is back in the middle now
             }
         }
     }
 
     void Update()
     {
-        if (Input.GetKey(KeyCode.LeftArrow))
+        //Only allow the player to move the email if it's not moving
+        if (monitorAnimator.GetCurrentAnimatorStateInfo(0).IsName("mail_idle_middle")
+            || monitorAnimator.GetCurrentAnimatorStateInfo(0).IsName("mail_idle_left")
+            || monitorAnimator.GetCurrentAnimatorStateInfo(0).IsName("mail_idle_right"))
         {
-            moveEmail(-1);
-        }
 
-        if (Input.GetKey(KeyCode.RightArrow))
-        {
-            moveEmail(1);
-        }
-
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            if (emailPos>0)
+            if (Input.GetAxis("Horizontal") != 0)
             {
-                monitorAnimator.Play("mail_junk");
-                //Do animation for email being destroyed
-                if (currentMail.isJunk)
+                moveEmail(Input.GetAxis("Horizontal") > 0 ? 1 : -1);
+            }
+            
+            if (Input.GetAxis("Fire1") > 0)
+            {
+                if (emailPos > 0) //If email is in the JUNK zone
                 {
-                    //Junk email put in junk pile, good job
-                    //+ points
+                    //Do animation for email being destroyed
+                    monitorAnimator.Play("mail_junk");
+
+                    if (currentMail.isJunk)
+                    {
+                        Debug.Log("Junk email put in junk pile, good job");
+                        //Junk email put in junk pile, good job
+                        //+ points
+                        Invoke("exitView", 4);
+                    }
+                    else
+                    {
+                        Debug.Log("You put a safe email in the junk pile, YOU WALLY");
+                        //You put a safe email in the junk pile
+                        //oooooo
+                        Invoke("exitView", 4);
+                    }
                 }
-                else
+                else if (emailPos < 0) //If email is in the SAFE zone
                 {
-                    //You put a safe email in the junk pile
-                    //oooooo
+                    //Do animation for email being marked as safe
+                    monitorAnimator.Play("mail_safe");
+                    miniEmailAnimator.Play("email_leave 0");
+
+                    if (currentMail.isJunk)
+                    {
+                        Debug.Log("You put junk in the safe pile");
+                        //You put junk in the safe pile
+                        //- points
+                        Invoke("exitView", 2.5f);
+                    }
+                    else
+                    {
+                        Debug.Log("Safe mail was marked as safe, woopee");
+                        //Safe mail was marked as safe, woopee
+                        //+ points
+                        Invoke("exitView", 2.5f);
+                    }
                 }
             }
-            else if (emailPos < 0)
-            {
-                monitorAnimator.Play("mail_safe");
-                miniEmailAnimator.Play("email_leave 0");
-                //Do animation for email being marked as safe
-                if (currentMail.isJunk)
-                {
-                    //You put junk in the safe pile
-                    //- points
-                }
-                else
-                {
-                    //Safe mail was marked as safe, woopee
-                    //+ points
-                }
-            }
         }
     }
-
-    #region ye olde system
-    /*
-    public void openMail()
-    {
-        //Turn game manager to paused, don't let the player move or anything like that
-        StartCoroutine(mail());
-    }
-    public void closeMail()
-    {
-        emailAnimator.SetBool("finished", true);
-        emailAnimator.SetBool("openMail", false);
-    }
-
-    IEnumerator mail()
-    {
-        while (canvasFade.color.a < .5f)
-        {
-            canvasFade.color = Color.Lerp(canvasFade.color, new Color(0, 0, 0, .6f), 0.1f);
-            yield return new WaitForSeconds(.05f);
-        }
-        emailAnimator.SetBool("finished", false);
-        emailAnimator.SetBool("openMail", true);
-
-        while (!emailAnimator.GetBool("finished"))
-        {
-            yield return null;
-        }
-        yield return new WaitForSeconds(1f);
-        while (canvasFade.color.a > 0f)
-        {
-            canvasFade.color = Color.Lerp(canvasFade.color, new Color(0, 0, 0, 0f), 0.1f);
-            yield return new WaitForSeconds(.05f);
-        }
-    }
-
-    public void closeEmail()
-    {
-        canvasFade.color = new Color(0, 0, 0, 0f);
-    }*/
-    #endregion
 }
