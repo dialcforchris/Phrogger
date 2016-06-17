@@ -22,7 +22,16 @@ public class Cubicle : WorldObject
     [SerializeField] private Transform table = null;
     [SerializeField] private Transform empty = null;
     [SerializeField] private Transform[] chairs = null;
+    public bool[] filledChairs = null;
 
+    private int deskId;
+    public int cubicleId
+    {
+        get { return deskId; }
+        set { deskId = value; }
+    }
+      
+    
     private bool isMessy = false;
 
 	// Use this for initialization
@@ -73,6 +82,10 @@ public class Cubicle : WorldObject
         {
             if (_obj.GetTile(0) == tiles[(int)Positions.OPENING])
             {
+                if (_obj.GetComponent<Worker>().cubicleId == deskId)
+                {
+                    _obj.GetComponent<Worker>().MoveToChair(opening.position,empty.position,chairs[0].position);
+                }
                 //Get their desk id, if it matches they enter
                 //Move to empty space
                 //Move to free chair
@@ -85,8 +98,9 @@ public class Cubicle : WorldObject
                 if (!isMessy)
                 {
                     isMessy = true;
-                    //Apply messiness
+                    deskFodder.sprite = messyDesk[currentDesk];
                 }
+                
                 Phishing();
             }
             else if (_obj.GetTile(0) == tiles[(int)Positions.EMPTY])
