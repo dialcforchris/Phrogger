@@ -172,7 +172,7 @@ public class Player : WorldObject
                 anim.SetBool("Dead", false);
                 state = PlayerState.ACTIVE;
                 deathCool = 0;
-                transform.position = new Vector3(0.5f, 10.0f, 0.0f);
+                transform.position = new Vector2(-0.5f, -2.0f);
                 RemoveFromWorld();
                 AddToWorld();
             }
