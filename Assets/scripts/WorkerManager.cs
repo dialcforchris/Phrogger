@@ -17,7 +17,7 @@ public class WorkerManager : MonoBehaviour
     private void Awake()
     {
         workerManager = this;
-        workerPool = new ObjectPool<Worker>(workerPrefab, 50);
+        workerPool = new ObjectPool<Worker>(workerPrefab, 50,transform);
         Cubicle[] c = Cubicle.FindObjectsOfType<Cubicle>();
         foreach (Cubicle cub in c)
         {
@@ -34,6 +34,7 @@ public class WorkerManager : MonoBehaviour
     public Worker GetPooledWorker()
     {
         Worker _worker = workerPool.GetPooledObject();
+        _worker.transform.parent = this.transform;
         if (!_worker.GetIsSetup())
         {
             AssignCubicle(_worker);
