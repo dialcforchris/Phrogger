@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Cubicle : WorldObject 
+public class Cubicle : WorldObject
 {
     private enum Positions
     {
@@ -18,11 +18,16 @@ public class Cubicle : WorldObject
 
     private int currentDesk;
 
-    [SerializeField] private Transform opening = null;
-    [SerializeField] private Transform table = null;
-    [SerializeField] private Transform empty = null;
-    [SerializeField] private Transform[] chairs = null;
-    [SerializeField] private Transform[] chairPivots = null;
+    [SerializeField]
+    private Transform opening = null;
+    [SerializeField]
+    private Transform table = null;
+    [SerializeField]
+    private Transform empty = null;
+    [SerializeField]
+    private Transform[] chairs = null;
+    [SerializeField]
+    private Transform[] chairPivots = null;
     public bool[] filledChairs;
     public int chair;
     private int deskId;
@@ -31,15 +36,15 @@ public class Cubicle : WorldObject
         get { return deskId; }
         set { deskId = value; }
     }
-      
-    
+
+
     private bool isMessy = false;
 
-	// Use this for initialization
-	protected override void Awake () 
+    // Use this for initialization
+    protected override void Awake()
     {
         filledChairs = new bool[chairs.Length];
-        for (int i = 0; i < filledChairs.Length;i++ )
+        for (int i = 0; i < filledChairs.Length; i++)
         {
             filledChairs[i] = false;
         }
@@ -79,25 +84,25 @@ public class Cubicle : WorldObject
     }
 
     // Update is called once per frame
-    void Update () 
+    void Update()
     {
-	    
-	}
+
+    }
 
     //The behavior of an object when something tries to interact with it
     public override void Interaction(WorldObject _obj)
     {
-       
-        if(_obj.tag == "Worker")
+
+        if (_obj.tag == "Worker")
         {
             if (_obj.GetTile(0) == tiles[(int)Positions.OPENING])
             {
                 if (_obj.GetComponent<Worker>().cubicleId == deskId)
                 {
-                    int pickChair=16;
-                    for (int i = 0; i < filledChairs.Length;i++ )
+                    int pickChair = 16;
+                    for (int i = 0; i < filledChairs.Length; i++)
                     {
-                  
+
                         if (filledChairs[i])
                         {
                             continue;
@@ -107,7 +112,7 @@ public class Cubicle : WorldObject
                             pickChair = i;
                             _obj.GetComponent<Worker>().MoveToChair(opening.position, empty.position, chairs[pickChair].position, chairPivots[pickChair].position);
                             filledChairs[i] = true;
-                           
+
                         }
                         break;
                     }
@@ -118,7 +123,7 @@ public class Cubicle : WorldObject
                 //Move to free chair
             }
         }
-        else if(_obj.tag == "Player")
+        else if (_obj.tag == "Player")
         {
             if (_obj.GetTile(0) == tiles[(int)Positions.TABLE])
             {
@@ -127,7 +132,7 @@ public class Cubicle : WorldObject
                     isMessy = true;
                     deskFodder.sprite = messyDesk[currentDesk];
                 }
-                
+
                 Phishing();
             }
             else if (_obj.GetTile(0) == tiles[(int)Positions.EMPTY])
