@@ -22,6 +22,7 @@ public class Cubicle : WorldObject
     [SerializeField] private Transform table = null;
     [SerializeField] private Transform empty = null;
     [SerializeField] private Transform[] chairs = null;
+    [SerializeField] private Transform[] chairPivots = null;
     public bool[] filledChairs = null;
 
     private int deskId;
@@ -40,6 +41,7 @@ public class Cubicle : WorldObject
         tiles = new Tile[3 + chairs.Length];
         currentDesk = Random.Range(0, tidyDesk.Length);
         deskFodder.sprite = tidyDesk[currentDesk];
+
     }
 
     protected override void Start()

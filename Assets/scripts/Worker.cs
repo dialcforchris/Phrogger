@@ -27,7 +27,7 @@ public class Worker : WorldObject, IPoolable<Worker>
     //move to chair logic
     List<Vector2> positions = new List<Vector2>();
     int targetIndex = 0;
-    bool finishedMovement= false;
+    //bool finishedMovement= false;
 
     public int cubicleId
     {
@@ -113,7 +113,7 @@ public class Worker : WorldObject, IPoolable<Worker>
         state = WorkerState.SITTING;
         StopCoroutine("SitAtDesk");
         StartCoroutine("SitAtDesk");
-        Debug.Log("moving to chair " + deskId);
+      //  Debug.Log("moving to chair " + deskId);
 
     }
     IEnumerator SitAtDesk()
@@ -122,16 +122,17 @@ public class Worker : WorldObject, IPoolable<Worker>
         Vector2 currentTarget = positions[0];
         while(true)
         {
-            Debug.Log("doing it");
+          //  Debug.Log("doing it");
             if (Vector2.Distance(transform.position,currentTarget)<0.1f)
             {
                 targetIndex++;
                 if (targetIndex>=positions.Count)
                 {
-                    finishedMovement = true;
+                  //  finishedMovement = true;
                     targetIndex = 0;
                     animator.SetBool("sit", true);
-                    animator.SetBool("walk", false);
+                    transform.rotation = Quaternion.Euler(transform.up);
+                  //  animator.SetBool("walk", false);
                    // state = WorkerState.WALKING;
                     yield break;
                 }
