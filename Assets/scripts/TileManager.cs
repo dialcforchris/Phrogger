@@ -15,6 +15,7 @@ public class TileManager : MonoBehaviour
 
     //public Cubicle c;
 
+
     private void Awake()
     {
         if (instance == null)
@@ -27,26 +28,20 @@ public class TileManager : MonoBehaviour
             CreateGrid();
         }
 
-        //for(int i = 0; i < gridSizeX; ++i)
+        //for (int i = 0; i < gridSizeX; ++i)
         //{
         //    for (int j = 0; j < gridSizeY; ++j)
         //    {
-        //        if (i == 33 && j > 14 && j < 33)
-        //        {
-        //            GameObject _obj =  (GameObject)Instantiate(o, tiles[(j * gridSizeX) + i].transform.position, Quaternion.identity);
-        //            _obj.transform.SetParent(tiles[(j * gridSizeX) + i].transform);
-        //            _obj.GetComponent<SpriteRenderer>().flipX = true;
-        //        }
-        //        else if (i == 2 && j > 14 && j < 33)
+        //        if (j == 31 && i > 1 && i < 34)
         //        {
         //            GameObject _obj = (GameObject)Instantiate(o, tiles[(j * gridSizeX) + i].transform.position, Quaternion.identity);
         //            _obj.transform.SetParent(tiles[(j * gridSizeX) + i].transform);
-                    
+        //            _obj.GetComponent<SpriteRenderer>().flipY = false;
         //        }
         //    }
         //}
     }
-  
+
     private void CreateGrid()
     {
         tiles = new Tile[gridSizeX * gridSizeY];
