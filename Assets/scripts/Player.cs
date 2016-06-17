@@ -173,6 +173,7 @@ public class Player : WorldObject
                 state = PlayerState.ACTIVE;
                 deathCool = 0;
                 transform.position = new Vector2(-0.5f, -1.0f);
+                angle = 0;
                 RemoveFromWorld();
                 AddToWorld();
             }

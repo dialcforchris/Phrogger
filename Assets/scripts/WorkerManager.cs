@@ -13,12 +13,21 @@ public class WorkerManager : MonoBehaviour
     [SerializeField] private string[] bodySprites = null;
     [SerializeField] private Sprite[] hairSprites = null;
     [SerializeField] private List<Cubicle> cubicles = new List<Cubicle>();
-
+   
     private void Awake()
     {
         workerManager = this;
         workerPool = new ObjectPool<Worker>(workerPrefab, 50);
-        cubicles.AddRange(Cubicle.FindObjectsOfType<Cubicle>());
+        Cubicle[] c = Cubicle.FindObjectsOfType<Cubicle>();
+        foreach (Cubicle cub in c)
+        {
+           cubicles.Add(cub); 
+            if (cub.chair>1)
+            {
+                cubicles.Add(cub);
+            }
+           
+        }
         GiveCubicleID();
     }
 

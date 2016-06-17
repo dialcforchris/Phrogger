@@ -27,6 +27,7 @@ public class Worker : WorldObject, IPoolable<Worker>
     //move to chair logic
     List<Vector2> positions = new List<Vector2>();
     int targetIndex = 0;
+    Vector2 chairFacing;
     //bool finishedMovement= false;
 
     public int cubicleId
@@ -105,11 +106,13 @@ public class Worker : WorldObject, IPoolable<Worker>
         poolData.ReturnPool(this);
         gameObject.SetActive(false);
     }
-    public void MoveToChair(Vector2 outide, Vector2 inside, Vector2 chair)
+    public void MoveToChair(Vector2 outide, Vector2 inside, Vector2 chairTile, Vector2 chairPivot)
     {
         positions.Add(outide);
         positions.Add(inside);
-        positions.Add(chair);
+        positions.Add(chairTile);
+        positions.Add(chairPivot);
+        chairFacing = direction;
         state = WorkerState.SITTING;
         StopCoroutine("SitAtDesk");
         StartCoroutine("SitAtDesk");
@@ -128,20 +131,22 @@ public class Worker : WorldObject, IPoolable<Worker>
                 targetIndex++;
                 if (targetIndex>=positions.Count)
                 {
-                  //  finishedMovement = true;
                     targetIndex = 0;
                     animator.SetBool("sit", true);
-                    transform.rotation = Quaternion.Euler(transform.up);
-                  //  animator.SetBool("walk", false);
-                   // state = WorkerState.WALKING;
                     yield break;
                 }
                 currentTarget = positions[targetIndex];
             }
             transform.position = Vector2.MoveTowards(transform.position, currentTarget, speed * Time.deltaTime);
+            Vector2 pos = transform.position;
+           
+   
+            float lookAngle = Mathf.Atan2((transform.position.y - currentTarget.y), (transform.position.x - currentTarget.x)) * Mathf.Rad2Deg;
+            Quaternion newRot = new Quaternion();
+            newRot.eulerAngles = new Vector3(0, 0, lookAngle + 90);
+            transform.rotation = newRot;
             yield return null;
         }
-      
     }
 
 
