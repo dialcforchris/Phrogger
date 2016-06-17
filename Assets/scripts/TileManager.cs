@@ -13,7 +13,7 @@ public class TileManager : MonoBehaviour
 
     [SerializeField] private GameObject parentObject = null;
 
-    public Cubicle c;
+    //public Cubicle c;
 
     private void Awake()
     {

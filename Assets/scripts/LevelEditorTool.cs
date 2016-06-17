@@ -74,7 +74,7 @@ public class LevelEditorTool : MonoBehaviour
                         Tile _tile = TileManager.instance.GetTile(transform.position);
                         _obj.name = spawnName + _tile.IndexName();
                         _obj.transform.SetParent(spawnParent.transform);
-                        _tile.Place(_obj);
+                        //_tile.Place(_obj);
                     }
                     break;
                 }
