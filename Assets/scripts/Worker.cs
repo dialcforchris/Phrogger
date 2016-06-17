@@ -136,7 +136,7 @@ public class Worker : WorldObject, IPoolable<Worker>
                     targetIndex = 0;
                     if (state == WorkerState.SITTING)
                     {
-                        animator.SetTrigger("sit");
+                        animator.SetBool("sit",true);
                         SatAtDesk();
                     }
                     yield break;
@@ -161,7 +161,7 @@ public class Worker : WorldObject, IPoolable<Worker>
             if (Vector2.Distance(transform.position, currentTarget) < 0.1f)
             {
                 targetIndex--;
-                if (targetIndex <= 0)
+                if (targetIndex <0)
                 {
                     targetIndex = 0;
                     state = WorkerState.WALKING;
@@ -180,7 +180,7 @@ public class Worker : WorldObject, IPoolable<Worker>
     }
     void SatAtDesk()
     {
-        if (Random.value>0.3f)
+        if (Random.value>0.5f)
         {
             state = WorkerState.HELP;
         }
@@ -192,27 +192,33 @@ public class Worker : WorldObject, IPoolable<Worker>
         {
             case WorkerState.WALKING:
                 {
-                    animator.SetTrigger("walk");
+                    animator.SetBool("walk",true);
+                    animator.SetBool("sit", false);
+                    
+
                     Movement();
                     break;
                 }
             case WorkerState.HELP:
                 {
-                   if (!helpMe.GetComponent<SpriteRenderer>().enabled)
+                   if (!helpMe.activeSelf)
                    {
-                       helpMe.GetComponent<SpriteRenderer>().enabled = true;
+                       helpMe.SetActive(true);
+                       helpMe.transform.rotation = Quaternion.Euler(Vector2.up);
+                           
                       
                     }
                     break;
                 }
             case WorkerState.STANDING:
                 {
-                    animator.SetTrigger("walk");
+                    animator.SetBool("walk",true);
+                    animator.SetBool("sit", false);
                     break;
                 }
             case WorkerState.SITTING:
                 {
-                    SitCooldown();
+                   // SitCooldown();
                     break;
                 }
         }
