@@ -13,7 +13,7 @@ public class mailOpener : MonoBehaviour {
 
     public SpriteRenderer emailContent;
     public Animator monitorAnimator,miniEmailAnimator;
-    public Camera monitorCamera;
+    public Camera monitorCamera,mainCam;
 
     public List<mail> messages; //All the possible emails the player might have to deal with
     mail currentMail;
@@ -33,7 +33,7 @@ public class mailOpener : MonoBehaviour {
         Random.seed = System.DateTime.Now.Millisecond;
 
         //Purly for testing reasosns, remove at a later date
-        enterView();
+        //enterView();
     }
 
     public void enterView()
@@ -43,7 +43,7 @@ public class mailOpener : MonoBehaviour {
         GameStateManager.instance.ChangeState(GameStates.STATE_EMAIL);
 
         //Change cameras over
-        Camera.main.enabled = false;
+        mainCam.enabled = false;
         monitorCamera.enabled = true;
 
         //Intro animation
@@ -63,7 +63,7 @@ public class mailOpener : MonoBehaviour {
         GameStateManager.instance.ChangeState(GameStates.STATE_GAMEPLAY);
 
         //Change cameras over
-        Camera.main.enabled = true;
+        mainCam.enabled = true;
         monitorCamera.enabled = false;
     }
 
@@ -122,6 +122,9 @@ public class mailOpener : MonoBehaviour {
                         Debug.Log("Junk email put in junk pile, good job");
                         //Junk email put in junk pile, good job
                         //+ points
+                        StatTracker.instance.scoreToAdd += 100;
+                        StatTracker.instance.junkEmailsCorrect++;
+
                         Invoke("exitView", 4);
                     }
                     else
@@ -129,6 +132,9 @@ public class mailOpener : MonoBehaviour {
                         Debug.Log("You put a safe email in the junk pile, YOU WALLY");
                         //You put a safe email in the junk pile
                         //oooooo
+                        StatTracker.instance.scoreToAdd -= 100;
+                        StatTracker.instance.safeEmailsWrong++;
+
                         Invoke("exitView", 4);
                     }
                 }
@@ -143,6 +149,9 @@ public class mailOpener : MonoBehaviour {
                         Debug.Log("You put junk in the safe pile");
                         //You put junk in the safe pile
                         //- points
+                        StatTracker.instance.scoreToAdd -= 100;
+                        StatTracker.instance.junkEmailsWrong++;
+
                         Invoke("exitView", 2.5f);
                     }
                     else
@@ -150,6 +159,9 @@ public class mailOpener : MonoBehaviour {
                         Debug.Log("Safe mail was marked as safe, woopee");
                         //Safe mail was marked as safe, woopee
                         //+ points
+                        StatTracker.instance.scoreToAdd += 100;
+                        StatTracker.instance.safeEmailsCorrect++;
+
                         Invoke("exitView", 2.5f);
                     }
                 }
