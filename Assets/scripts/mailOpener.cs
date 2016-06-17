@@ -15,6 +15,8 @@ public class mailOpener : MonoBehaviour {
     public SpriteRenderer emailContent;
     public Animator monitorAnimator,miniEmailAnimator;
     public Camera monitorCamera,mainCam;
+    public SpriteRenderer mainCamTransition, monCamTransition;
+    public Texture[] gradients;
 
     public List<mail> messages; //All the possible emails the player might have to deal with
     mail currentMail;
@@ -32,32 +34,66 @@ public class mailOpener : MonoBehaviour {
         instance = this;
         //Always remember to seed your random :)
         Random.seed = System.DateTime.Now.Millisecond;
-
-        //Purly for testing reasosns, remove at a later date
     }
 
     public void enterView()
     {
         //should probably change game manager state to email viewing
-        if (GameStateManager.instance)
-            GameStateManager.instance.ChangeState(GameStates.STATE_EMAIL);
-
+        GameStateManager.instance.ChangeState(GameStates.STATE_EMAIL);
         emailPos = 0;
+
         //Change cameras over
-        mainCam.enabled = false;
-        monitorCamera.enabled = true;
+        StartCoroutine(camTransition(true));
+    }
 
-        //Intro animation
-        monitorAnimator.Play("mail_intro");
+    IEnumerator camTransition(bool InOut) //True for entering email mode, false for exiting it
+    {
+        Random.seed = System.DateTime.Now.Millisecond;
+        mainCamTransition.material.SetTexture("_SliceGuide", gradients[Random.Range(0, gradients.Length - 1)]);
+        monCamTransition.material.SetTexture("_SliceGuide", gradients[Random.Range(0, gradients.Length - 1)]);
 
-        //Choose a random email to display
-        int chosen = Random.Range(0, messages.Count);
-        currentMail = messages[chosen];
+        float lerpy = 1;
+        while (lerpy > 0)
+        {
+            lerpy -= Time.deltaTime;
 
-        //Remove this email from the list so we can't get it twice
-        messages.Remove(currentMail);
-        emailContent.sprite = currentMail.image;
-        StartCoroutine(zoomInOut(7.5f));
+            if (!InOut)
+                monCamTransition.material.SetFloat("_SliceAmount", lerpy);
+            else
+                mainCamTransition.material.SetFloat("_SliceAmount", lerpy);
+            
+            yield return new WaitForEndOfFrame();
+        }
+
+        mainCam.enabled = !InOut;
+        monitorCamera.enabled = InOut;
+
+        lerpy = 0;
+        while (lerpy < 1)
+        {
+            lerpy += Time.deltaTime;
+
+            if (InOut)
+                monCamTransition.material.SetFloat("_SliceAmount", lerpy);
+            else
+                mainCamTransition.material.SetFloat("_SliceAmount", lerpy);
+
+            yield return new WaitForEndOfFrame();
+        }
+        if (InOut)
+        {
+            //Intro animation
+            monitorAnimator.Play("mail_intro");
+
+            //Choose a random email to display
+            int chosen = Random.Range(0, messages.Count);
+            currentMail = messages[chosen];
+
+            //Remove this email from the list so we can't get it twice
+            messages.Remove(currentMail);
+            emailContent.sprite = currentMail.image;
+            StartCoroutine(zoomInOut(7.5f));
+        }
     }
 
     IEnumerator zoomInOut(float newSize)
@@ -75,8 +111,7 @@ public class mailOpener : MonoBehaviour {
         GameStateManager.instance.ChangeState(GameStates.STATE_GAMEPLAY);
 
         //Change cameras over
-        mainCam.enabled = true;
-        monitorCamera.enabled = false;
+        StartCoroutine(camTransition(false));
     }
 
     int emailPos = 0;
@@ -111,6 +146,11 @@ public class mailOpener : MonoBehaviour {
 
     void Update()
     {
+        InputRelated();
+    }
+
+    void InputRelated()
+    {
         //Only allow the player to move the email if it's not moving
         if (monitorAnimator.GetCurrentAnimatorStateInfo(0).IsName("mail_idle_middle")
             || monitorAnimator.GetCurrentAnimatorStateInfo(0).IsName("mail_idle_left")
@@ -121,7 +161,7 @@ public class mailOpener : MonoBehaviour {
             {
                 moveEmail(Input.GetAxis("Horizontal") > 0 ? 1 : -1);
             }
-            
+
             if (Input.GetAxis("Fire1") > 0)
             {
                 if (emailPos > 0) //If email is in the JUNK zone
@@ -184,6 +224,7 @@ public class mailOpener : MonoBehaviour {
             }
         }
     }
+
 }
 
 [CustomEditor(typeof(mailOpener))]
