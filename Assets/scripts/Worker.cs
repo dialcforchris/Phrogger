@@ -23,11 +23,11 @@ public class Worker : WorldObject, IPoolable<Worker>
     private int deskId;
     private Vector3 direction;
     private float speed = 5.0f;
-    
+    private WorkerState state;
     //move to chair logic
     List<Vector2> positions = new List<Vector2>();
     int targetIndex = 0;
-    bool finishedMovement;
+    bool finishedMovement= false;
 
     public int cubicleId
     {
@@ -65,7 +65,11 @@ public class Worker : WorldObject, IPoolable<Worker>
 
     private void Update()
     {
-        Movement();
+        if (state == WorkerState.WALKING)
+        { 
+            Movement();
+            animator.SetBool("walk", true);
+        }
         Tile _tile = TileManager.instance.GetTile(transform.position);
         if (_tile != tiles[0])
         {
@@ -106,15 +110,19 @@ public class Worker : WorldObject, IPoolable<Worker>
         positions.Add(outide);
         positions.Add(inside);
         positions.Add(chair);
+        state = WorkerState.SITTING;
+        StopCoroutine("SitAtDesk");
         StartCoroutine("SitAtDesk");
         Debug.Log("moving to chair " + deskId);
 
     }
-    IEnumerable SitAtDesk()
+    IEnumerator SitAtDesk()
     {
+        
         Vector2 currentTarget = positions[0];
         while(true)
         {
+            Debug.Log("doing it");
             if (Vector2.Distance(transform.position,currentTarget)<0.1f)
             {
                 targetIndex++;
@@ -122,13 +130,30 @@ public class Worker : WorldObject, IPoolable<Worker>
                 {
                     finishedMovement = true;
                     targetIndex = 0;
+                    animator.SetBool("sit", true);
+                    animator.SetBool("walk", false);
+                   // state = WorkerState.WALKING;
                     yield break;
                 }
                 currentTarget = positions[targetIndex];
             }
+            transform.position = Vector2.MoveTowards(transform.position, currentTarget, speed * Time.deltaTime);
+            yield return null;
         }
-       // transform.position = Vector2.MoveTowards(transform.position,currentTarget,speed*Time.deltaTime);
-       // yield return null;
+      
+    }
+
+
+    void StateSwitch()
+    {
+        switch (state)
+        {
+            case WorkerState.WALKING:
+                {
+                    Movement();
+                    break;
+                }
+                   }
     }
 }
 
