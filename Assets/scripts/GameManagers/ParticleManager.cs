@@ -29,7 +29,7 @@ public class ParticleManager : MonoBehaviour
             DontDestroyOnLoad(gameObject);
             for(int i = 0; i < particleData.Length; ++i)
             {
-                particleDictionary.Add(particleData[i].particleName, new ObjectPool<ParticleEffect>(particleData[i].particlePrefab, 5));
+                particleDictionary.Add(particleData[i].particleName, new ObjectPool<ParticleEffect>(particleData[i].particlePrefab, 5,null));
             }
         }
     }

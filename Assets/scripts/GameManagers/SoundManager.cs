@@ -11,7 +11,7 @@ public class SoundManager : MonoBehaviour
     public AudioSource music;
     List<AudioSource> audioSrcs = new List<AudioSource>();
 
-    public AudioClip[] explosionSounds, hitSounds;
+    public List<AudioClip> moveSounds;
 
     void Awake()
     {
@@ -46,6 +46,8 @@ public class SoundManager : MonoBehaviour
         }
     }
 
+    AudioClip lastMoveSound;
+
     public void playSound(int type)//1 for explosions,0 for hit sounds.
     {
         int c = 0;
@@ -56,12 +58,15 @@ public class SoundManager : MonoBehaviour
                 switch (type)
                 {
                     case 0:
-                        audioSrcs[c].PlayOneShot(hitSounds[Random.Range(0, hitSounds.Length - 1)]);
+                        if (lastMoveSound)
+                            moveSounds.Remove(lastMoveSound);
+                        var playMe = moveSounds[Random.Range(0, moveSounds.Count - 1)];
+                        audioSrcs[c].PlayOneShot(playMe);
                         audioSrcs[c].volume = volumeMultiplayer * .4f;
-                        break;
-                    case 1:
-                        audioSrcs[c].PlayOneShot(explosionSounds[Random.Range(0, explosionSounds.Length - 1)]);
-                        audioSrcs[c].volume = volumeMultiplayer * .8f;
+                        if (lastMoveSound)
+                            moveSounds.Add(lastMoveSound);
+
+                        lastMoveSound = playMe;
                         break;
                 }
                 break;

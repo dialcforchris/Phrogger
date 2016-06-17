@@ -30,13 +30,13 @@ public class ObjectPool<T> where T : MonoBehaviour, IPoolable<T>
     protected T poolObject = null;
 
     //Constructor calls initialise function
-    public ObjectPool(T _poolObject, int _startSize)
+    public ObjectPool(T _poolObject, int _startSize,Transform t)
     {
-        InitialisePool(_poolObject, _startSize);
+        InitialisePool(_poolObject, _startSize,t);
     }
 
     //Sets up pool
-    private void InitialisePool(T _poolObject, int _startSize)
+    private void InitialisePool(T _poolObject, int _startSize,Transform t)
     {
         poolObject = _poolObject;
         for (int i = 0; i < _startSize; ++i)
@@ -45,6 +45,7 @@ public class ObjectPool<T> where T : MonoBehaviour, IPoolable<T>
             _obj.poolData = new PoolData<T>();
             _obj.gameObject.SetActive(false);
             pooledObjects.Add(_obj);
+            _obj.transform.parent = t;
         }
     }
 
