@@ -113,7 +113,7 @@ public class Worker : WorldObject, IPoolable<Worker>
         state = WorkerState.SITTING;
         StopCoroutine("SitAtDesk");
         StartCoroutine("SitAtDesk");
-        Debug.Log("moving to chair " + deskId);
+      //  Debug.Log("moving to chair " + deskId);
 
     }
     IEnumerator SitAtDesk()
@@ -122,7 +122,7 @@ public class Worker : WorldObject, IPoolable<Worker>
         Vector2 currentTarget = positions[0];
         while(true)
         {
-            Debug.Log("doing it");
+          //  Debug.Log("doing it");
             if (Vector2.Distance(transform.position,currentTarget)<0.1f)
             {
                 targetIndex++;
