@@ -27,7 +27,7 @@ public class Worker : WorldObject, IPoolable<Worker>
     //move to chair logic
     List<Vector2> positions = new List<Vector2>();
     int targetIndex = 0;
-    bool finishedMovement= false;
+    //bool finishedMovement= false;
 
     public int cubicleId
     {
@@ -128,10 +128,11 @@ public class Worker : WorldObject, IPoolable<Worker>
                 targetIndex++;
                 if (targetIndex>=positions.Count)
                 {
-                    finishedMovement = true;
+                  //  finishedMovement = true;
                     targetIndex = 0;
                     animator.SetBool("sit", true);
-                    animator.SetBool("walk", false);
+                    transform.rotation = Quaternion.Euler(transform.up);
+                  //  animator.SetBool("walk", false);
                    // state = WorkerState.WALKING;
                     yield break;
                 }
