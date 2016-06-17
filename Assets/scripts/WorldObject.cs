@@ -19,10 +19,6 @@ public class WorldObject : MonoBehaviour
 
     public virtual void AddToWorld()
     {
-        if (name == "Outer4")
-        {
-            int b = 2;
-        }
         Tile _tile = TileManager.instance.GetTile(transform.position);
         _tile.Place(this);
         tiles[0] = _tile;
