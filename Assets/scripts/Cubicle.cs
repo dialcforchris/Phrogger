@@ -112,15 +112,10 @@ public class Cubicle : WorldObject
                             pickChair = i;
                             _obj.GetComponent<Worker>().MoveToChair(opening.position, empty.position, chairs[pickChair].position, chairPivots[pickChair].position);
                             filledChairs[i] = true;
-
                         }
                         break;
                     }
-
                 }
-                //Get their desk id, if it matches they enter
-                //Move to empty space
-                //Move to free chair
             }
         }
         else if (_obj.tag == "Player")

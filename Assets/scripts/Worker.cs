@@ -16,6 +16,7 @@ public class Worker : WorldObject, IPoolable<Worker>
         HELP,
     }
 
+   
     private bool isSetup = false;
     [SerializeField] private SpriteRenderer hairSpriteRenderer = null;
     [SerializeField] private Animator animator = null;
@@ -28,7 +29,11 @@ public class Worker : WorldObject, IPoolable<Worker>
     List<Vector2> positions = new List<Vector2>();
     int targetIndex = 0;
     Vector2 chairFacing;
-    //bool finishedMovement= false;
+    float sitCool=0;
+    float maxSitCool = 2;
+    // help variables
+    public GameObject helpMe;
+
 
     public int cubicleId
     {
@@ -38,7 +43,6 @@ public class Worker : WorldObject, IPoolable<Worker>
     protected override void Start()
     {
         //Override to prevent base start getting called
-        
     }
 
     public bool GetIsSetup()
@@ -66,11 +70,12 @@ public class Worker : WorldObject, IPoolable<Worker>
 
     private void Update()
     {
-        if (state == WorkerState.WALKING)
-        { 
-            Movement();
-            animator.SetBool("walk", true);
-        }
+        //if (state == WorkerState.WALKING)
+        //{ 
+        //    Movement();
+        //    animator.SetBool("walk", true);
+        //}
+        StateSwitch();
         Tile _tile = TileManager.instance.GetTile(transform.position);
         if (_tile != tiles[0])
         {
@@ -116,31 +121,30 @@ public class Worker : WorldObject, IPoolable<Worker>
         state = WorkerState.SITTING;
         StopCoroutine("SitAtDesk");
         StartCoroutine("SitAtDesk");
-      //  Debug.Log("moving to chair " + deskId);
-
     }
+
     IEnumerator SitAtDesk()
     {
-        
         Vector2 currentTarget = positions[0];
         while(true)
         {
-          //  Debug.Log("doing it");
             if (Vector2.Distance(transform.position,currentTarget)<0.1f)
             {
                 targetIndex++;
                 if (targetIndex>=positions.Count)
                 {
                     targetIndex = 0;
-                    animator.SetBool("sit", true);
+                    if (state == WorkerState.SITTING)
+                    {
+                        animator.SetTrigger("sit");
+                        SatAtDesk();
+                    }
                     yield break;
                 }
                 currentTarget = positions[targetIndex];
             }
             transform.position = Vector2.MoveTowards(transform.position, currentTarget, speed * Time.deltaTime);
             Vector2 pos = transform.position;
-           
-   
             float lookAngle = Mathf.Atan2((transform.position.y - currentTarget.y), (transform.position.x - currentTarget.x)) * Mathf.Rad2Deg;
             Quaternion newRot = new Quaternion();
             newRot.eulerAngles = new Vector3(0, 0, lookAngle + 90);
@@ -148,18 +152,83 @@ public class Worker : WorldObject, IPoolable<Worker>
             yield return null;
         }
     }
-
-
+    IEnumerator WalkFromDesk()
+    {
+        Vector2 currentTarget = positions[positions.Count-1];
+        targetIndex = positions.Count-1;
+        while (true)
+        {
+            if (Vector2.Distance(transform.position, currentTarget) < 0.1f)
+            {
+                targetIndex--;
+                if (targetIndex <= 0)
+                {
+                    targetIndex = 0;
+                    state = WorkerState.WALKING;
+                    yield break;
+                }
+                currentTarget = positions[targetIndex];
+            }
+            transform.position = Vector2.MoveTowards(transform.position, currentTarget, speed * Time.deltaTime);
+            Vector2 pos = transform.position;
+            float lookAngle = Mathf.Atan2((transform.position.y - currentTarget.y), (transform.position.x - currentTarget.x)) * Mathf.Rad2Deg;
+            Quaternion newRot = new Quaternion();
+            newRot.eulerAngles = new Vector3(0, 0, lookAngle + 90);
+            transform.rotation = newRot;
+            yield return null;
+        }
+    }
+    void SatAtDesk()
+    {
+        if (Random.value>0.3f)
+        {
+            state = WorkerState.HELP;
+        }
+       
+    }
     void StateSwitch()
     {
         switch (state)
         {
             case WorkerState.WALKING:
                 {
+                    animator.SetTrigger("walk");
                     Movement();
                     break;
                 }
-                   }
+            case WorkerState.HELP:
+                {
+                   if (!helpMe.GetComponent<SpriteRenderer>().enabled)
+                   {
+                       helpMe.GetComponent<SpriteRenderer>().enabled = true;
+                      
+                    }
+                    break;
+                }
+            case WorkerState.STANDING:
+                {
+                    animator.SetTrigger("walk");
+                    break;
+                }
+            case WorkerState.SITTING:
+                {
+                    SitCooldown();
+                    break;
+                }
+        }
+    }
+    void SitCooldown()
+    {
+        if (sitCool<maxSitCool)
+        {
+            sitCool += Time.deltaTime;
+        }
+        else
+        {
+            state = WorkerState.STANDING;
+            StopCoroutine("WalkFromDesk");
+            StartCoroutine("WalkFromDesk");
+        }
     }
 }
 
