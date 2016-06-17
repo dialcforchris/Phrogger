@@ -21,17 +21,20 @@ public class StatTracker : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (scoreToAdd > 0)
+        if (GameStateManager.instance.GetState() == GameStates.STATE_GAMEPLAY)
         {
-            scoreToAdd--;
-            score++;
-            ScoreText.text = ""+score;
-        }
-        else if (scoreToAdd < 0)
-        {
-            scoreToAdd++;
-            score--;
-            ScoreText.text = "" + score;
+            if (scoreToAdd > 0)
+            {
+                scoreToAdd--;
+                score++;
+                ScoreText.text = "" + score;
+            }
+            else if (scoreToAdd < 0)
+            {
+                scoreToAdd++;
+                score--;
+                ScoreText.text = "" + score;
+            }
         }
     }
 }

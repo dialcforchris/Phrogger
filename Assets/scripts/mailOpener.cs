@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEditor;
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
@@ -33,15 +34,15 @@ public class mailOpener : MonoBehaviour {
         Random.seed = System.DateTime.Now.Millisecond;
 
         //Purly for testing reasosns, remove at a later date
-        //enterView();
     }
 
     public void enterView()
     {
         //should probably change game manager state to email viewing
         if (GameStateManager.instance)
-        GameStateManager.instance.ChangeState(GameStates.STATE_EMAIL);
+            GameStateManager.instance.ChangeState(GameStates.STATE_EMAIL);
 
+        emailPos = 0;
         //Change cameras over
         mainCam.enabled = false;
         monitorCamera.enabled = true;
@@ -56,6 +57,17 @@ public class mailOpener : MonoBehaviour {
         //Remove this email from the list so we can't get it twice
         messages.Remove(currentMail);
         emailContent.sprite = currentMail.image;
+        StartCoroutine(zoomInOut(7.5f));
+    }
+
+    IEnumerator zoomInOut(float newSize)
+    {
+        yield return new WaitForSeconds(1);
+        while (Mathf.Abs(monitorCamera.orthographicSize - newSize) > 0.1f)
+        {
+            monitorCamera.orthographicSize= Mathf.Lerp(monitorCamera.orthographicSize, newSize, Time.deltaTime);
+            yield return new WaitForEndOfFrame();
+        }
     }
 
     public void exitView()
@@ -124,6 +136,7 @@ public class mailOpener : MonoBehaviour {
                         //+ points
                         StatTracker.instance.scoreToAdd += 100;
                         StatTracker.instance.junkEmailsCorrect++;
+                        StartCoroutine(zoomInOut(11));
 
                         Invoke("exitView", 4);
                     }
@@ -134,6 +147,7 @@ public class mailOpener : MonoBehaviour {
                         //oooooo
                         StatTracker.instance.scoreToAdd -= 100;
                         StatTracker.instance.safeEmailsWrong++;
+                        StartCoroutine(zoomInOut(11));
 
                         Invoke("exitView", 4);
                     }
@@ -151,6 +165,7 @@ public class mailOpener : MonoBehaviour {
                         //- points
                         StatTracker.instance.scoreToAdd -= 100;
                         StatTracker.instance.junkEmailsWrong++;
+                        StartCoroutine(zoomInOut(11));
 
                         Invoke("exitView", 2.5f);
                     }
@@ -161,10 +176,28 @@ public class mailOpener : MonoBehaviour {
                         //+ points
                         StatTracker.instance.scoreToAdd += 100;
                         StatTracker.instance.safeEmailsCorrect++;
+                        StartCoroutine(zoomInOut(11));
 
                         Invoke("exitView", 2.5f);
                     }
                 }
+            }
+        }
+    }
+}
+
+[CustomEditor(typeof(mailOpener))]
+public class ObjectBuilderEditor : Editor
+{
+    public override void OnInspectorGUI()
+    {
+        DrawDefaultInspector();
+        if (EditorApplication.isPlaying)
+        {
+            //mailOpener myScript = (mailOpener)target;
+            if (GUILayout.Button("Enter Monitor View"))
+            {
+                mailOpener.instance.enterView();
             }
         }
     }
