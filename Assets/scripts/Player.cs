@@ -44,17 +44,25 @@ public class Player : WorldObject
     // Update is called once per frame
     void Update()
     {
-        if (state == PlayerState.ACTIVE)
+        if (GameStateManager.instance.GetState() == GameStates.STATE_GAMEPLAY)
         {
-            ConvertToPos();
-            Movement();
-            MoveCooldown();
+            if (state == PlayerState.ACTIVE)
+            {
+                ConvertToPos();
+                Movement();
+                MoveCooldown();
+            }
+            DeathCooler();
         }
-        DeathCooler();
     }
 
     void Movement()
     {
+        //anim.SetBool("PlayerWalk", ((Input.GetAxis("Vertical") != 0 || Input.GetAxis("Horizontal") != 0) && !MoveCooldown()) ? true : false);
+
+        if ((Input.GetAxis("Vertical") != 0 || Input.GetAxis("Horizontal") != 0) && !MoveCooldown())
+            anim.Play("PlayerWalk");
+
         float moveX = 0;
         float moveY = 0;
 
@@ -112,9 +120,6 @@ public class Player : WorldObject
         {
             lastPos.y = 0;
         }
-
-        anim.SetBool("PlayerWalk", ((Input.GetAxis("Vertical") != 0 || Input.GetAxis("Horizontal") != 0) && !MoveCooldown()) ? true : false);
-
     }
 
     bool MoveCooldown()

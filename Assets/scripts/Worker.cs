@@ -70,18 +70,21 @@ public class Worker : WorldObject, IPoolable<Worker>
 
     private void Update()
     {
-        //if (state == WorkerState.WALKING)
-        //{ 
-        //    Movement();
-        //    animator.SetBool("walk", true);
-        //}
-        StateSwitch();
-        Tile _tile = TileManager.instance.GetTile(transform.position);
-        if (_tile != tiles[0])
+        if (GameStateManager.instance.GetState() == GameStates.STATE_GAMEPLAY)
         {
-            RemoveFromWorld();
-            AddToWorld();
-            _tile.Interaction(this);
+            //if (state == WorkerState.WALKING)
+            //{ 
+            //    Movement();
+            //    animator.SetBool("walk", true);
+            //}
+            StateSwitch();
+            Tile _tile = TileManager.instance.GetTile(transform.position);
+            if (_tile != tiles[0])
+            {
+                RemoveFromWorld();
+                AddToWorld();
+                _tile.Interaction(this);
+            }
         }
     }
     void Movement()
