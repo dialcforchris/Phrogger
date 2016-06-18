@@ -1,14 +1,13 @@
 fileFormatVersion: 2
-guid: ef3fe1dfc0988324cabb65ce0dddb9de
-timeCreated: 1466266866
+guid: 84c240149af676b49b28ad820d179b1f
+timeCreated: 1466266506
 licenseType: Pro
 TextureImporter:
-  fileIDToRecycleName:
-    21300000: water cooler
+  fileIDToRecycleName: {}
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
-    enableMipMap: 1
+    enableMipMap: 0
     linearTexture: 0
     correctGamma: 0
     fadeOut: 0
@@ -39,7 +38,7 @@ TextureImporter:
   rGBM: 0
   compressionQuality: 50
   allowsAlphaSplitting: 0
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -50,18 +49,7 @@ TextureImporter:
   textureType: 8
   buildTargetSettings: []
   spriteSheet:
-    sprites:
-    - name: water cooler
-      rect:
-        serializedVersion: 2
-        x: 17
-        y: 35
-        width: 30
-        height: 25
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
+    sprites: []
     outline: []
   spritePackingTag: 
   userData: 

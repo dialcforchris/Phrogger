@@ -10,11 +10,14 @@ public enum GameStates
 
 public class GameStateManager : MonoBehaviour
 {
+    //public bool pausePressed;
+    public GameObject PauseMenu;
     private static GameStateManager singleton = null;
     public static GameStateManager instance { get { return singleton; } }
 
     private GameState[] states = new GameState[(int)GameStates.GAMESTATES_COUNT];
     private GameStates currentState = GameStates.STATE_GAMEPLAY;
+    public GameStates previousState;
 
     private void Awake()
     {
@@ -39,6 +42,7 @@ public class GameStateManager : MonoBehaviour
 
 	public void ChangeState(GameStates _state)
     {
+        previousState = currentState;
         states[(int)currentState].OnStateDeactivate();
         currentState = _state;
         states[(int)currentState].OnStateActivate();

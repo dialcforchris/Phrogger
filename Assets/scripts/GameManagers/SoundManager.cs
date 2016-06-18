@@ -11,7 +11,7 @@ public class SoundManager : MonoBehaviour
     public AudioSource music;
     List<AudioSource> audioSrcs = new List<AudioSource>();
 
-    public List<AudioClip> moveSounds;
+    public List<AudioClip> moveSounds,deskSounds;
 
     void Awake()
     {
@@ -48,7 +48,7 @@ public class SoundManager : MonoBehaviour
 
     AudioClip lastMoveSound;
 
-    public void playSound(int type)//1 for explosions,0 for hit sounds.
+    public void playSound(int type)//0 for move sounds, 1 for desk sounds
     {
         int c = 0;
         while (c < audioSrcs.Count)
@@ -67,6 +67,10 @@ public class SoundManager : MonoBehaviour
                             moveSounds.Add(lastMoveSound);
 
                         lastMoveSound = playMe;
+                        break;
+                    case 1:
+                        audioSrcs[c].PlayOneShot(deskSounds[Random.Range(0, deskSounds.Count - 1)]);
+                        audioSrcs[c].volume = volumeMultiplayer * 1f;
                         break;
                 }
                 break;

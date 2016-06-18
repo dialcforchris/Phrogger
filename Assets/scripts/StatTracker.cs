@@ -9,13 +9,17 @@ public class StatTracker : MonoBehaviour
     public int junkEmailsCorrect, safeEmailsCorrect, safeEmailsWrong, junkEmailsWrong;
     int score;
     public int scoreToAdd;
-    public Text ScoreText;
+    public Text ScoreText,LivesText;
 
     public float bossAngerLevel;
 
     void Awake()
     {
         instance = this;
+    }
+    public void changeLifeCount(int i)
+    {
+        LivesText.text = "x" + i;
     }
 
     // Update is called once per frame
