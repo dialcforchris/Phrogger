@@ -154,7 +154,7 @@ public class Player : WorldObject
         strikes -= 1;
         StatTracker.instance.changeLifeCount(strikes);
 
-        if (strikes < 1) //If the player has run out of lives
+        if (strikes ==0) //If the player has run out of lives
         {
             //Game over
             GameStateManager.instance.ChangeState(GameStates.STATE_GAMEOVER);

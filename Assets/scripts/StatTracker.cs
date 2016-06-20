@@ -6,13 +6,13 @@ public class StatTracker : MonoBehaviour
 {
     public static StatTracker instance;
 
-    public int junkEmailsCorrect, safeEmailsCorrect, safeEmailsWrong, junkEmailsWrong,numOfDaysCompleted;
+    public int junkEmailsCorrect, safeEmailsCorrect, safeEmailsWrong, junkEmailsWrong,numOfDaysCompleted,messyDesks;
     int score;
     public int scoreToAdd;
     public Text ScoreText, LivesText;
     [Header("Game Over UI")]
     public GameObject GameOverUI;
-    public Text causeOfDeath,daysCompleted, daysCompletedValue, emailsFiled, emailsFiledValue, emailsHandled, emailsHandledValue, finalScore, finalScoreValue;
+    public Text causeOfDeath,daysCompleted, daysCompletedValue, emailsFiled, emailsFiledValue, emailsHandled, emailsHandledValue, professionalism, professionalismValue, finalScore, finalScoreValue;
 
     [Header("")]
     public float bossAngerLevel;
@@ -53,41 +53,63 @@ public class StatTracker : MonoBehaviour
         float total = junkEmailsCorrect + junkEmailsWrong + safeEmailsCorrect + safeEmailsWrong;
         float correct = junkEmailsCorrect + safeEmailsCorrect;
 
-
+        //.25f pitch for bad
+        //normal for good
         yield return new WaitForSeconds(1.5f);
         GameOverUI.SetActive(true);
-        SoundManager.instance.playSound(0);
+        SoundManager.instance.playSound(0,.25f);
         yield return new WaitForSeconds(1.5f);
         causeOfDeath.enabled = true;
-        SoundManager.instance.playSound(0);
 
         yield return new WaitForSeconds(1f);
         daysCompleted.enabled = true;
-        SoundManager.instance.playSound(0);
         yield return new WaitForSeconds(1.5f);
-        daysCompletedValue.text = ""+numOfDaysCompleted;
+        daysCompletedValue.text = "" + numOfDaysCompleted;
         daysCompletedValue.enabled = true;
-        SoundManager.instance.playSound(0);
+        if (numOfDaysCompleted < 3)
+            SoundManager.instance.playSound(0, .25f);
+        else
+            SoundManager.instance.playSound(0, 0.95f);
 
         yield return new WaitForSeconds(1f);
         emailsFiled.enabled = true;
-        SoundManager.instance.playSound(0);
         yield return new WaitForSeconds(1.5f);
-        emailsFiledValue.text = (int)(correct / total* 100) + "%";
+        if (correct != 0)
+            emailsFiledValue.text = (int)(correct / total * 100) + "%";
+        else
+            emailsFiledValue.text = "0%";
         emailsFiledValue.enabled = true;
-        SoundManager.instance.playSound(0);
+        if ((correct / total * 100) < 51 || correct ==0)
+            SoundManager.instance.playSound(0, .25f);
+        else
+            SoundManager.instance.playSound(0, 0.95f);
 
         yield return new WaitForSeconds(1f);
         emailsHandled.enabled = true;
-        SoundManager.instance.playSound(0);
         yield return new WaitForSeconds(1.5f);
         emailsHandledValue.text = "" + total;
         emailsHandledValue.enabled = true;
-        SoundManager.instance.playSound(0);
+        if (total < 8)
+            SoundManager.instance.playSound(0, .25f);
+        else
+            SoundManager.instance.playSound(0, .95f);
+
+        yield return new WaitForSeconds(1f);
+        professionalism.enabled = true;
+        yield return new WaitForSeconds(1.5f);
+        if (messyDesks != 0)
+            professionalismValue.text = 100-(int)(messyDesks/28f*100) + "%";//NOT A MAGIC NUMBER HONEST, 28 is the current number of desks you can mess up
+        else
+            professionalismValue.text = "0%";
+        professionalismValue.enabled = true;
+        if (100 - (messyDesks / 28f * 100) < 50)
+            SoundManager.instance.playSound(0, .25f);
+        else
+            SoundManager.instance.playSound(0, .95f);
+
 
         yield return new WaitForSeconds(1f);
         finalScore.enabled = true;
-        SoundManager.instance.playSound(0);
         yield return new WaitForSeconds(1.5f);
         finalScoreValue.enabled = true;
 
@@ -115,6 +137,5 @@ public class StatTracker : MonoBehaviour
             }
 
         }
-        SoundManager.instance.playSound(0);
     }
 }

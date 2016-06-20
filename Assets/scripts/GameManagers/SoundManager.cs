@@ -59,8 +59,9 @@ public class SoundManager : MonoBehaviour
         {
             if (!audioSrcs[c].isPlaying)
             {
+                audioSrcs[c].pitch = 1;
                 audioSrcs[c].PlayOneShot(sound);
-                audioSrcs[c].volume = volumeMultiplayer;// * .6f;
+                audioSrcs[c].volume = volumeMultiplayer;
                 break;
             }
             else
@@ -72,7 +73,7 @@ public class SoundManager : MonoBehaviour
 
     AudioClip lastMoveSound;
 
-    public void playSound(int type)//0 for move sounds, 1 for desk sounds
+    public void playSound(int type,float pitch=1)//0 for move sounds, 1 for desk sounds
     {
         int c = 0;
         while (c < audioSrcs.Count)
@@ -82,17 +83,28 @@ public class SoundManager : MonoBehaviour
                 switch (type)
                 {
                     case 0:
-                        if (lastMoveSound)
-                            moveSounds.Remove(lastMoveSound);
-                        var playMe = moveSounds[Random.Range(0, moveSounds.Count - 1)];
-                        audioSrcs[c].PlayOneShot(playMe);
-                        audioSrcs[c].volume = volumeMultiplayer * .4f;
-                        if (lastMoveSound)
-                            moveSounds.Add(lastMoveSound);
+                        if (pitch == 1)
+                        {
+                            if (lastMoveSound)
+                                moveSounds.Remove(lastMoveSound);
+                            var playMe = moveSounds[Random.Range(0, moveSounds.Count - 1)];
+                            audioSrcs[c].pitch = pitch;
+                            audioSrcs[c].PlayOneShot(playMe);
+                            audioSrcs[c].volume = volumeMultiplayer * .4f;
+                            if (lastMoveSound)
+                                moveSounds.Add(lastMoveSound);
 
-                        lastMoveSound = playMe;
+                            lastMoveSound = playMe;
+                        }
+                        else
+                        {
+                            audioSrcs[c].pitch = pitch;
+                            audioSrcs[c].PlayOneShot(moveSounds[moveSounds.Count - 1]);
+                            audioSrcs[c].volume = volumeMultiplayer * .4f;
+                        }
                         break;
                     case 1:
+                        audioSrcs[c].pitch = pitch;
                         audioSrcs[c].PlayOneShot(deskSounds[Random.Range(0, deskSounds.Count - 1)]);
                         audioSrcs[c].volume = volumeMultiplayer * 1f;
                         break;
