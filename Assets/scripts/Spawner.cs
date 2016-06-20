@@ -23,12 +23,15 @@ public class Spawner : WorldObject
 
 	private void Update ()
     {
-        if (isActive)
+        if (GameStateManager.instance.GetState() == GameStates.STATE_GAMEPLAY)
         {
-            cooldown = cooldown + Time.deltaTime < spawnCooldown ? cooldown + Time.deltaTime : spawnCooldown;
-            if (cooldown == spawnCooldown)
+            if (isActive)
             {
-                Spawn();
+                cooldown = cooldown + Time.deltaTime < spawnCooldown ? cooldown + Time.deltaTime : spawnCooldown;
+                if (cooldown == spawnCooldown)
+                {
+                    Spawn();
+                }
             }
         }
 	}

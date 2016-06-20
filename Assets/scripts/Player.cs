@@ -12,6 +12,7 @@ public class Player : WorldObject
     private int score = 0;
     private float hori;
     private float verti;
+    public ParticleSystem bloodSplatter;
 
     [SerializeField] private Animator anim = null;
     private PlayerState state = PlayerState.ACTIVE;
@@ -44,17 +45,23 @@ public class Player : WorldObject
     // Update is called once per frame
     void Update()
     {
-        if (state == PlayerState.ACTIVE)
+        if (GameStateManager.instance.GetState() == GameStates.STATE_GAMEPLAY)
         {
-            ConvertToPos();
-            Movement();
-            MoveCooldown();
+            if (state == PlayerState.ACTIVE)
+            {
+                ConvertToPos();
+                Movement();
+                MoveCooldown();
+            }
+            DeathCooler();
         }
-        DeathCooler();
     }
 
     void Movement()
     {
+        if ((Input.GetAxis("Vertical") != 0 || Input.GetAxis("Horizontal") != 0) && !MoveCooldown())
+            anim.Play("PlayerWalk");
+
         float moveX = 0;
         float moveY = 0;
 
@@ -112,9 +119,6 @@ public class Player : WorldObject
         {
             lastPos.y = 0;
         }
-
-        anim.SetBool("PlayerWalk", ((Input.GetAxis("Vertical") != 0 || Input.GetAxis("Horizontal") != 0) && !MoveCooldown()) ? true : false);
-
     }
 
     bool MoveCooldown()
@@ -144,10 +148,12 @@ public class Player : WorldObject
 
     public void Die()
     {
+        bloodSplatter.Play();
         state = PlayerState.DEAD;
         anim.SetBool("Dead", true);
         //Rather than this leave behind a corpse call remove from world, move position then add to world immediately
         strikes -= 1;
+        StatTracker.instance.changeLifeCount(strikes);
     }
 
     public override void Interaction(WorldObject _obj)

@@ -92,7 +92,6 @@ public class Cubicle : WorldObject
     //The behavior of an object when something tries to interact with it
     public override void Interaction(WorldObject _obj)
     {
-
         if (_obj.tag == "Worker")
         {
             if (_obj.GetTile(0) == tiles[(int)Positions.OPENING])
@@ -118,12 +117,13 @@ public class Cubicle : WorldObject
                 }
             }
         }
-        else if (_obj.tag == "Player")
+        else if (_obj.tag == "Player") //if the player attempts to interact with a tile...
         {
-            if (_obj.GetTile(0) == tiles[(int)Positions.TABLE])
+            if (_obj.GetTile(0) == tiles[(int)Positions.TABLE]) //Is the frog on a table?
             {
-                if (!isMessy)
+                if (!isMessy) //If we haven't already, knock things off the desk
                 {
+                    SoundManager.instance.playSound(1);
                     isMessy = true;
                     deskFodder.sprite = messyDesk[currentDesk];
                 }

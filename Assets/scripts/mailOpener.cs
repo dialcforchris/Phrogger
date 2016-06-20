@@ -17,6 +17,8 @@ public class mailOpener : MonoBehaviour {
     public Camera monitorCamera,mainCam;
     public SpriteRenderer mainCamTransition, monCamTransition;
     public Texture[] gradients;
+    public AudioClip[] keypressSounds;
+    public AudioSource computerSounds;
 
     public List<mail> messages; //All the possible emails the player might have to deal with
     mail currentMail;
@@ -48,6 +50,7 @@ public class mailOpener : MonoBehaviour {
 
     IEnumerator camTransition(bool InOut) //True for entering email mode, false for exiting it
     {
+        computerSounds.DOFade((InOut)?1:0, 2);
         Random.seed = System.DateTime.Now.Millisecond;
         mainCamTransition.material.SetTexture("_SliceGuide", gradients[Random.Range(0, gradients.Length - 1)]);
         monCamTransition.material.SetTexture("_SliceGuide", gradients[Random.Range(0, gradients.Length - 1)]);
@@ -80,6 +83,7 @@ public class mailOpener : MonoBehaviour {
 
             yield return new WaitForEndOfFrame();
         }
+
         if (InOut)
         {
             //Intro animation
@@ -92,8 +96,11 @@ public class mailOpener : MonoBehaviour {
             //Remove this email from the list so we can't get it twice
             messages.Remove(currentMail);
             emailContent.sprite = currentMail.image;
+            StopCoroutine("zoomInOut");
             StartCoroutine(zoomInOut(7.5f));
         }
+        else
+            GameStateManager.instance.ChangeState(GameStates.STATE_GAMEPLAY);
     }
 
     IEnumerator zoomInOut(float newSize)
@@ -101,15 +108,18 @@ public class mailOpener : MonoBehaviour {
         yield return new WaitForSeconds(1);
         while (Mathf.Abs(monitorCamera.orthographicSize - newSize) > 0.1f)
         {
-            monitorCamera.orthographicSize= Mathf.Lerp(monitorCamera.orthographicSize, newSize, Time.deltaTime);
+            monitorCamera.orthographicSize = Mathf.Lerp(monitorCamera.orthographicSize, newSize, Time.deltaTime);
+            if (GameStateManager.instance.GetState() == GameStates.STATE_GAMEPLAY)
+            {
+                monitorCamera.orthographicSize = 11;
+                break;
+            }
             yield return new WaitForEndOfFrame();
         }
     }
 
     public void exitView()
     {
-        GameStateManager.instance.ChangeState(GameStates.STATE_GAMEPLAY);
-
         //Change cameras over
         StartCoroutine(camTransition(false));
     }
@@ -125,6 +135,13 @@ public class mailOpener : MonoBehaviour {
                 monitorAnimator.Play("mail_left");
 
             emailPos += dir;
+
+            if (!soundPlaying)
+            {
+                SoundManager.instance.playSound(keypressSounds[Random.Range(0, keypressSounds.Length - 1)]);
+                soundPlaying = true;
+                Invoke("allowSounds", .5f);
+            }
         }
         else if (emailPos > 0) //Email currently sits at the right of the screen
         {
@@ -132,6 +149,12 @@ public class mailOpener : MonoBehaviour {
             {
                 monitorAnimator.Play("mail_right_reverse");
                 emailPos = 0;//Email is back in the middle now
+                if (!soundPlaying)
+                {
+                    SoundManager.instance.playSound(keypressSounds[Random.Range(0, keypressSounds.Length - 1)]);
+                    soundPlaying = true;
+                    Invoke("allowSounds", .5f);
+                }
             }
         }
         else //Email must be at the left hand side of the monitor
@@ -140,6 +163,12 @@ public class mailOpener : MonoBehaviour {
             {
                 monitorAnimator.Play("mail_left_reverse");
                 emailPos = 0;//Email is back in the middle now
+                if (!soundPlaying)
+                {
+                    SoundManager.instance.playSound(keypressSounds[Random.Range(0, keypressSounds.Length - 1)]);
+                    soundPlaying = true;
+                    Invoke("allowSounds", .5f);
+                }
             }
         }
     }
@@ -148,6 +177,13 @@ public class mailOpener : MonoBehaviour {
     {
         InputRelated();
     }
+
+    void allowSounds()
+    {
+        soundPlaying = false;
+    }
+
+    bool soundPlaying;
 
     void InputRelated()
     {
@@ -162,8 +198,14 @@ public class mailOpener : MonoBehaviour {
                 moveEmail(Input.GetAxis("Horizontal") > 0 ? 1 : -1);
             }
 
-            if (Input.GetAxis("Fire1") > 0)
+            if (Input.GetAxis("Fire1") > 0 && emailPos !=0)
             {
+                if (!soundPlaying)
+                {
+                    SoundManager.instance.playSound(keypressSounds[Random.Range(0, keypressSounds.Length - 1)]);
+                    soundPlaying = true;
+                    Invoke("allowSounds", .5f);
+                }
                 if (emailPos > 0) //If email is in the JUNK zone
                 {
                     //Do animation for email being destroyed
@@ -176,6 +218,7 @@ public class mailOpener : MonoBehaviour {
                         //+ points
                         StatTracker.instance.scoreToAdd += 100;
                         StatTracker.instance.junkEmailsCorrect++;
+                        StopCoroutine("zoomInOut");
                         StartCoroutine(zoomInOut(11));
 
                         Invoke("exitView", 4);
@@ -187,6 +230,7 @@ public class mailOpener : MonoBehaviour {
                         //oooooo
                         StatTracker.instance.scoreToAdd -= 100;
                         StatTracker.instance.safeEmailsWrong++;
+                        StopCoroutine("zoomInOut");
                         StartCoroutine(zoomInOut(11));
 
                         Invoke("exitView", 4);
@@ -205,6 +249,7 @@ public class mailOpener : MonoBehaviour {
                         //- points
                         StatTracker.instance.scoreToAdd -= 100;
                         StatTracker.instance.junkEmailsWrong++;
+                        StopCoroutine("zoomInOut");
                         StartCoroutine(zoomInOut(11));
 
                         Invoke("exitView", 2.5f);
@@ -216,6 +261,7 @@ public class mailOpener : MonoBehaviour {
                         //+ points
                         StatTracker.instance.scoreToAdd += 100;
                         StatTracker.instance.safeEmailsCorrect++;
+                        StopCoroutine("zoomInOut");
                         StartCoroutine(zoomInOut(11));
 
                         Invoke("exitView", 2.5f);
