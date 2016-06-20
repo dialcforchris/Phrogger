@@ -100,7 +100,7 @@ public class StatTracker : MonoBehaviour
         if (messyDesks != 0)
             professionalismValue.text = 100-(int)(messyDesks/28f*100) + "%";//NOT A MAGIC NUMBER HONEST, 28 is the current number of desks you can mess up
         else
-            professionalismValue.text = "0%";
+            professionalismValue.text = "100%";
         professionalismValue.enabled = true;
         if (100 - (messyDesks / 28f * 100) < 50)
             SoundManager.instance.playSound(0, .25f);

@@ -22,9 +22,20 @@ public class mailOpener : MonoBehaviour
     public AudioClip[] keypressSounds;
     public AudioSource computerSounds;
 
-    public List<mail> messages; //All the possible emails the player might have to deal with
-    mail currentMail;
+    public List<mailColection> messages; //All the possible emails the player might have to deal with
+
+    private mailColection selectedList;
+    private mail currentMail;
     
+    [System.Serializable]
+    public class mailColection
+    {
+        public string name;
+        public List<mail> messages;
+        public bool randomSelection;
+        public int index;
+    }
+
     //An email object, might need variables for score and such in the future
     [System.Serializable]
     public struct mail
@@ -48,7 +59,6 @@ public class mailOpener : MonoBehaviour
         //Change cameras over
         StartCoroutine(camTransition(true));
     }
-
     IEnumerator camTransition(bool InOut) //True for entering email mode, false for exiting it
     {
         computerSounds.DOFade((InOut) ? SoundManager.instance.volumeMultiplayer: 0, 2);
@@ -90,18 +100,31 @@ public class mailOpener : MonoBehaviour
             //Intro animation
             monitorAnimator.Play("mail_intro");
 
-            //Choose a random email to display
-            int chosen = Random.Range(0, messages.Count);
-            currentMail = messages[chosen];
+            //pick a random list
+            selectedList =  messages[Random.Range(0, messages.Count - 1)];
 
-            //Remove this email from the list so we can't get it twice
-            messages.Remove(currentMail);
+            if (selectedList.randomSelection)
+            {
+                //Pick a random message form the selected list
+                currentMail = selectedList.messages[Random.Range(0, selectedList.messages.Count - 1)];
+                //Remove this email from the list so we can't get it twice
+                selectedList.messages.Remove(currentMail);
+            }
+            else
+            {
+                currentMail = selectedList.messages[selectedList.index];
+                selectedList.index++;
+                if (selectedList.index > selectedList.messages.Count - 1)
+                    messages.Remove(selectedList);
+            }
             emailContent.sprite = currentMail.image;
+            
             StopCoroutine("zoomInOut");
             StartCoroutine(zoomInOut(7.5f));
         }
         else
             GameStateManager.instance.ChangeState(GameStates.STATE_GAMEPLAY);
+        
     }
 
     IEnumerator zoomInOut(float newSize)
