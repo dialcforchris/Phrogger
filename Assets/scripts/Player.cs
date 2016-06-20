@@ -8,7 +8,7 @@ public class Player : WorldObject
     float maxCool = 0.4f;
     private Vector2 lastPos = Vector2.zero;
     //private members
-    private int strikes = 3;
+    private int strikes = 1;
     private int score = 0;
     private float hori;
     private float verti;
@@ -36,8 +36,7 @@ public class Player : WorldObject
     {
         base.Awake();
     }
-
-    protected override void Start()
+        protected override void Start()
     {
         base.Start();
     }
@@ -81,7 +80,7 @@ public class Player : WorldObject
                         _tile.Interaction(this);
                     }
 
-                 //   SoundManager.instance.playSound(0);
+                    SoundManager.instance.playSound(0);
                     angle = Input.GetAxis("Horizontal") > 0 ? 270 : 90;
                     coolDown = 0;
                     lastPos.x = moveX;
@@ -103,7 +102,7 @@ public class Player : WorldObject
                         AddToWorld();
                         _tile.Interaction(this);
                     }
-                 //   SoundManager.instance.playSound(0);
+                    SoundManager.instance.playSound(0);
                     angle = Input.GetAxis("Vertical") > 0 ? 0 : 180;
                     coolDown = 0;
                     lastPos.y = moveY;
@@ -154,6 +153,12 @@ public class Player : WorldObject
         //Rather than this leave behind a corpse call remove from world, move position then add to world immediately
         strikes -= 1;
         StatTracker.instance.changeLifeCount(strikes);
+
+        if (strikes < 1) //If the player has run out of lives
+        {
+            //Game over
+            GameStateManager.instance.ChangeState(GameStates.STATE_GAMEOVER);
+        }
     }
 
     public override void Interaction(WorldObject _obj)

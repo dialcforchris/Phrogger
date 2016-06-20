@@ -72,7 +72,7 @@ public class Worker : WorldObject, IPoolable<Worker>
 
     private void Update()
     {
-        if (GameStateManager.instance.GetState() == GameStates.STATE_GAMEPLAY)
+        if (GameStateManager.instance.GetState() == GameStates.STATE_GAMEPLAY || GameStateManager.instance.GetState() == GameStates.STATE_GAMEOVER)
         {
             //if (state == WorkerState.WALKING)
             //{ 

@@ -20,3 +20,21 @@ public class EmailState : GameState
             GameStateManager.instance.ChangeState(GameStates.STATE_PAUSE);
     }
 }
+
+public class GameOverState : GameState
+{
+    public override void OnStateActivate()
+    {
+        SoundManager.instance.music.volume = 0;
+        StatTracker.instance.StartCoroutine(StatTracker.instance.GameOverUIReveal());
+    }
+
+    public override void OnStateDeactivate()
+    {
+
+    }
+
+    public override void Update()
+    {
+    }
+}

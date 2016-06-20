@@ -30,7 +30,6 @@ public class mailOpener : MonoBehaviour {
         public Sprite image;
         public bool isJunk;
     }
-
     void Awake()
     {
         instance = this;
@@ -50,7 +49,7 @@ public class mailOpener : MonoBehaviour {
 
     IEnumerator camTransition(bool InOut) //True for entering email mode, false for exiting it
     {
-        computerSounds.DOFade((InOut)?1:0, 2);
+        computerSounds.DOFade((InOut) ? SoundManager.instance.volumeMultiplayer: 0, 2);
         Random.seed = System.DateTime.Now.Millisecond;
         mainCamTransition.material.SetTexture("_SliceGuide", gradients[Random.Range(0, gradients.Length - 1)]);
         monCamTransition.material.SetTexture("_SliceGuide", gradients[Random.Range(0, gradients.Length - 1)]);
