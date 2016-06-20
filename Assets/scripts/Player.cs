@@ -74,7 +74,7 @@ public class Player : WorldObject
                         _tile.Interaction(this);
                     }
 
-                    SoundManager.instance.playSound(0);
+                 //   SoundManager.instance.playSound(0);
                     angle = Input.GetAxis("Horizontal") > 0 ? 270 : 90;
                     coolDown = 0;
                     lastPos.x = moveX;
@@ -96,7 +96,7 @@ public class Player : WorldObject
                         AddToWorld();
                         _tile.Interaction(this);
                     }
-                    SoundManager.instance.playSound(0);
+                 //   SoundManager.instance.playSound(0);
                     angle = Input.GetAxis("Vertical") > 0 ? 0 : 180;
                     coolDown = 0;
                     lastPos.y = moveY;

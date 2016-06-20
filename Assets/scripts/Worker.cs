@@ -205,7 +205,7 @@ public class Worker : WorldObject, IPoolable<Worker>
                    {
                        helpMe.SetActive(true);
                        helpMe.transform.rotation = Quaternion.Euler(Vector2.up);
-                           
+                       helpMe.transform.position = (new Vector2(helpMe.transform.position.x , helpMe.transform.position.y + (transform.localScale.y*0.7f)));
                       
                     }
                     break;
