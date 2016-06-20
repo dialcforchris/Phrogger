@@ -35,6 +35,7 @@ public class Worker : WorldObject, IPoolable<Worker>
     public bool goneToDesk = false;
     // help variables
     public GameObject helpMe;
+    public bool needHelp = false;
 
 
     public int cubicleId
@@ -80,6 +81,7 @@ public class Worker : WorldObject, IPoolable<Worker>
             //    animator.SetBool("walk", true);
             //}
             StateSwitch();
+            SetHelpBalloon();
             Tile _tile = TileManager.instance.GetTile(transform.position);
             if (_tile != tiles[0])
             {
@@ -195,7 +197,11 @@ public class Worker : WorldObject, IPoolable<Worker>
         {
        //     state = WorkerState.HELP;
         }
-       
+    }
+
+    void SetHelpBalloon()
+    {
+        helpMe.SetActive(needHelp);
     }
     void StateSwitch()
     {
@@ -214,7 +220,7 @@ public class Worker : WorldObject, IPoolable<Worker>
                 {
                    if (!helpMe.activeSelf)
                    {
-                       helpMe.SetActive(true);
+                       needHelp = true;
                        helpMe.transform.rotation = Quaternion.Euler(Vector2.up);
                        helpMe.transform.position = (new Vector2(helpMe.transform.position.x , helpMe.transform.position.y + (transform.localScale.y*0.7f)));
                       
@@ -229,7 +235,6 @@ public class Worker : WorldObject, IPoolable<Worker>
                 }
             case WorkerState.SITTING:
                 {
-
                     SitCooldown();
                     break;
                 }
@@ -243,7 +248,8 @@ public class Worker : WorldObject, IPoolable<Worker>
         }
         else
         {
-            if (Random.value > 0.5f)
+            
+            if (Random.value > 10f)
             {
                 state = WorkerState.STANDING;
                 StopCoroutine("WalkFromDesk");

@@ -101,7 +101,6 @@ public class Cubicle : WorldObject
                     int pickChair = 16;
                     for (int i = 0; i < filledChairs.Length; i++)
                     {
-
                         if (filledChairs[i])
                         {
                             continue;
@@ -140,11 +139,29 @@ public class Cubicle : WorldObject
 
     private void Phishing()
     {
-        //If player presses button to check email
-        //If there is someone in need of help
-        //Logic for if there is someone who needs help
+        for (int i=0;i<chairs.Length;i++)
+        {
+            if (filledChairs[i])
+            {
+                Tile _tile = TileManager.instance.GetTile(chairs[i].position);
+                WorldObject[] onTile = _tile.GetObjects();
+                foreach (WorldObject wo in onTile)
+                {
+                    if (wo.tag == "Worker")
+                    {
+                        if (((Worker)wo).needHelp)
+                        {
+                            mailOpener.instance.enterView();
+                            ((Worker)wo).needHelp = false;
+                            ((Worker)wo).helpMe.SetActive(false);
+                        }
+                    }
+                }
+                
+            }
+        }
     }
-
+    
     //Whether an object can move to the same position as another object
     public override bool CheckMovement(WorldObject _obj)
     {

@@ -13,6 +13,7 @@ public class Player : WorldObject
     private float hori;
     private float verti;
     public ParticleSystem bloodSplatter;
+    public FrogCorpse corpse;
 
     [SerializeField] private Animator anim = null;
     private PlayerState state = PlayerState.ACTIVE;
@@ -147,9 +148,14 @@ public class Player : WorldObject
 
     public void Die()
     {
-        bloodSplatter.Play();
+     //   bloodSplatter.Play();
         state = PlayerState.DEAD;
-        anim.SetBool("Dead", true);
+        FrogCorpse frogCorpse = (FrogCorpse)Instantiate(corpse, transform.position, transform.rotation);
+        frogCorpse.blood.transform.position = frogCorpse.transform.position;
+        
+        gameObject.GetComponent<SpriteRenderer>().enabled = false;
+        transform.position = new Vector2(-0.5f, -1.0f);
+        RemoveFromWorld();
         //Rather than this leave behind a corpse call remove from world, move position then add to world immediately
         strikes -= 1;
         StatTracker.instance.changeLifeCount(strikes);
@@ -163,7 +169,7 @@ public class Player : WorldObject
 
     public override void Interaction(WorldObject _obj)
     {
-        if (_obj.tag == "Worker")
+        if (_obj.tag == "Worker"&& state == PlayerState.ACTIVE)
         {
             Die();
         }
@@ -180,13 +186,23 @@ public class Player : WorldObject
             else
             {
                 anim.SetBool("Dead", false);
+                gameObject.GetComponent<SpriteRenderer>().enabled = true;
                 state = PlayerState.ACTIVE;
                 deathCool = 0;
                 transform.position = new Vector2(-0.5f, -1.0f);
+                AddToWorld();
                 angle = 0;
                 RemoveFromWorld();
                 AddToWorld();
             }
+        }
+    }
+    void HelpWorker()
+    {
+        if (Input.GetButtonDown("Fire1"))
+        {
+            Tile _tile = TileManager.instance.GetTile(transform.position);
+            _tile.Interaction(this);
         }
     }
 }

@@ -1,11 +1,13 @@
-﻿using UnityEngine;
+﻿
+using UnityEngine;
 using UnityEditor;
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 
-public class mailOpener : MonoBehaviour {
+public class mailOpener : MonoBehaviour 
+{
 
     public static mailOpener instance;
 
@@ -197,7 +199,7 @@ public class mailOpener : MonoBehaviour {
                 moveEmail(Input.GetAxis("Horizontal") > 0 ? 1 : -1);
             }
 
-            if (Input.GetAxis("Fire1") > 0 && emailPos !=0)
+            if (Input.GetButtonDown("Fire1") && emailPos !=0)
             {
                 if (!soundPlaying)
                 {
