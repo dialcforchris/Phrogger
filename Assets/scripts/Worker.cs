@@ -31,6 +31,8 @@ public class Worker : WorldObject, IPoolable<Worker>
     Vector2 chairFacing;
     float sitCool=0;
     float maxSitCool = 2;
+    private int chairId =0;
+    public bool goneToDesk = false;
     // help variables
     public GameObject helpMe;
 
@@ -90,6 +92,8 @@ public class Worker : WorldObject, IPoolable<Worker>
     void Movement()
     {
         transform.position += direction * Time.deltaTime * speed;
+     //   transform.rotation = Quaternion.Euler(direction);
+     
     }
     private void LateUpdate()
     {
@@ -139,6 +143,7 @@ public class Worker : WorldObject, IPoolable<Worker>
                     targetIndex = 0;
                     if (state == WorkerState.SITTING)
                     {
+                        goneToDesk = true;
                         animator.SetBool("sit",true);
                         SatAtDesk();
                     }
@@ -157,17 +162,20 @@ public class Worker : WorldObject, IPoolable<Worker>
     }
     IEnumerator WalkFromDesk()
     {
-        Vector2 currentTarget = positions[positions.Count-1];
-        targetIndex = positions.Count-1;
+        Vector2 currentTarget = positions[0];
         while (true)
         {
             if (Vector2.Distance(transform.position, currentTarget) < 0.1f)
             {
-                targetIndex--;
-                if (targetIndex <0)
+                targetIndex++;
+                if (targetIndex ==positions.Count)
                 {
-                    targetIndex = 0;
+                    targetIndex = 0 ;
                     state = WorkerState.WALKING;
+                    if (goneToDesk)
+                    {
+                        goneToDesk = false; 
+                    }
                     yield break;
                 }
                 currentTarget = positions[targetIndex];
@@ -183,9 +191,9 @@ public class Worker : WorldObject, IPoolable<Worker>
     }
     void SatAtDesk()
     {
-        if (Random.value>0.5f)
+        if (Random.value>1.5f)
         {
-            state = WorkerState.HELP;
+       //     state = WorkerState.HELP;
         }
        
     }
@@ -221,7 +229,8 @@ public class Worker : WorldObject, IPoolable<Worker>
                 }
             case WorkerState.SITTING:
                 {
-                   // SitCooldown();
+
+                    SitCooldown();
                     break;
                 }
         }
@@ -234,9 +243,18 @@ public class Worker : WorldObject, IPoolable<Worker>
         }
         else
         {
-            state = WorkerState.STANDING;
-            StopCoroutine("WalkFromDesk");
-            StartCoroutine("WalkFromDesk");
+            if (Random.value > 0.5f)
+            {
+                state = WorkerState.STANDING;
+                StopCoroutine("WalkFromDesk");
+                positions.Reverse();
+                targetIndex = 0;
+                StartCoroutine("WalkFromDesk");
+            }
+            else
+            {
+                state = WorkerState.HELP;
+            }
         }
     }
 }

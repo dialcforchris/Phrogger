@@ -96,7 +96,7 @@ public class Cubicle : WorldObject
         {
             if (_obj.GetTile(0) == tiles[(int)Positions.OPENING])
             {
-                if (_obj.GetComponent<Worker>().cubicleId == deskId)
+                if (_obj.GetComponent<Worker>().cubicleId == deskId && !_obj.GetComponent<Worker>().goneToDesk)
                 {
                     int pickChair = 16;
                     for (int i = 0; i < filledChairs.Length; i++)
