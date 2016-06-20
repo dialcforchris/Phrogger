@@ -94,8 +94,6 @@ public class Worker : WorldObject, IPoolable<Worker>
     void Movement()
     {
         transform.position += direction * Time.deltaTime * speed;
-     //   transform.rotation = Quaternion.Euler(direction);
-     
     }
     private void LateUpdate()
     {
@@ -202,6 +200,10 @@ public class Worker : WorldObject, IPoolable<Worker>
     void SetHelpBalloon()
     {
         helpMe.SetActive(needHelp);
+        if (!needHelp&&state == WorkerState.HELP)
+            {
+                state = WorkerState.SITTING;
+            }
     }
     void StateSwitch()
     {
@@ -211,21 +213,15 @@ public class Worker : WorldObject, IPoolable<Worker>
                 {
                     animator.SetBool("walk",true);
                     animator.SetBool("sit", false);
-                    
-
                     Movement();
                     break;
                 }
             case WorkerState.HELP:
                 {
-                   if (!helpMe.activeSelf)
-                   {
-                       needHelp = true;
-                       helpMe.transform.rotation = Quaternion.Euler(Vector2.up);
-                       helpMe.transform.position = (new Vector2(helpMe.transform.position.x , helpMe.transform.position.y + (transform.localScale.y*0.7f)));
-                      
-                    }
-                    break;
+                  helpMe.transform.rotation = Quaternion.Euler(Vector2.up);
+                  helpMe.transform.position = (new Vector2(helpMe.transform.position.x,
+                      transform.position.y + (transform.localScale.y*0.7f)));
+                  break;
                 }
             case WorkerState.STANDING:
                 {
@@ -248,8 +244,7 @@ public class Worker : WorldObject, IPoolable<Worker>
         }
         else
         {
-            
-            if (Random.value > 10f)
+            if (Random.value <0.8f)
             {
                 state = WorkerState.STANDING;
                 StopCoroutine("WalkFromDesk");
@@ -260,8 +255,16 @@ public class Worker : WorldObject, IPoolable<Worker>
             else
             {
                 state = WorkerState.HELP;
+                sitCool = 0;
+                needHelp = true;
             }
         }
+    }
+    public void NoHelp()
+    {
+        needHelp = false;
+        helpMe.SetActive(false);
+        state = WorkerState.SITTING;
     }
 }
 

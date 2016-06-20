@@ -152,12 +152,10 @@ public class Cubicle : WorldObject
                         if (((Worker)wo).needHelp)
                         {
                             mailOpener.instance.enterView();
-                            ((Worker)wo).needHelp = false;
-                            ((Worker)wo).helpMe.SetActive(false);
+                           ((Worker)wo).NoHelp();
                         }
                     }
                 }
-                
             }
         }
     }
