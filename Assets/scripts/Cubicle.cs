@@ -28,7 +28,7 @@ public class Cubicle : WorldObject
     private Transform[] chairs = null;
     [SerializeField]
     private Transform[] chairPivots = null;
-    public bool[] filledChairs;
+    //public bool[] filledChairs;
 
     private int deskId;
     public int cubicleId
@@ -45,11 +45,11 @@ public class Cubicle : WorldObject
     // Use this for initialization
     protected override void Awake()
     {
-        filledChairs = new bool[chairs.Length];
-        for (int i = 0; i < filledChairs.Length; i++)
-        {
-            filledChairs[i] = false;
-        }
+        //filledChairs = new bool[chairs.Length];
+        //for (int i = 0; i < filledChairs.Length; i++)
+        //{
+        //    filledChairs[i] = false;
+        //}
 
         tiles = new Tile[3 + chairs.Length];
         currentDesk = Random.Range(0, tidyDesk.Length);
@@ -102,7 +102,7 @@ public class Cubicle : WorldObject
 
     public void AssignWorkerImmediately(Worker _worker)
     {
-        filledChairs[_worker.chairId] = true;
+        //filledChairs[_worker.chairId] = true;
         _worker.transform.position = chairPivots[_worker.chairId].position;
 
         float lookAngle = Mathf.Atan2((chairs[_worker.chairId].position.y - chairPivots[_worker.chairId].position.y), 
@@ -121,19 +121,8 @@ public class Cubicle : WorldObject
             {
                 if (((Worker)_obj).cubicleId == deskId && !((Worker)_obj).hasEnteredCubicle)
                 {
-                    for (int i = 0; i < filledChairs.Length; i++)
-                    {
-                        if (filledChairs[i])
-                        {
-                            continue;
-                        }
-                        else
-                        {
-                            ((Worker)_obj).MoveToChair();
-                            filledChairs[i] = true;
-                        }
-                        break;
-                    }
+                    ((Worker)_obj).MoveToChair();
+                    //filledChairs[((Worker)_obj).chairId] = true; 
                 }
             }
         }
@@ -162,8 +151,8 @@ public class Cubicle : WorldObject
     {
         for (int i=0;i<chairs.Length;i++)
         {
-            if (filledChairs[i])
-            {
+            //if (filledChairs[i])
+            //{
                 Tile _tile = TileManager.instance.GetTile(chairs[i].position);
                 WorldObject[] onTile = _tile.GetObjects();
                 foreach (WorldObject wo in onTile)
@@ -178,7 +167,7 @@ public class Cubicle : WorldObject
                         }
                     }
                 }
-            }
+            //}
         }
     }
     
