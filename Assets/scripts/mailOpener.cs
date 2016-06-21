@@ -102,12 +102,10 @@ public class mailOpener : MonoBehaviour
 
             //pick a random list
             selectedList =  messages[Random.Range(0, messages.Count - 1)];
-
-<<<<<<< HEAD
+            
             //Remove this email from the list so we can't get it twice
-            messages.Remove(currentMail);
+        //    messages.Remove(currentMail);
             messages.TrimExcess();
-=======
             if (selectedList.randomSelection)
             {
                 //Pick a random message form the selected list
@@ -122,7 +120,6 @@ public class mailOpener : MonoBehaviour
                 if (selectedList.index > selectedList.messages.Count - 1)
                     messages.Remove(selectedList);
             }
->>>>>>> origin/master
             emailContent.sprite = currentMail.image;
             
             StopCoroutine("zoomInOut");
