@@ -79,6 +79,10 @@ public class Player : WorldObject
                         RemoveFromWorld();
                         AddToWorld();
                         _tile.Interaction(this);
+                        if(Boss.instance.isActiveAndEnabled)
+                        {
+                            Boss.instance.ChasePlayer(_tile);
+                        }
                     }
 
                     SoundManager.instance.playSound(0);
@@ -102,6 +106,10 @@ public class Player : WorldObject
                         RemoveFromWorld();
                         AddToWorld();
                         _tile.Interaction(this);
+                        if (Boss.instance.isActiveAndEnabled)
+                        {
+                            Boss.instance.ChasePlayer(_tile);
+                        }
                     }
                     SoundManager.instance.playSound(0);
                     angle = Input.GetAxis("Vertical") > 0 ? 0 : 180;
@@ -153,7 +161,7 @@ public class Player : WorldObject
         FrogCorpse frogCorpse = (FrogCorpse)Instantiate(corpse, transform.position, transform.rotation);
         frogCorpse.blood.transform.position = frogCorpse.transform.position;
         
-        gameObject.GetComponent<SpriteRenderer>().enabled = false;
+        spriteRenderer.enabled = false;
         transform.position = new Vector2(-0.5f, -1.0f);
         RemoveFromWorld();
         //Rather than this leave behind a corpse call remove from world, move position then add to world immediately
@@ -169,9 +177,19 @@ public class Player : WorldObject
 
     public override void Interaction(WorldObject _obj)
     {
-        if (_obj.tag == "Worker"&& state == PlayerState.ACTIVE)
+        if (_obj.tag == "Worker")
         {
-            Die();
+            if (state == PlayerState.ACTIVE)
+            {
+                Die();
+            }
+        }
+        else if(_obj.tag == "Boss")
+        {
+            if (state == PlayerState.ACTIVE)
+            {
+                Die();
+            }
         }
     }
 
@@ -186,7 +204,7 @@ public class Player : WorldObject
             else
             {
                 anim.SetBool("Dead", false);
-                gameObject.GetComponent<SpriteRenderer>().enabled = true;
+                spriteRenderer.enabled = true;
                 state = PlayerState.ACTIVE;
                 deathCool = 0;
                 transform.position = new Vector2(-0.5f, -1.0f);
