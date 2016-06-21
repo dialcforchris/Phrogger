@@ -96,6 +96,7 @@ public class mailOpener : MonoBehaviour
 
             //Remove this email from the list so we can't get it twice
             messages.Remove(currentMail);
+            messages.TrimExcess();
             emailContent.sprite = currentMail.image;
             StopCoroutine("zoomInOut");
             StartCoroutine(zoomInOut(7.5f));

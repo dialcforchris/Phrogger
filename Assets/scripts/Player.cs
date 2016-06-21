@@ -8,7 +8,7 @@ public class Player : WorldObject
     float maxCool = 0.4f;
     private Vector2 lastPos = Vector2.zero;
     //private members
-    private int strikes = 1;
+    private int strikes = 3;
     private int score = 0;
     private float hori;
     private float verti;
