@@ -38,3 +38,19 @@ public class GameOverState : GameState
     {
     }
 }
+
+public class DayOverState : GameState
+{
+    public override void OnStateActivate()
+    {
+    }
+
+    public override void OnStateDeactivate()
+    {
+
+    }
+
+    public override void Update()
+    {
+    }
+}

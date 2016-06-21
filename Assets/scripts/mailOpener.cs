@@ -34,6 +34,7 @@ public class mailOpener : MonoBehaviour
         public List<mail> messages;
         public bool randomSelection;
         public int index;
+        public int score;
     }
 
     //An email object, might need variables for score and such in the future
@@ -243,8 +244,14 @@ public class mailOpener : MonoBehaviour
                         Debug.Log("Junk email put in junk pile, good job");
                         //Junk email put in junk pile, good job
                         //+ points
-                        StatTracker.instance.scoreToAdd += 100;
+                        StatTracker.instance.scoreToAdd += selectedList.score;
                         StatTracker.instance.junkEmailsCorrect++;
+
+                        dayTimer.completedEmail newMail;
+                        newMail.junk = true;
+                        newMail.correctAnswer = true;
+                        dayTimer.instance.todaysEmails.Add(newMail);
+
                         StopCoroutine("zoomInOut");
                         StartCoroutine(zoomInOut(11));
 
@@ -255,7 +262,7 @@ public class mailOpener : MonoBehaviour
                         Debug.Log("You put a safe email in the junk pile, YOU WALLY");
                         //You put a safe email in the junk pile
                         //oooooo
-                        StatTracker.instance.scoreToAdd -= 100;
+                        StatTracker.instance.scoreToAdd -= (int)(.8f*selectedList.score);
                         StatTracker.instance.safeEmailsWrong++;
                         StopCoroutine("zoomInOut");
                         StartCoroutine(zoomInOut(11));

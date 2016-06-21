@@ -6,6 +6,7 @@ public enum GameStates
     STATE_PAUSE,
     STATE_EMAIL,
     STATE_GAMEOVER,
+    STATE_DAYOVER,
     GAMESTATES_COUNT
 }
 
@@ -34,6 +35,7 @@ public class GameStateManager : MonoBehaviour
             states[(int)GameStates.STATE_PAUSE] = new PauseState();
             states[(int)GameStates.STATE_EMAIL] = new EmailState();
             states[(int)GameStates.STATE_GAMEOVER] = new GameOverState();
+            states[(int)GameStates.STATE_DAYOVER] = new DayOverState();
         }
     }
 
