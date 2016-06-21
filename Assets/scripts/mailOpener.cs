@@ -262,6 +262,7 @@ public class mailOpener : MonoBehaviour
                         Debug.Log("You put a safe email in the junk pile, YOU WALLY");
                         //You put a safe email in the junk pile
                         //oooooo
+                        BossFace.instance.CheckEmails(false);
                         StatTracker.instance.scoreToAdd -= (int)(.8f*selectedList.score);
                         StatTracker.instance.safeEmailsWrong++;
                         StopCoroutine("zoomInOut");
@@ -281,6 +282,7 @@ public class mailOpener : MonoBehaviour
                         Debug.Log("You put junk in the safe pile");
                         //You put junk in the safe pile
                         //- points
+                        BossFace.instance.CheckEmails(false);
                         StatTracker.instance.scoreToAdd -= 100;
                         StatTracker.instance.junkEmailsWrong++;
                         StopCoroutine("zoomInOut");
