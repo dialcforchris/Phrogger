@@ -2,6 +2,7 @@
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 
 public class dayTimer : MonoBehaviour {
 
@@ -14,7 +15,7 @@ public class dayTimer : MonoBehaviour {
     public GameObject emailIconPrefab;
     public Animator dayFinishedText;
     public Sprite junkMailSprite;
-
+    public Text DayText;
     public List<completedEmail> todaysEmails = new List<completedEmail>();
 
     [System.Serializable]
