@@ -121,7 +121,6 @@ public class Cubicle : WorldObject
             {
                 if (((Worker)_obj).cubicleId == deskId && !((Worker)_obj).hasEnteredCubicle)
                 {
-                    int pickChair = 16;
                     for (int i = 0; i < filledChairs.Length; i++)
                     {
                         if (filledChairs[i])
@@ -130,7 +129,6 @@ public class Cubicle : WorldObject
                         }
                         else
                         {
-                            pickChair = i;
                             ((Worker)_obj).MoveToChair();
                             filledChairs[i] = true;
                         }
@@ -172,10 +170,11 @@ public class Cubicle : WorldObject
                 {
                     if (wo.tag == "Worker")
                     {
-                        if (((Worker)wo).needHelp)
+                        if (((Worker)wo).helpNeeded)
                         {
                             mailOpener.instance.enterView();
-                           ((Worker)wo).NoHelp();
+                            ((Worker)wo).FinishedHelping();
+                            return;
                         }
                     }
                 }

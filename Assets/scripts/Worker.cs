@@ -30,7 +30,6 @@ public class Worker : WorldObject, IPoolable<Worker>
     //move to chair logic
     private List<Vector2> positions = new List<Vector2>();
     private int targetIndex = 0;
-    private Vector2 chairFacing;
 
     private float sitCool = 0;
     private float maxSitCool = 8.0f;
@@ -46,6 +45,9 @@ public class Worker : WorldObject, IPoolable<Worker>
 
     public int chairId { get; set; }
     public int cubicleId { get; set; }
+
+    private bool needHelp = false;
+    public bool helpNeeded { get { return needHelp; } }
 
     // help variables
     [SerializeField] private GameObject helpMe;
@@ -128,12 +130,25 @@ public class Worker : WorldObject, IPoolable<Worker>
     //The behavior of an object when something tries to interact with it
     public override void Interaction(WorldObject _obj)
     {
-
+        if(_obj.tag == "Player")
+        {
+            if (state == WorkerState.WALKING || state == WorkerState.STANDING)
+            {
+                ((Player)_obj).Die();
+            }
+        }
     }
 
     //Whether an object can move to the same position as another object
     public override bool CheckMovement(WorldObject _obj)
     {
+        if (_obj.name == "Player")
+        {
+            if (state == WorkerState.SITTING || state == WorkerState.HELP)
+            {
+                return false;
+            }
+        }
         return true;
     }
 
@@ -160,7 +175,6 @@ public class Worker : WorldObject, IPoolable<Worker>
     public void MoveToChair()
     {
         hasEnteredCubicle = true;
-        chairFacing = direction;
         StateSwitch(WorkerState.STANDING);
         //StopCoroutine("SitAtDesk");
         StartCoroutine("SitAtDesk");
@@ -186,7 +200,6 @@ public class Worker : WorldObject, IPoolable<Worker>
                 currentTarget = positions[targetIndex];
             }
             transform.position = Vector2.MoveTowards(transform.position, currentTarget, speed * Time.deltaTime);
-            Vector2 pos = transform.position;
             float lookAngle = Mathf.Atan2((transform.position.y - currentTarget.y), (transform.position.x - currentTarget.x)) * Mathf.Rad2Deg;
             Quaternion newRot = new Quaternion();
             newRot.eulerAngles = new Vector3(0, 0, lookAngle + 90);
@@ -211,7 +224,6 @@ public class Worker : WorldObject, IPoolable<Worker>
                 currentTarget = positions[targetIndex];
             }
             transform.position = Vector2.MoveTowards(transform.position, currentTarget, speed * Time.deltaTime);
-            Vector2 pos = transform.position;
             float lookAngle = Mathf.Atan2((transform.position.y - currentTarget.y), (transform.position.x - currentTarget.x)) * Mathf.Rad2Deg;
             Quaternion newRot = new Quaternion();
             newRot.eulerAngles = new Vector3(0, 0, lookAngle + 90);
@@ -263,8 +275,8 @@ public class Worker : WorldObject, IPoolable<Worker>
                    {
                        helpMe.SetActive(true);
                        helpMe.transform.rotation = Quaternion.Euler(Vector2.up);
-                       helpMe.transform.position = (new Vector2(helpMe.transform.position.x , helpMe.transform.position.y + (transform.localScale.y*0.7f)));
-                      
+                       helpMe.transform.position = (new Vector2(transform.position.x , transform.position.y + (transform.localScale.y*0.7f)));
+                       needHelp = true;
                     }
                     break;
                 }
@@ -304,6 +316,13 @@ public class Worker : WorldObject, IPoolable<Worker>
                 StateSwitch(WorkerState.HELP);
             }
         }
+    }
+
+    public void FinishedHelping()
+    {
+        needHelp = false;
+        helpMe.SetActive(false);
+        StateSwitch(WorkerState.SITTING);
     }
 }
 
