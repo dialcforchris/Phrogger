@@ -105,6 +105,13 @@ public class BossFace : MonoBehaviour
         {
             bossAngerExp += 0.5f;
         }
+        else
+        {
+            if (bossAngerLevel>=faceList.Length-1)
+            {
+                bossAngerLevel--;
+            }
+        }
    }
     void SummonBoss()
   {

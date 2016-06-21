@@ -246,12 +246,11 @@ public class mailOpener : MonoBehaviour
                         //+ points
                         StatTracker.instance.scoreToAdd += selectedList.score;
                         StatTracker.instance.junkEmailsCorrect++;
-
+                        BossFace.instance.CheckEmails(true);
                         dayTimer.completedEmail newMail;
                         newMail.junk = true;
                         newMail.correctAnswer = true;
                         dayTimer.instance.todaysEmails.Add(newMail);
-
                         StopCoroutine("zoomInOut");
                         StartCoroutine(zoomInOut(11));
 
@@ -297,9 +296,9 @@ public class mailOpener : MonoBehaviour
                         //+ points
                         StatTracker.instance.scoreToAdd += 100;
                         StatTracker.instance.safeEmailsCorrect++;
+                        BossFace.instance.CheckEmails(true);
                         StopCoroutine("zoomInOut");
                         StartCoroutine(zoomInOut(11));
-
                         Invoke("exitView", 2.5f);
                     }
                 }
