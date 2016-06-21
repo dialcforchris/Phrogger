@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 
 public class SoundManager : MonoBehaviour
 {
@@ -8,8 +9,17 @@ public class SoundManager : MonoBehaviour
     public static SoundManager instance;
     public int numberOfSources;
     public float volumeMultiplayer = 1;
-    public AudioSource music;
+    public AudioSource music,computerSounds;
+
+    public List<managedSource> managedAudioSources = new List<managedSource>();
     List<AudioSource> audioSrcs = new List<AudioSource>();
+
+    [System.Serializable]
+    public struct managedSource
+    {
+        public AudioSource AudioSrc;
+        public float volumeLimit;
+    }
 
     public List<AudioClip> moveSounds,deskSounds;
 
@@ -25,7 +35,21 @@ public class SoundManager : MonoBehaviour
     public void changeVolume(float newVol)
     {
         volumeMultiplayer = newVol;
-        //nothing atm
+        
+        //Special handling for the computer hummming since the volume fades in/out and also needs to be managed
+        if (GameStateManager.instance.previousState == GameStates.STATE_EMAIL)
+        {
+            computerSounds.DOKill(false);
+            computerSounds.volume = newVol;
+        }
+        foreach (AudioSource a in audioSrcs)
+        {
+            a.volume = newVol;
+        }
+        for (int i=0; i < managedAudioSources.Count;i++)
+        {
+            managedAudioSources[i].AudioSrc.volume = volumeMultiplayer * managedAudioSources[i].volumeLimit;
+        }
     }
 
     public void playSound(AudioClip sound)
@@ -35,8 +59,9 @@ public class SoundManager : MonoBehaviour
         {
             if (!audioSrcs[c].isPlaying)
             {
+                audioSrcs[c].pitch = 1;
                 audioSrcs[c].PlayOneShot(sound);
-                audioSrcs[c].volume = volumeMultiplayer;// * .6f;
+                audioSrcs[c].volume = volumeMultiplayer;
                 break;
             }
             else
@@ -48,7 +73,7 @@ public class SoundManager : MonoBehaviour
 
     AudioClip lastMoveSound;
 
-    public void playSound(int type)//0 for move sounds, 1 for desk sounds
+    public void playSound(int type,float pitch=1)//0 for move sounds, 1 for desk sounds
     {
         int c = 0;
         while (c < audioSrcs.Count)
@@ -58,17 +83,28 @@ public class SoundManager : MonoBehaviour
                 switch (type)
                 {
                     case 0:
-                        if (lastMoveSound)
-                            moveSounds.Remove(lastMoveSound);
-                        var playMe = moveSounds[Random.Range(0, moveSounds.Count - 1)];
-                        audioSrcs[c].PlayOneShot(playMe);
-                        audioSrcs[c].volume = volumeMultiplayer * .4f;
-                        if (lastMoveSound)
-                            moveSounds.Add(lastMoveSound);
+                        if (pitch == 1)
+                        {
+                            if (lastMoveSound)
+                                moveSounds.Remove(lastMoveSound);
+                            var playMe = moveSounds[Random.Range(0, moveSounds.Count - 1)];
+                            audioSrcs[c].pitch = pitch;
+                            audioSrcs[c].PlayOneShot(playMe);
+                            audioSrcs[c].volume = volumeMultiplayer * .4f;
+                            if (lastMoveSound)
+                                moveSounds.Add(lastMoveSound);
 
-                        lastMoveSound = playMe;
+                            lastMoveSound = playMe;
+                        }
+                        else
+                        {
+                            audioSrcs[c].pitch = pitch;
+                            audioSrcs[c].PlayOneShot(moveSounds[moveSounds.Count - 1]);
+                            audioSrcs[c].volume = volumeMultiplayer * .4f;
+                        }
                         break;
                     case 1:
+                        audioSrcs[c].pitch = pitch;
                         audioSrcs[c].PlayOneShot(deskSounds[Random.Range(0, deskSounds.Count - 1)]);
                         audioSrcs[c].volume = volumeMultiplayer * 1f;
                         break;

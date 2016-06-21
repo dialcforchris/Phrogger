@@ -22,7 +22,6 @@ public class WorldObject : MonoBehaviour
         Tile _tile = TileManager.instance.GetTile(transform.position);
         _tile.Place(this);
         tiles[0] = _tile;
-        
     }
 
     public virtual void RemoveFromWorld()

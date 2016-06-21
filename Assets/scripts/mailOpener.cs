@@ -1,11 +1,13 @@
-﻿using UnityEngine;
+﻿
+using UnityEngine;
 using UnityEditor;
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 
-public class mailOpener : MonoBehaviour {
+public class mailOpener : MonoBehaviour 
+{
 
     public static mailOpener instance;
 
@@ -20,9 +22,20 @@ public class mailOpener : MonoBehaviour {
     public AudioClip[] keypressSounds;
     public AudioSource computerSounds;
 
-    public List<mail> messages; //All the possible emails the player might have to deal with
-    mail currentMail;
+    public List<mailColection> messages; //All the possible emails the player might have to deal with
+
+    private mailColection selectedList;
+    private mail currentMail;
     
+    [System.Serializable]
+    public class mailColection
+    {
+        public string name;
+        public List<mail> messages;
+        public bool randomSelection;
+        public int index;
+    }
+
     //An email object, might need variables for score and such in the future
     [System.Serializable]
     public struct mail
@@ -30,7 +43,6 @@ public class mailOpener : MonoBehaviour {
         public Sprite image;
         public bool isJunk;
     }
-
     void Awake()
     {
         instance = this;
@@ -47,10 +59,9 @@ public class mailOpener : MonoBehaviour {
         //Change cameras over
         StartCoroutine(camTransition(true));
     }
-
     IEnumerator camTransition(bool InOut) //True for entering email mode, false for exiting it
     {
-        computerSounds.DOFade((InOut)?1:0, 2);
+        computerSounds.DOFade((InOut) ? SoundManager.instance.volumeMultiplayer: 0, 2);
         Random.seed = System.DateTime.Now.Millisecond;
         mainCamTransition.material.SetTexture("_SliceGuide", gradients[Random.Range(0, gradients.Length - 1)]);
         monCamTransition.material.SetTexture("_SliceGuide", gradients[Random.Range(0, gradients.Length - 1)]);
@@ -89,18 +100,37 @@ public class mailOpener : MonoBehaviour {
             //Intro animation
             monitorAnimator.Play("mail_intro");
 
-            //Choose a random email to display
-            int chosen = Random.Range(0, messages.Count);
-            currentMail = messages[chosen];
+            //pick a random list
+            selectedList =  messages[Random.Range(0, messages.Count - 1)];
 
+<<<<<<< HEAD
             //Remove this email from the list so we can't get it twice
             messages.Remove(currentMail);
+            messages.TrimExcess();
+=======
+            if (selectedList.randomSelection)
+            {
+                //Pick a random message form the selected list
+                currentMail = selectedList.messages[Random.Range(0, selectedList.messages.Count - 1)];
+                //Remove this email from the list so we can't get it twice
+                selectedList.messages.Remove(currentMail);
+            }
+            else
+            {
+                currentMail = selectedList.messages[selectedList.index];
+                selectedList.index++;
+                if (selectedList.index > selectedList.messages.Count - 1)
+                    messages.Remove(selectedList);
+            }
+>>>>>>> origin/master
             emailContent.sprite = currentMail.image;
+            
             StopCoroutine("zoomInOut");
             StartCoroutine(zoomInOut(7.5f));
         }
         else
             GameStateManager.instance.ChangeState(GameStates.STATE_GAMEPLAY);
+        
     }
 
     IEnumerator zoomInOut(float newSize)
@@ -198,7 +228,7 @@ public class mailOpener : MonoBehaviour {
                 moveEmail(Input.GetAxis("Horizontal") > 0 ? 1 : -1);
             }
 
-            if (Input.GetAxis("Fire1") > 0 && emailPos !=0)
+            if (Input.GetButtonDown("Fire1") && emailPos !=0)
             {
                 if (!soundPlaying)
                 {

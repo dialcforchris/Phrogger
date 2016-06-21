@@ -63,5 +63,8 @@ public class Tile : MonoBehaviour
     {
         spriteRenderer.sprite = _sprite;
     }
-
+    public WorldObject[] GetObjects()
+    {
+        return objects.ToArray();
+    }
 }

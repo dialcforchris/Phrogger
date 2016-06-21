@@ -36,7 +36,7 @@
 	void surf(Input IN, inout SurfaceOutput o) {
 		clip(tex2D(_SliceGuide, IN.uv_SliceGuide).rgb - _SliceAmount);
 		fixed4 c = tex2D(_MainTex, IN.uv_MainTex);
-		o.Albedo = c.rgb*_TintColour.rgb -((tex2D(_BurnTex, IN.uv_BurnTex)*_BurnAmount)*c.rgb);
+	o.Albedo = c.rgb*_TintColour.rgb - ((tex2D(_BurnTex, IN.uv_BurnTex)*_BurnAmount)*c.rgb);
 		o.Alpha =_TintColour.a;
 	}
 
