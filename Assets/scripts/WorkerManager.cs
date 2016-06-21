@@ -20,9 +20,6 @@ public class WorkerManager : MonoBehaviour
     [SerializeField]
     private Cubicle[] cubicles = null;
 
-    private int cubicleIndex = 0;
-    private int chairIndex = 0;
-
     private const int numSeats = 40;
 
     private void Awake()
