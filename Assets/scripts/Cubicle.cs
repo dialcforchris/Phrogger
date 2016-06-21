@@ -29,7 +29,7 @@ public class Cubicle : WorldObject
     [SerializeField]
     private Transform[] chairPivots = null;
     public bool[] filledChairs;
-    public int chair;
+
     private int deskId;
     public int cubicleId
     {
@@ -37,6 +37,8 @@ public class Cubicle : WorldObject
         set { deskId = value; }
     }
 
+    [SerializeField] private Spawner spawner = null;
+    public Spawner GetAssociatedSpawner() { return spawner; }
 
     private bool isMessy = false;
 
@@ -49,7 +51,6 @@ public class Cubicle : WorldObject
             filledChairs[i] = false;
         }
 
-        chair = chairs.Length;
         tiles = new Tile[3 + chairs.Length];
         currentDesk = Random.Range(0, tidyDesk.Length);
         deskFodder.sprite = tidyDesk[currentDesk];
@@ -89,6 +90,28 @@ public class Cubicle : WorldObject
 
     }
 
+    public int GetChairs()
+    {
+        return chairs.Length;
+    }
+
+    public void AssignWorkerPositionData(Worker _worker)
+    {
+        _worker.AssignCubiclePivots(opening.position, empty.position, chairs[_worker.chairId].position, chairPivots[_worker.chairId].position);
+    }
+
+    public void AssignWorkerImmediately(Worker _worker)
+    {
+        filledChairs[_worker.chairId] = true;
+        _worker.transform.position = chairPivots[_worker.chairId].position;
+
+        float lookAngle = Mathf.Atan2((chairs[_worker.chairId].position.y - chairPivots[_worker.chairId].position.y), 
+            (chairs[_worker.chairId].position.x - chairPivots[_worker.chairId].position.x)) * Mathf.Rad2Deg;
+        Quaternion newRot = new Quaternion();
+        newRot.eulerAngles = new Vector3(0, 0, lookAngle + 90);
+        _worker.transform.rotation = newRot;
+    }
+
     //The behavior of an object when something tries to interact with it
     public override void Interaction(WorldObject _obj)
     {
@@ -96,7 +119,7 @@ public class Cubicle : WorldObject
         {
             if (_obj.GetTile(0) == tiles[(int)Positions.OPENING])
             {
-                if (_obj.GetComponent<Worker>().cubicleId == deskId && !_obj.GetComponent<Worker>().goneToDesk)
+                if (((Worker)_obj).cubicleId == deskId && !((Worker)_obj).hasEnteredCubicle)
                 {
                     int pickChair = 16;
                     for (int i = 0; i < filledChairs.Length; i++)
@@ -109,7 +132,7 @@ public class Cubicle : WorldObject
                         else
                         {
                             pickChair = i;
-                            _obj.GetComponent<Worker>().MoveToChair(opening.position, empty.position, chairs[pickChair].position, chairPivots[pickChair].position);
+                            ((Worker)_obj).MoveToChair();
                             filledChairs[i] = true;
                         }
                         break;

@@ -2,46 +2,56 @@
 using System.Collections;
 using System.Collections.Generic;
 
+public enum WorkerState
+{
+    WALKING,
+    SITTING,
+    STANDING,
+    HELP,
+}
+
 public class Worker : WorldObject, IPoolable<Worker>
 {
     #region IPoolable
     public PoolData<Worker> poolData { get; set; }
     #endregion
 
-    enum WorkerState
-    {
-        WALKING,
-        SITTING,
-        STANDING,
-        HELP,
-    }
+    
 
    
     private bool isSetup = false;
     [SerializeField] private SpriteRenderer hairSpriteRenderer = null;
     [SerializeField] private Animator animator = null;
     [SerializeField] private AnimationOverride animOverride= null;
-    private int deskId;
+    
     private Vector3 direction;
     private float speed = 5.0f;
     private WorkerState state;
     //move to chair logic
-    List<Vector2> positions = new List<Vector2>();
-    int targetIndex = 0;
-    Vector2 chairFacing;
-    float sitCool=0;
-    float maxSitCool = 2;
-    private int chairId =0;
-    public bool goneToDesk = false;
+    private List<Vector2> positions = new List<Vector2>();
+    private int targetIndex = 0;
+    private Vector2 chairFacing;
+
+    private float sitCool = 0;
+    private float maxSitCool = 8.0f;
+    private float maxSitLowerCool = 4.0f;
+    private float maxSitUpperCool = 12.0f;
+    private float standChance = 0.5f;
+
+    private float helpCool = 0;
+    private float maxHelpCool = 5.0f;
+    private float helpChance = 0.25f;
+
+    public bool hasEnteredCubicle { get; set; }
+
+    public int chairId { get; set; }
+    public int cubicleId { get; set; }
+
     // help variables
-    public GameObject helpMe;
+    [SerializeField] private GameObject helpMe;
 
 
-    public int cubicleId
-    {
-        get { return deskId; }
-        set { deskId = value; }
-    }
+  
     protected override void Start()
     {
         //Override to prevent base start getting called
@@ -58,7 +68,15 @@ public class Worker : WorldObject, IPoolable<Worker>
         {
             hairSpriteRenderer.sprite = _hairSprite;
             animOverride.SetSpriteSheet(_animName);
+            cubicleId = 100;
+            isSetup = true;
         }
+    }
+
+    public void SetupCubicle(int _cubicleId, int _chairId)
+    {
+        cubicleId = _cubicleId;
+        chairId = _chairId;
     }
 
     public void Initialise(Vector3 _direction, float _speed)
@@ -67,19 +85,26 @@ public class Worker : WorldObject, IPoolable<Worker>
         transform.rotation = Quaternion.Euler(new Vector3(0, 0, _direction == Vector3.left ? 90.0f : 270.0f));
         speed = _speed;
         AddToWorld();
+        targetIndex = 0;
         gameObject.SetActive(true);
+        hasEnteredCubicle = false;
+    }
+
+    public void InitialiseToCubicle(Vector3 _direction, float _speed)
+    {
+        Initialise(_direction, _speed);
+        targetIndex = positions.Count - 1;
+
+        StateSwitch(WorkerState.SITTING);
+        animator.SetBool("sit", true);
+        hasEnteredCubicle = true;
     }
 
     private void Update()
     {
         if (GameStateManager.instance.GetState() == GameStates.STATE_GAMEPLAY)
         {
-            //if (state == WorkerState.WALKING)
-            //{ 
-            //    Movement();
-            //    animator.SetBool("walk", true);
-            //}
-            StateSwitch();
+            StateUpdate();
             Tile _tile = TileManager.instance.GetTile(transform.position);
             if (_tile != tiles[0])
             {
@@ -92,7 +117,7 @@ public class Worker : WorldObject, IPoolable<Worker>
     void Movement()
     {
         transform.position += direction * Time.deltaTime * speed;
-     //   transform.rotation = Quaternion.Euler(direction);
+        transform.rotation = Quaternion.LookRotation(Vector3.forward, direction);
      
     }
     private void LateUpdate()
@@ -115,18 +140,29 @@ public class Worker : WorldObject, IPoolable<Worker>
     public void Reset()
     {
         RemoveFromWorld();
-        poolData.ReturnPool(this);
+        ReturnPool();
         gameObject.SetActive(false);
     }
-    public void MoveToChair(Vector2 outide, Vector2 inside, Vector2 chairTile, Vector2 chairPivot)
+
+    public void ReturnPool()
+    {
+        poolData.ReturnPool(this);
+    }
+
+    public void AssignCubiclePivots(Vector2 outide, Vector2 inside, Vector2 chairTile, Vector2 chairPivot)
     {
         positions.Add(outide);
         positions.Add(inside);
         positions.Add(chairTile);
         positions.Add(chairPivot);
+    }
+
+    public void MoveToChair()
+    {
+        hasEnteredCubicle = true;
         chairFacing = direction;
-        state = WorkerState.SITTING;
-        StopCoroutine("SitAtDesk");
+        StateSwitch(WorkerState.STANDING);
+        //StopCoroutine("SitAtDesk");
         StartCoroutine("SitAtDesk");
     }
 
@@ -140,13 +176,11 @@ public class Worker : WorldObject, IPoolable<Worker>
                 targetIndex++;
                 if (targetIndex>=positions.Count)
                 {
-                    targetIndex = 0;
-                    if (state == WorkerState.SITTING)
-                    {
-                        goneToDesk = true;
-                        animator.SetBool("sit",true);
-                        SatAtDesk();
-                    }
+                    targetIndex = positions.Count - 1;
+
+                    animator.SetBool("sit",true);
+                    StateSwitch(WorkerState.SITTING);
+
                     yield break;
                 }
                 currentTarget = positions[targetIndex];
@@ -162,20 +196,16 @@ public class Worker : WorldObject, IPoolable<Worker>
     }
     IEnumerator WalkFromDesk()
     {
-        Vector2 currentTarget = positions[0];
+        Vector2 currentTarget = positions[positions.Count - 1];
         while (true)
         {
             if (Vector2.Distance(transform.position, currentTarget) < 0.1f)
             {
-                targetIndex++;
-                if (targetIndex ==positions.Count)
+                targetIndex--;
+                if (targetIndex == -1)
                 {
-                    targetIndex = 0 ;
-                    state = WorkerState.WALKING;
-                    if (goneToDesk)
-                    {
-                        goneToDesk = false; 
-                    }
+                    targetIndex = 0;
+                    StateSwitch(WorkerState.WALKING);
                     yield break;
                 }
                 currentTarget = positions[targetIndex];
@@ -189,25 +219,42 @@ public class Worker : WorldObject, IPoolable<Worker>
             yield return null;
         }
     }
-    void SatAtDesk()
-    {
-        if (Random.value>1.5f)
-        {
-       //     state = WorkerState.HELP;
-        }
-       
-    }
-    void StateSwitch()
+
+    private void StateUpdate()
     {
         switch (state)
         {
             case WorkerState.WALKING:
                 {
-                    animator.SetBool("walk",true);
-                    animator.SetBool("sit", false);
-                    
-
                     Movement();
+                    break;
+                }
+            case WorkerState.HELP:
+                {
+                    break;
+                }
+            case WorkerState.STANDING:
+                {
+                    break;
+                }
+            case WorkerState.SITTING:
+                {
+                    SitCooldown();
+                    break;
+                }
+        }
+    }
+
+    public void StateSwitch(WorkerState _newState)
+    {
+        state = _newState;
+        sitCool = 0.0f;
+        helpCool = 0.0f;
+        switch (state)
+        {
+            case WorkerState.WALKING:
+                {
+                    animator.SetBool("walk",true);
                     break;
                 }
             case WorkerState.HELP:
@@ -223,37 +270,38 @@ public class Worker : WorldObject, IPoolable<Worker>
                 }
             case WorkerState.STANDING:
                 {
-                    animator.SetBool("walk",true);
                     animator.SetBool("sit", false);
+                    animator.SetBool("walk",true);
                     break;
                 }
             case WorkerState.SITTING:
                 {
-
-                    SitCooldown();
                     break;
                 }
         }
     }
     void SitCooldown()
     {
-        if (sitCool<maxSitCool)
+        sitCool += Time.deltaTime;
+        helpCool += Time.deltaTime;
+        if (sitCool > maxSitCool)
         {
-            sitCool += Time.deltaTime;
-        }
-        else
-        {
-            if (Random.value > 0.5f)
+            sitCool = 0.0f;
+            maxSitCool = Random.Range(maxSitLowerCool, maxSitUpperCool);
+            if (Random.value < standChance)
             {
-                state = WorkerState.STANDING;
-                StopCoroutine("WalkFromDesk");
-                positions.Reverse();
-                targetIndex = 0;
+                StateSwitch(WorkerState.STANDING);
+                //StopCoroutine("WalkFromDesk");
                 StartCoroutine("WalkFromDesk");
+                return;
             }
-            else
+        }
+        if (helpCool > maxHelpCool)
+        {
+            helpCool = 0.0f;
+            if (Random.value < helpChance)
             {
-                state = WorkerState.HELP;
+                StateSwitch(WorkerState.HELP);
             }
         }
     }

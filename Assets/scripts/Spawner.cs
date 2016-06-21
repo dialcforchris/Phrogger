@@ -53,4 +53,14 @@ public class Spawner : WorldObject
         cooldown = 0;
         spawnCooldown = Random.Range(minSpawnCooldown, maxSpawnCooldown);
     }
+
+    public Vector3 GetDirection()
+    {
+        return isLeft ? Vector3.right : Vector3.left;
+    }
+
+    public float GetSpeed()
+    {
+        return laneSpeed;
+    }
 }

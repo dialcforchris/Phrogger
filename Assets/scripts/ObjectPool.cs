@@ -45,7 +45,7 @@ public class ObjectPool<T> where T : MonoBehaviour, IPoolable<T>
             _obj.poolData = new PoolData<T>();
             _obj.gameObject.SetActive(false);
             pooledObjects.Add(_obj);
-            _obj.transform.parent = t;
+            _obj.transform.SetParent(t);
         }
     }
 
