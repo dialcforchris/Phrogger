@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 
 public class Player : WorldObject
 {
@@ -156,7 +156,8 @@ public class Player : WorldObject
 
     public void Die()
     {
-     //   bloodSplatter.Play();
+        Boss.instance.EndChase();
+        //   bloodSplatter.Play();
         state = PlayerState.DEAD;
         FrogCorpse frogCorpse = (FrogCorpse)Instantiate(corpse, transform.position, transform.rotation);
         frogCorpse.blood.transform.position = frogCorpse.transform.position;
@@ -222,6 +223,73 @@ public class Player : WorldObject
             Tile _tile = TileManager.instance.GetTile(transform.position);
             _tile.Interaction(this);
         }
+    }
+
+    public List<Tile> GetRouteToPlayer()
+    {
+        List<Tile> _tiles = new List<Tile>();
+
+        int _x;
+        int _y;
+        int _direction;
+
+        //Loop through objects to see if player is in cubicle
+        foreach (WorldObject _wo in tiles[0].GetObjects())
+        {
+            if(_wo.tag == "Cubicle")
+            {
+                //Create a tile route into the cubicle
+                List<Tile> _temp = ((Cubicle)_wo).GetTileRoute(tiles[0]);
+                //Get the closest spawner
+                _tiles.Add(TileManager.instance.GetAssociatedSpawner(_temp[0]));
+
+                _x = _tiles[0].X();
+                _y = _tiles[0].Y();
+                _direction = _x < _temp[0].X() ? 1 : -1;
+
+                //Loop and create route from spawner to entrance of cubicle
+                while (true)
+                {
+                    _x += _direction;
+                    Tile _tempTile = TileManager.instance.GetTile(_x, _y);
+                    if(_tempTile.X() == _temp[0].X())
+                    {
+                        break;
+                    }
+                    _tiles.Add(_tempTile);
+                }
+                //Add the cubicle route after the entrance
+                _tiles.AddRange(_temp);
+                return _tiles;
+            }
+        }
+
+        _tiles.Add(TileManager.instance.GetAssociatedSpawner(tiles[0]));
+        _x = _tiles[0].X();
+        _y = _tiles[0].Y();
+        _direction = _x < TileManager.instance.GetTile(tiles[0].X(), _y).X() ? 1 : -1;
+
+        //Create a route from the spawner to the tile where direction shoul dbe changed
+        while (true)
+        {
+            _x += _direction;
+            Tile _tempTile = TileManager.instance.GetTile(_x, _y);
+            _tiles.Add(_tempTile);
+            if (_tempTile.X() == tiles[0].X())
+            {
+                _direction = _y < tiles[0].Y() ? 1 : -1;
+
+                while (tiles[0].Y() != _tiles[_tiles.Count - 1].Y())
+                {
+                    _y += _direction;
+                    _tempTile = TileManager.instance.GetTile(_x, _y);
+                    _tiles.Add(_tempTile);
+                }
+                break;
+            }
+            
+        }
+        return _tiles;
     }
 }
 

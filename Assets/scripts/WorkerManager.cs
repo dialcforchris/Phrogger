@@ -19,8 +19,7 @@ public class WorkerManager : MonoBehaviour
     private Sprite[] hairSprites = null;
     [SerializeField]
     private Cubicle[] cubicles = null;
-    //[SerializeField]
-    //private Spawner spawners = null;
+  
 
     private const int numSeats = 40;
 

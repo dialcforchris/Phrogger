@@ -14,7 +14,7 @@ public class TileManager : MonoBehaviour
     [SerializeField] private GameObject parentObject = null;
 
     //public Cubicle c;
-
+    [SerializeField] private Spawner[] spawners = null;
 
     private void Awake()
     {
@@ -81,6 +81,27 @@ public class TileManager : MonoBehaviour
         int _x = (int)(((_pos.x / size) + (gridSizeX / 2.0f)) - (size / 2.0f));
         int _y = (int)(((_pos.y / size) + (gridSizeY / 2.0f)) - (size / 2.0f));
         return tiles[(_y * gridSizeX) + _x];
+    }
+
+    public Tile GetTile(int _x, int _y)
+    {
+        return tiles[(_y * gridSizeX) + _x];
+    }
+
+    public Tile GetAssociatedSpawner(Tile _tile)
+    {
+        int _distance = 10;
+        int _index = 0;
+        for(int i = 0; i < spawners.Length; ++i)
+        {
+            int _dist = Mathf.Abs(_tile.Y() - spawners[i].GetTile(0).Y());
+            if (_dist < _distance)
+            {
+                _distance = _dist;
+                _index = i;
+           }
+        }
+        return spawners[_index].GetTile(0);
     }
 }
 

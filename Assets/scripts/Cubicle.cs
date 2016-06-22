@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 
 public class Cubicle : WorldObject
 {
@@ -175,5 +175,25 @@ public class Cubicle : WorldObject
     public override bool CheckMovement(WorldObject _obj)
     {
         return true;
+    }
+
+    public List<Tile> GetTileRoute(Tile _tile)
+    {
+        List<Tile> _tiles = new List<Tile>();
+
+        _tiles.Add(tiles[(int)Positions.OPENING]);
+        if (_tile == tiles[(int)Positions.OPENING])
+        {
+            return _tiles;
+        }
+
+        _tiles.Add(tiles[(int)Positions.EMPTY]);
+        if (_tile == tiles[(int)Positions.EMPTY])
+        {
+            return _tiles;
+        }
+
+        _tiles.Add(_tile);
+        return _tiles;
     }
 }

@@ -13,6 +13,9 @@ public class Tile : MonoBehaviour
         y = _y;
     }
 
+    public int X() { return x; }
+    public int Y() { return y; }
+
     public void Awake()
     {
         objects.Clear();
