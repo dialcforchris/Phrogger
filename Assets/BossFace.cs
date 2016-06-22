@@ -41,7 +41,7 @@ public class BossFace : WorldObject
 	// Update is called once per frame
 	void Update () 
     {
-        if (XPtoAdd > 0)
+        if (XPtoAdd > 0 && GameStateManager.instance.GetState() == GameStates.STATE_GAMEPLAY)
         {
             XPtoAdd -= 0.01f;
             bossAngerExp += 0.01f;
@@ -125,7 +125,7 @@ public class BossFace : WorldObject
                 }
                 else
                 {
-                    bossAngerExp = 0;
+                    bossAngerExp -= 1;
                 }
             }
         }
