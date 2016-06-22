@@ -152,7 +152,7 @@ public class Worker : WorldObject, IPoolable<Worker>
         return true;
     }
 
-    public void Reset()
+    public override void Reset()
     {
         RemoveFromWorld();
         ReturnPool();

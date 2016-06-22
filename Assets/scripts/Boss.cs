@@ -19,12 +19,12 @@ public class Boss : WorldObject
         base.Awake();
         boss = this;
         animOverride.SetSpriteSheet("The Boss");
-        gameObject.SetActive(false);
     }
 
     protected override void Start()
     {
         AddToWorld();
+        gameObject.SetActive(false);
     }
 
     private void Update()

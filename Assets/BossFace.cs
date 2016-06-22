@@ -7,7 +7,7 @@ public class BossFace : WorldObject
     public static BossFace instance = null;
     public Sprite[] faceList;
     public Sprite bossGone;
-//    public SpriteRenderer spriteRenderer;
+    public ParticleSystem steam;
     public GameObject eyes;
     public Player player;
     float bossAngerAddition = 0.45f;
@@ -20,13 +20,14 @@ public class BossFace : WorldObject
     int bossAngerLevel = 0;
     FaceState faceState;
 	// Use this for initialization
-	void Awake () 
+	protected override void Awake () 
     {
         if (instance==null)
         {
             instance = this;
         }
         faceState = FaceState.UI;
+        base.Awake();
 	}
 	
 	// Update is called once per frame
@@ -37,6 +38,8 @@ public class BossFace : WorldObject
         AddToAnger();
         CoolDown();
         States(faceState);
+        SteamParticles();
+        
 	}
 
     void CoolDown()
@@ -113,6 +116,22 @@ public class BossFace : WorldObject
     {
         bossAngerLevel += amount;
     }
+    void SteamParticles()
+   {
+      
+        if (bossAngerLevel==3&&faceState==FaceState.UI)
+        {
+            if (!steam.isPlaying)
+            steam.Play();
+        }
+        else
+        {
+            if (steam.isPlaying)
+            {
+                steam.Stop();
+            }
+        }
+   }
 
    public void CheckEmails(bool _correct)
    {
@@ -171,5 +190,6 @@ public class BossFace : WorldObject
        spriteRenderer.sprite = faceList[bossAngerLevel];
        emailCool = 0;
        playerCool = 0;
+       steam.Stop();
    }
 }
