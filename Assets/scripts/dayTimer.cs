@@ -15,7 +15,6 @@ public class dayTimer : MonoBehaviour {
     public GameObject emailIconPrefab;
     public Animator dayFinishedText;
     public Sprite junkMailSprite;
-    public Text DayText;
     public List<completedEmail> todaysEmails = new List<completedEmail>();
 
     [System.Serializable]

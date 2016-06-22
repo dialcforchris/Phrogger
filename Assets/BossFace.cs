@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class BossFace : WorldObject
@@ -10,9 +11,10 @@ public class BossFace : WorldObject
     public ParticleSystem steam;
     public GameObject eyes;
     public Player player;
-    float bossAngerAddition = 0.45f;
+    public Slider XPbar;
+    float bossAngerAddition = 0.35f;
     float emailCool = 0;
-    float emailMaxCool = 10;
+    float emailMaxCool = 20;
     float playerCool = 0;
     float playerMaxCool= 1.5f;
     Tile playerTile;
@@ -30,9 +32,15 @@ public class BossFace : WorldObject
         base.Awake();
 	}
 	
+    public void addEmailAngerXP()
+    {
+        bossAngerExp += (emailCool/emailMaxCool)*bossAngerAddition;
+    }
+
 	// Update is called once per frame
 	void Update () 
     {
+        XPbar.value = bossAngerExp;
         MoveEyes();
         ManyFacedBoss();
         AddToAnger();
@@ -49,17 +57,18 @@ public class BossFace : WorldObject
             playerCool = 0;
             if (emailCool< emailMaxCool)
             {
-                emailCool += Time.deltaTime;
-            }
-            else
-            {
-                bossAngerExp += bossAngerAddition;
-                emailCool = 0;
+                if (mailOpener.instance.activeCountdown)
+                {
+                    emailCool += Time.deltaTime;
+                    mailOpener.instance.angerMeter.value = emailCool;
+                    var cols = mailOpener.instance.angerMeter.colors;
+                    cols.disabledColor = Color.Lerp(Color.green, Color.red, (emailCool / (emailMaxCool*.75f)));
+                    mailOpener.instance.angerMeter.colors = cols;
+                }
             }
         }
         else if (GameStateManager.instance.GetState() == GameStates.STATE_GAMEPLAY&&player.playerState==PlayerState.ACTIVE)
         {
-            
             emailCool = 0;
             if (playerCool < playerMaxCool)
             {
