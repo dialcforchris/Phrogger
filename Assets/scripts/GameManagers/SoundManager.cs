@@ -87,7 +87,7 @@ public class SoundManager : MonoBehaviour
                         {
                             if (lastMoveSound)
                                 moveSounds.Remove(lastMoveSound);
-                            var playMe = moveSounds[Random.Range(0, moveSounds.Count - 1)];
+                            var playMe = moveSounds[Random.Range(0, moveSounds.Count)];
                             audioSrcs[c].pitch = pitch;
                             audioSrcs[c].PlayOneShot(playMe);
                             audioSrcs[c].volume = volumeMultiplayer * .4f;
@@ -105,7 +105,7 @@ public class SoundManager : MonoBehaviour
                         break;
                     case 1:
                         audioSrcs[c].pitch = pitch;
-                        audioSrcs[c].PlayOneShot(deskSounds[Random.Range(0, deskSounds.Count - 1)]);
+                        audioSrcs[c].PlayOneShot(deskSounds[Random.Range(0, deskSounds.Count)]);
                         audioSrcs[c].volume = volumeMultiplayer * 1f;
                         break;
                 }

@@ -25,7 +25,7 @@ public class dayTimer : MonoBehaviour {
         public bool correctAnswer;
     }
 
-    [Header("Game Over UI")]
+    [Header("Day Over UI")]
     public Text dayCompletedHeader;
     public Text filedText, performanceText, performanceResult;
 

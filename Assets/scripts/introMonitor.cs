@@ -5,37 +5,19 @@ using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 
-public class mailOpener : MonoBehaviour 
+public class introMonitor : MonoBehaviour
 {
-    public static mailOpener instance;
-
-    //Need to be able to open and close emails at will
-    //i.e. have them be seperate events
-
+    public static introMonitor instance;
+    
     public SpriteRenderer emailContent;
-    public Animator monitorAnimator,miniEmailAnimator;
-    public Camera monitorCamera,mainCam;
+    public Animator monitorAnimator, miniEmailAnimator;
+    public Camera monitorCamera, mainCam;
     public SpriteRenderer mainCamTransition, monCamTransition;
     public Texture[] gradients;
     public AudioClip[] keypressSounds;
     public AudioSource computerSounds;
-    public Slider angerMeter;
-    public bool activeCountdown;
 
-    public List<mailColection> messages; //All the possible emails the player might have to deal with
-
-    private mailColection selectedList;
-    private mail currentMail;
-    
-    [System.Serializable]
-    public class mailColection
-    {
-        public string name;
-        public List<mail> messages;
-        public bool randomSelection;
-        public int index;
-        public int score;
-    }
+    public mail currentMail;
 
     //An email object, might need variables for score and such in the future
     [System.Serializable]
@@ -44,11 +26,10 @@ public class mailOpener : MonoBehaviour
         public Sprite image;
         public bool isJunk;
     }
+
     void Awake()
     {
         instance = this;
-        //Always remember to seed your random :)
-        Random.seed = System.DateTime.Now.Millisecond;
     }
 
     public void enterView()
@@ -100,64 +81,25 @@ public class mailOpener : MonoBehaviour
 
         if (InOut)
         {
-            activeCountdown = true;
             //Intro animation
             monitorAnimator.Play("mail_intro");
-            pickEmail();
+            emailContent.sprite = currentMail.image;
 
             StopCoroutine("zoomInOut");
             StartCoroutine(zoomInOut(7.5f));
         }
         else
-        {
             GameStateManager.instance.ChangeState(GameStates.STATE_GAMEPLAY);
-        }
     }
 
-    int nonFrogMail=0;
+    int nonFrogMail = 0;
     bool frogStory = true;
-    void pickEmail()
-    {
-        if (nonFrogMail > 5 && frogStory)
-        {
-            nonFrogMail = 0;
-            selectedList = messages[0];
-        }
-        else
-        {
-            //Pick a random list of emails to display messages from
-            selectedList = messages[Random.Range(1, messages.Count)];
-            nonFrogMail++;
-        }
-
-        if (selectedList.randomSelection)
-        {
-            //Pick a random message form the selected list
-            currentMail = selectedList.messages[Random.Range(0, selectedList.messages.Count)];
-            //Remove this email from the list so we can't get it twice
-            selectedList.messages.Remove(currentMail);
-            if (selectedList.messages.Count == 0)
-            {
-                messages.Remove(selectedList);
-            }
-        }
-        else
-        {
-            currentMail = selectedList.messages[selectedList.index];
-            selectedList.index++;
-            if (selectedList.index > selectedList.messages.Count)
-                messages.Remove(selectedList);
-        }
-
-        emailContent.sprite = currentMail.image;
-    }
-
     IEnumerator zoomInOut(float newSize)
     {
         yield return new WaitForSeconds(1);
         while (Mathf.Abs(monitorCamera.orthographicSize - newSize) > 0.1f)
         {
-            monitorCamera.orthographicSize = Mathf.Lerp(monitorCamera.orthographicSize, newSize, Time.deltaTime*2);
+            monitorCamera.orthographicSize = Mathf.Lerp(monitorCamera.orthographicSize, newSize, Time.deltaTime * 2);
             if (GameStateManager.instance.GetState() == GameStates.STATE_GAMEPLAY)
             {
                 monitorCamera.orthographicSize = 11;
@@ -247,7 +189,7 @@ public class mailOpener : MonoBehaviour
                 moveEmail(Input.GetAxis("Horizontal") > 0 ? 1 : -1);
             }
 
-            if (Input.GetButtonDown("Fire1") && emailPos !=0)
+            if (Input.GetButtonDown("Fire1") && emailPos != 0)
             {
                 if (!soundPlaying)
                 {
@@ -257,43 +199,18 @@ public class mailOpener : MonoBehaviour
                 }
                 if (emailPos > 0) //If email is in the JUNK zone
                 {
-                    activeCountdown = false;
-                    BossFace.instance.addEmailAngerXP();
-                    if (selectedList == messages[0])
-                        frogStory = false;
-
                     //Do animation for email being destroyed
                     monitorAnimator.Play("mail_junk");
 
                     if (currentMail.isJunk)
                     {
-                        //Junk email put in junk pile, good job
-                        //+ points
-                        StatTracker.instance.scoreToAdd += selectedList.score;
-                        StatTracker.instance.junkEmailsCorrect++;
-                        BossFace.instance.CheckEmails(true);
-                        dayTimer.completedEmail newMail;
-                        newMail.junk = true;
-                        newMail.correctAnswer = true;
-                        dayTimer.instance.todaysEmails.Add(newMail);
-
                         StopCoroutine("zoomInOut");
                         StartCoroutine(zoomInOut(11));
 
-                        Invoke("exitView",3.5f);
+                        Invoke("exitView", 3.5f);
                     }
                     else
                     {
-                        //You put a safe email in the junk pile
-                        //oooooo
-                        StatTracker.instance.scoreToAdd -= (int)(.8f*selectedList.score);
-                        StatTracker.instance.safeEmailsWrong++;
-                        BossFace.instance.CheckEmails(false);
-                        dayTimer.completedEmail newMail;
-                        newMail.junk = false;
-                        newMail.correctAnswer = false;
-                        dayTimer.instance.todaysEmails.Add(newMail);
-
                         StopCoroutine("zoomInOut");
                         StartCoroutine(zoomInOut(11));
 
@@ -302,24 +219,12 @@ public class mailOpener : MonoBehaviour
                 }
                 else if (emailPos < 0) //If email is in the SAFE zone
                 {
-                    activeCountdown = false;
-                    BossFace.instance.addEmailAngerXP();
                     //Do animation for email being marked as safe
                     monitorAnimator.Play("mail_safe");
                     miniEmailAnimator.Play("email_leave 0");
 
                     if (currentMail.isJunk)
                     {
-                        //You put junk in the safe pile
-                        //- points
-                        StatTracker.instance.scoreToAdd -= (int)(.8f * selectedList.score);
-                        StatTracker.instance.junkEmailsWrong++;
-                        BossFace.instance.CheckEmails(false);
-                        dayTimer.completedEmail newMail;
-                        newMail.junk = true;
-                        newMail.correctAnswer = false;
-                        dayTimer.instance.todaysEmails.Add(newMail);
-
                         StopCoroutine("zoomInOut");
                         StartCoroutine(zoomInOut(11));
 
@@ -327,22 +232,29 @@ public class mailOpener : MonoBehaviour
                     }
                     else
                     {
-                        //Safe mail was marked as safe, woopee
-                        //+ points
-                        StatTracker.instance.scoreToAdd += selectedList.score;
-                        StatTracker.instance.safeEmailsCorrect++;
-                        BossFace.instance.CheckEmails(true);
-                        dayTimer.completedEmail newMail;
-                        newMail.junk = false;
-                        newMail.correctAnswer = true;
-                        dayTimer.instance.todaysEmails.Add(newMail);
-
                         StopCoroutine("zoomInOut");
                         StartCoroutine(zoomInOut(11));
 
                         Invoke("exitView", 2.5f);
                     }
                 }
+            }
+        }
+    }
+}
+
+[CustomEditor(typeof(introMonitor))]
+public class ObjectBuilderEditor : Editor
+{
+    public override void OnInspectorGUI()
+    {
+        DrawDefaultInspector();
+        if (EditorApplication.isPlaying)
+        {
+            //mailOpener myScript = (mailOpener)target;
+            if (GUILayout.Button("Enter Monitor View"))
+            {
+                introMonitor.instance.enterView();
             }
         }
     }
