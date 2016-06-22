@@ -22,8 +22,7 @@ public class KnockableObjects : Wall
         else
         {
             spriteRenderer.sprite = altImage;
-          //  StatTracker.instance.messyDesks++;
-            //Debug.Log(StatTracker.instance.messyDesks);
+           StatTracker.instance.messyDesks++;
         }
     }
     public override bool CheckMovement(WorldObject _obj)
