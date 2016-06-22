@@ -28,7 +28,7 @@ public class BossFace : WorldObject
         {
             instance = this;
         }
-        faceState = FaceState.UI;
+        ChangeState(FaceState.UI);
         base.Awake();
 	}
 	
@@ -45,7 +45,6 @@ public class BossFace : WorldObject
         ManyFacedBoss();
         AddToAnger();
         CoolDown();
-        States(faceState);
         SteamParticles();
         
 	}
@@ -61,7 +60,7 @@ public class BossFace : WorldObject
                 {
                     emailCool += Time.deltaTime;
                     mailOpener.instance.angerMeter.value = emailCool;
-                    var cols = mailOpener.instance.angerMeter.colors;
+                    ColorBlock cols = mailOpener.instance.angerMeter.colors;
                     cols.disabledColor = Color.Lerp(Color.green, Color.red, (emailCool / (emailMaxCool*.75f)));
                     mailOpener.instance.angerMeter.colors = cols;
                 }
@@ -100,27 +99,30 @@ public class BossFace : WorldObject
 
     void ManyFacedBoss()
     {
-        if (bossAngerLevel <= faceList.Length - 1)
+        if (bossAngerLevel < faceList.Length)
         {
             spriteRenderer.sprite = faceList[bossAngerLevel];
         }
     }
 
-        void AddToAnger()
+    void AddToAnger()
+    {
+        if (bossAngerExp >= 1)
         {
-            if (bossAngerExp >= 1)
+            if (bossAngerLevel < faceList.Length)
             {
-                if (bossAngerLevel < faceList.Length - 1)
+                bossAngerLevel++;
+                if (bossAngerLevel == faceList.Length)
                 {
-                    bossAngerLevel++;
+                    ChangeState(FaceState.CHASE);
                 }
                 else
                 {
-                    faceState = FaceState.CHASE;
+                    bossAngerExp = 0;
                 }
-                bossAngerExp = 0;
             }
         }
+    }
    public void AngerLevelAdj(int amount = 1)
     {
         bossAngerLevel += amount;
@@ -150,36 +152,34 @@ public class BossFace : WorldObject
        }
    }
 
-   void States(FaceState _state)
+   void ChangeState(FaceState _state)
    {
-       switch (_state)
-       {
-           case FaceState.UI:
-               {
-                   spriteRenderer.sprite = faceList[bossAngerLevel];
-                   break;
-               }
-           case FaceState.CHASE:
-               {
-                   spriteRenderer.sprite = bossGone;
-                    
-                   break;
-               }
-       }
-   }
+        if (faceState != _state)
+        {
+            faceState = _state;
+            switch (faceState)
+            {
+                case FaceState.UI:
+                    {
+                        spriteRenderer.sprite = faceList[bossAngerLevel];
+                        break;
+                    }
+                case FaceState.CHASE:
+                    {
+                        spriteRenderer.sprite = bossGone;
+                        Boss.instance.BeginChase();
 
-   void SummonBoss()
-   {
-       if (bossAngerLevel >= faceList.Length - 1)
-       {
-           faceState = FaceState.CHASE;
-       }
-   }
+                        break;
+                    }
+            }
+        }
+    }
 
    public void ChangeStateBack()
    {
-       faceState = FaceState.UI;
-       bossAngerLevel-=2;
+        bossAngerExp = 0;
+        bossAngerLevel -= 2;
+        ChangeState(FaceState.UI);
    }
 
    public void NextEmail()
@@ -196,7 +196,7 @@ public class BossFace : WorldObject
    {
        bossAngerExp = 0;
        bossAngerLevel = 0;
-       faceState = FaceState.UI;
+        ChangeState(FaceState.UI);
        spriteRenderer.sprite = faceList[bossAngerLevel];
        emailCool = 0;
        playerCool = 0;

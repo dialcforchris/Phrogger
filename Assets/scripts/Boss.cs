@@ -70,10 +70,10 @@ public class Boss : WorldObject
             }
             else
             {
-                //Return boss to portrait here
                 if (!chasePlayer)
                 {
                     RemoveFromWorld();
+                    BossFace.instance.ChangeStateBack();
                     gameObject.SetActive(false);
                 }
             } 
