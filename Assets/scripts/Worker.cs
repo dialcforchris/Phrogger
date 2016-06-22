@@ -15,10 +15,7 @@ public class Worker : WorldObject, IPoolable<Worker>
     #region IPoolable
     public PoolData<Worker> poolData { get; set; }
     #endregion
-
-    
-
-   
+       
     private bool isSetup = false;
     [SerializeField] private SpriteRenderer hairSpriteRenderer = null;
     [SerializeField] private Animator animator = null;
@@ -51,9 +48,7 @@ public class Worker : WorldObject, IPoolable<Worker>
 
     // help variables
     [SerializeField] private GameObject helpMe;
-
-
-  
+    
     protected override void Start()
     {
         //Override to prevent base start getting called
@@ -102,10 +97,17 @@ public class Worker : WorldObject, IPoolable<Worker>
         hasEnteredCubicle = true;
     }
 
+    bool stopped;
+    AnimatorClipInfo[] ipo;
     private void Update()
     {
         if (GameStateManager.instance.GetState() == GameStates.STATE_GAMEPLAY)
         {
+            if (stopped)
+            {
+                animator.enabled = true;
+                stopped = false;
+            }
             StateUpdate();
             Tile _tile = TileManager.instance.GetTile(transform.position);
             if (_tile != tiles[0])
@@ -115,12 +117,17 @@ public class Worker : WorldObject, IPoolable<Worker>
                 _tile.Interaction(this);
             }
         }
+        else
+        {
+            animator.enabled = false;
+            stopped = true;
+        }
     }
     void Movement()
     {
         transform.position += direction * Time.deltaTime * speed;
         transform.rotation = Quaternion.LookRotation(Vector3.forward, direction);
-     
+
     }
     private void LateUpdate()
     {
