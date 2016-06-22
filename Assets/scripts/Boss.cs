@@ -194,4 +194,15 @@ public class Boss : WorldObject
         }
     }
 
+    public override void Reset()
+    {
+        tileSearch.Clear();
+        chasePlayer = false;
+        gameObject.SetActive(false);
+        if(tiles[0])
+        {
+            RemoveFromWorld();
+        }
+    }
+
 }

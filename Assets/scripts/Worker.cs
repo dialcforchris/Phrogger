@@ -152,11 +152,19 @@ public class Worker : WorldObject, IPoolable<Worker>
         return true;
     }
 
-    public void Reset()
+    public override void Reset()
     {
+        gameObject.SetActive(false);
         RemoveFromWorld();
         ReturnPool();
-        gameObject.SetActive(false);
+        helpCool = 0.0f;
+        sitCool = 0.0f;
+        targetIndex = 0;
+        StopAllCoroutines();
+        animator.SetBool("sit", false);
+        StateSwitch(WorkerState.WALKING);
+        needHelp = false;
+        helpMe.SetActive(false);
     }
 
     public void ReturnPool()

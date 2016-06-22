@@ -28,7 +28,9 @@ public class dayTimer : MonoBehaviour {
     public Text dayCompletedHeader;
     public Text filedText, performanceText, performanceResult;
 
-    void newDay()
+    private bool finishedDisplay = false;
+
+    public void NewDay()
     {
         currentTime = 0;
     }
@@ -45,6 +47,7 @@ public class dayTimer : MonoBehaviour {
             currentTime += Time.deltaTime;
             if (currentTime > secondsPerDay)
             {
+                finishedDisplay = false;
                 StartCoroutine(endOfDay());
             }
 
@@ -53,6 +56,18 @@ public class dayTimer : MonoBehaviour {
 
             //go from 0 to 2880
             bigHand.rectTransform.rotation = Quaternion.Euler(0, 0, (currentTime / secondsPerDay * -2880));
+        }
+        if(GameStateManager.instance.GetState() == GameStates.STATE_DAYOVER && finishedDisplay)
+        {
+            if(Input.GetButtonDown("Fire1"))
+            {
+                NewDay();
+                foreach(WorldObject _wo in FindObjectsOfType<WorldObject>())
+                {
+                    _wo.Reset();
+                }
+                GameStateManager.instance.ChangeState(GameStates.STATE_GAMEPLAY);
+            }
         }
     }
 
@@ -120,5 +135,7 @@ public class dayTimer : MonoBehaviour {
         performanceResult.color = Color.Lerp(Color.red, Color.green, correct / todaysEmails.Count);
 
         performanceResult.enabled = true;
+
+        finishedDisplay = true;
     }
 }

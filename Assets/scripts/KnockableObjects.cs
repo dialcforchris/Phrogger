@@ -31,4 +31,9 @@ public class KnockableObjects : Wall
         Knocked();
         return base.CheckMovement(_obj);
     }
+
+    public override void Reset()
+    {
+        spriteRenderer.sprite = image;
+    }
 }

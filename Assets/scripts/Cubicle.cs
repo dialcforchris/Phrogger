@@ -193,4 +193,10 @@ public class Cubicle : WorldObject
         _tiles.Add(_tile);
         return _tiles;
     }
+
+    public override void Reset()
+    {
+        isMessy = false;
+        deskFodder.sprite = tidyDesk[currentDesk];
+    }
 }

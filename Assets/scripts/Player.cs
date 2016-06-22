@@ -13,7 +13,9 @@ public class Player : WorldObject
     private float hori;
     private float verti;
     public ParticleSystem bloodSplatter;
-    public FrogCorpse corpse;
+    [SerializeField] private FrogCorpse corpse;
+
+    [SerializeField] private Transform playerSpawn = null;
     
     [SerializeField] private Animator anim = null;
     private PlayerState state = PlayerState.ACTIVE;
@@ -39,6 +41,7 @@ public class Player : WorldObject
     protected override void Awake()
     {
         base.Awake();
+        transform.position = playerSpawn.position;
     }
         protected override void Start()
     {
@@ -168,7 +171,7 @@ public class Player : WorldObject
         frogCorpse.blood.transform.position = frogCorpse.transform.position;
         
         spriteRenderer.enabled = false;
-        transform.position = new Vector2(-0.5f, -1.0f);
+        transform.position = playerSpawn.position;
         RemoveFromWorld();
         //Rather than this leave behind a corpse call remove from world, move position then add to world immediately
         strikes -= 1;
@@ -213,10 +216,8 @@ public class Player : WorldObject
                 spriteRenderer.enabled = true;
                 state = PlayerState.ACTIVE;
                 deathCool = 0;
-                transform.position = new Vector2(-0.5f, -1.0f);
-                AddToWorld();
+                //transform.position = new Vector2(-0.5f, -1.0f);
                 angle = 0;
-                RemoveFromWorld();
                 AddToWorld();
             }
         }
@@ -295,6 +296,20 @@ public class Player : WorldObject
             
         }
         return _tiles;
+    }
+
+    public override void Reset()
+    {
+        coolDown = 0.0f;
+        deathCool = 0.0f;
+        lastPos = Vector2.zero;
+        state = PlayerState.ACTIVE;
+        if(tiles[0])
+        {
+            RemoveFromWorld();
+        }
+        transform.position = playerSpawn.position;
+        AddToWorld();
     }
 }
 
