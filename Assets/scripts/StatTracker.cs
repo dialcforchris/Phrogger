@@ -98,7 +98,7 @@ public class StatTracker : MonoBehaviour
         professionalism.enabled = true;
         yield return new WaitForSeconds(1.5f);
         if (messyDesks != 0)
-            professionalismValue.text = 100-(int)(messyDesks/28f*100) + "%";//NOT A MAGIC NUMBER HONEST, 28 is the current number of desks you can mess up
+            professionalismValue.text = 100-(int)(messyDesks/47f*100) + "%";//NOT A MAGIC NUMBER HONEST, 28 is the current number of desks you can mess up
         else
             professionalismValue.text = "100%";
         professionalismValue.enabled = true;

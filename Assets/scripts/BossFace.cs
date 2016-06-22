@@ -22,6 +22,7 @@ public class BossFace : WorldObject
     float XPtoAdd = 0;
     int bossAngerLevel = 0;
     FaceState faceState;
+
 	// Use this for initialization
 	protected override void Awake () 
     {
@@ -46,14 +47,12 @@ public class BossFace : WorldObject
             XPtoAdd -= 0.01f;
             bossAngerExp += 0.01f;
         }
-
         XPbar.value = bossAngerExp;
         MoveEyes();
         ManyFacedBoss();
         AddToAnger();
         CoolDown();
         SteamParticles();
-        
 	}
 
     void CoolDown()

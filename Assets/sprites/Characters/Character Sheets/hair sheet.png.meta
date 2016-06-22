@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 6d2277a4a7641974f83591b9be97bf62
-timeCreated: 1466083217
+timeCreated: 1466609919
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -14,6 +14,16 @@ TextureImporter:
     21300014: hair sheet_7
     21300016: hair sheet_8
     21300018: hair sheet_9
+    21300020: hair sheet_10
+    21300022: hair sheet_11
+    21300024: hair sheet_12
+    21300026: hair sheet_13
+    21300028: hair sheet_14
+    21300030: hair sheet_15
+    21300032: hair sheet_16
+    21300034: hair sheet_17
+    21300036: hair sheet_18
+    21300038: hair sheet_19
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -64,110 +74,220 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 8
+        y: 32
         width: 18
         height: 14
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
     - name: hair sheet_1
       rect:
         serializedVersion: 2
         x: 20
-        y: 8
+        y: 32
         width: 24
         height: 16
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
     - name: hair sheet_2
       rect:
         serializedVersion: 2
         x: 49
-        y: 3
+        y: 27
         width: 18
         height: 17
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
     - name: hair sheet_3
       rect:
         serializedVersion: 2
         x: 72
-        y: 8
+        y: 32
         width: 18
         height: 12
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
     - name: hair sheet_4
       rect:
         serializedVersion: 2
         x: 92
-        y: 8
+        y: 32
         width: 18
         height: 13
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
     - name: hair sheet_5
       rect:
         serializedVersion: 2
         x: 113
-        y: 8
+        y: 32
         width: 18
         height: 12
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
     - name: hair sheet_6
       rect:
         serializedVersion: 2
         x: 134
-        y: 7
+        y: 31
         width: 18
         height: 13
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
     - name: hair sheet_7
       rect:
         serializedVersion: 2
         x: 154
-        y: 7
+        y: 31
         width: 18
         height: 13
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
     - name: hair sheet_8
       rect:
         serializedVersion: 2
         x: 181
-        y: 6
+        y: 30
         width: 6
         height: 11
-      alignment: 9
-      pivot: {x: 0.5, y: 0.15068986}
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
     - name: hair sheet_9
       rect:
         serializedVersion: 2
         x: 191
-        y: 0
+        y: 24
         width: 26
         height: 17
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: hair sheet_10
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 5
+        width: 16
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: hair sheet_11
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 1
+        width: 16
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: hair sheet_12
+      rect:
+        serializedVersion: 2
+        x: 47
+        y: 3
+        width: 22
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: hair sheet_13
+      rect:
+        serializedVersion: 2
+        x: 70
+        y: 5
+        width: 18
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: hair sheet_14
+      rect:
+        serializedVersion: 2
+        x: 93
+        y: 1
+        width: 16
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: hair sheet_15
+      rect:
+        serializedVersion: 2
+        x: 114
+        y: 5
+        width: 16
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: hair sheet_16
+      rect:
+        serializedVersion: 2
+        x: 135
+        y: 3
+        width: 16
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: hair sheet_17
+      rect:
+        serializedVersion: 2
+        x: 155
+        y: 5
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: hair sheet_18
+      rect:
+        serializedVersion: 2
+        x: 176
+        y: 5
+        width: 16
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - name: hair sheet_19
+      rect:
+        serializedVersion: 2
+        x: 195
+        y: 4
+        width: 18
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
     outline: []
