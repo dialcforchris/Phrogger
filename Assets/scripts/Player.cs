@@ -14,7 +14,7 @@ public class Player : WorldObject
     private float verti;
     public ParticleSystem bloodSplatter;
     public FrogCorpse corpse;
-
+    
     [SerializeField] private Animator anim = null;
     private PlayerState state = PlayerState.ACTIVE;
     public PlayerState playerState
@@ -54,6 +54,7 @@ public class Player : WorldObject
             {
                 ConvertToPos();
                 Movement();
+                HelpWorker();
                 MoveCooldown();
             }
             DeathCooler();
@@ -130,6 +131,7 @@ public class Player : WorldObject
         {
             lastPos.y = 0;
         }
+       
     }
 
     bool MoveCooldown()

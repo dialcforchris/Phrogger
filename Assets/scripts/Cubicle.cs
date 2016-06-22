@@ -122,7 +122,6 @@ public class Cubicle : WorldObject
                 if (((Worker)_obj).cubicleId == deskId && !((Worker)_obj).hasEnteredCubicle)
                 {
                     ((Worker)_obj).MoveToChair();
-                    //filledChairs[((Worker)_obj).chairId] = true; 
                 }
             }
         }
@@ -137,40 +136,38 @@ public class Cubicle : WorldObject
                     isMessy = true;
                     deskFodder.sprite = messyDesk[currentDesk];
                 }
-
-                Phishing();
+               
+                    Phishing();
             }
             else if (_obj.GetTile(0) == tiles[(int)Positions.EMPTY])
             {
-                Phishing();
+                    Phishing();
             }
         }
     }
 
     private void Phishing()
     {
-        for (int i=0;i<chairs.Length;i++)
+        for (int i = 0; i < chairs.Length; i++)
         {
-            //if (filledChairs[i])
-            //{
-                Tile _tile = TileManager.instance.GetTile(chairs[i].position);
-                WorldObject[] onTile = _tile.GetObjects();
-                foreach (WorldObject wo in onTile)
+            Tile _tile = TileManager.instance.GetTile(chairs[i].position);
+            WorldObject[] onTile = _tile.GetObjects();
+
+            foreach (WorldObject wo in onTile)
+            {
+                if (wo.tag == "Worker")
                 {
-                    if (wo.tag == "Worker")
+                    if (((Worker)wo).helpNeeded)
                     {
-                        if (((Worker)wo).helpNeeded)
-                        {
-                            mailOpener.instance.enterView();
-                            ((Worker)wo).FinishedHelping();
-                            return;
-                        }
-                    }
+                        mailOpener.instance.enterView();
+                        ((Worker)wo).FinishedHelping();
+                        return;
+                     }
                 }
-            //}
+            }
         }
     }
-    
+
     //Whether an object can move to the same position as another object
     public override bool CheckMovement(WorldObject _obj)
     {
