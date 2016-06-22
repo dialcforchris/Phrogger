@@ -15,7 +15,6 @@ public class dayTimer : MonoBehaviour {
     public GameObject emailIconPrefab;
     public Animator dayFinishedText;
     public Sprite junkMailSprite;
-    public Text DayText;
     public List<completedEmail> todaysEmails = new List<completedEmail>();
 
     [System.Serializable]
@@ -25,7 +24,7 @@ public class dayTimer : MonoBehaviour {
         public bool correctAnswer;
     }
 
-    [Header("Game Over UI")]
+    [Header("Day Over UI")]
     public Text dayCompletedHeader;
     public Text filedText, performanceText, performanceResult;
 

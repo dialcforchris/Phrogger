@@ -14,10 +14,13 @@ public class Player : WorldObject
     private float verti;
     public ParticleSystem bloodSplatter;
     public FrogCorpse corpse;
-
+    
     [SerializeField] private Animator anim = null;
     private PlayerState state = PlayerState.ACTIVE;
-
+    public PlayerState playerState
+    {
+        get { return state; }
+    }
     float deathCool = 0;
     float maxDeathcool = 3;
 
@@ -51,6 +54,7 @@ public class Player : WorldObject
             {
                 ConvertToPos();
                 Movement();
+                HelpWorker();
                 MoveCooldown();
             }
             DeathCooler();
@@ -127,6 +131,7 @@ public class Player : WorldObject
         {
             lastPos.y = 0;
         }
+       
     }
 
     bool MoveCooldown()
@@ -294,7 +299,7 @@ public class Player : WorldObject
 }
 
 
-enum PlayerState
+public enum PlayerState
 {
     ACTIVE,
     DEAD,

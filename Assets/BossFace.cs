@@ -1,55 +1,75 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
-public class BossFace : MonoBehaviour 
+public class BossFace : WorldObject
 
 {
     public static BossFace instance = null;
     public Sprite[] faceList;
-    public SpriteRenderer spriteRenderer;
+    public Sprite bossGone;
+    public ParticleSystem steam;
     public GameObject eyes;
-    public GameObject player;
+    public Player player;
+    public Slider XPbar;
+    float bossAngerAddition = 0.35f;
     float emailCool = 0;
-    float emailMaxCool = 6;
+    float emailMaxCool = 20;
     float playerCool = 0;
     float playerMaxCool= 1.5f;
     Tile playerTile;
     float bossAngerExp = 0;
     int bossAngerLevel = 0;
-    public bool wrongEmail = false;
+    FaceState faceState;
 	// Use this for initialization
-	void Awake () 
+	protected override void Awake () 
     {
         if (instance==null)
         {
             instance = this;
         }
+        faceState = FaceState.UI;
+        base.Awake();
 	}
 	
+    public void addEmailAngerXP()
+    {
+        bossAngerExp += (emailCool/emailMaxCool)*bossAngerAddition;
+    }
+
 	// Update is called once per frame
 	void Update () 
     {
+        XPbar.value = bossAngerExp;
         MoveEyes();
         ManyFacedBoss();
         AddToAnger();
         CoolDown();
+        States(faceState);
+        SteamParticles();
+        
 	}
+
     void CoolDown()
     {
         if (GameStateManager.instance.GetState() == GameStates.STATE_EMAIL)
         {
+            playerCool = 0;
             if (emailCool< emailMaxCool)
             {
-                emailCool += Time.deltaTime;
-            }
-            else
-            {
-                bossAngerExp += 0.5f;
-                emailCool = 0;
+                if (mailOpener.instance.activeCountdown)
+                {
+                    emailCool += Time.deltaTime;
+                    mailOpener.instance.angerMeter.value = emailCool;
+                    var cols = mailOpener.instance.angerMeter.colors;
+                    cols.disabledColor = Color.Lerp(Color.green, Color.red, (emailCool / (emailMaxCool*.75f)));
+                    mailOpener.instance.angerMeter.colors = cols;
+                }
             }
         }
-        else if (GameStateManager.instance.GetState() == GameStates.STATE_GAMEPLAY)
+        else if (GameStateManager.instance.GetState() == GameStates.STATE_GAMEPLAY&&player.playerState==PlayerState.ACTIVE)
         {
+            emailCool = 0;
             if (playerCool < playerMaxCool)
             {
                 if (playerCool == 0)
@@ -62,7 +82,7 @@ public class BossFace : MonoBehaviour
             {
                 if (playerTile == TileManager.instance.GetTile(player.transform.position))
                 {
-                    bossAngerExp += 0.5f;
+                    bossAngerExp += bossAngerAddition;
                 }
                 playerCool = 0;
             }
@@ -77,47 +97,109 @@ public class BossFace : MonoBehaviour
             ((Camera.main.WorldToViewportPoint(player.transform.position).x * 2 - 1) / 10), eyes.transform.position.y);
         }
     }
-        void ManyFacedBoss()
+
+    void ManyFacedBoss()
     {
         if (bossAngerLevel <= faceList.Length - 1)
         {
             spriteRenderer.sprite = faceList[bossAngerLevel];
         }
     }
-    void AddToAnger()
-    {
-        if (bossAngerExp>=1)
+
+        void AddToAnger()
         {
-            if (bossAngerLevel < faceList.Length - 1)
+            if (bossAngerExp >= 1)
             {
-                bossAngerLevel++; 
+                if (bossAngerLevel < faceList.Length - 1)
+                {
+                    bossAngerLevel++;
+                }
+                else
+                {
+                    faceState = FaceState.CHASE;
+                }
+                bossAngerExp = 0;
             }
-            bossAngerExp = 0;
         }
-    }
    public void AngerLevelAdj(int amount = 1)
     {
         bossAngerLevel += amount;
     }
-  public void CheckEmails(bool _correct)
+    void SteamParticles()
    {
-        if (!_correct)
+      
+        if (bossAngerLevel==3&&faceState==FaceState.UI)
         {
-            bossAngerExp += 0.5f;
+            if (!steam.isPlaying)
+            steam.Play();
         }
         else
         {
-            if (bossAngerLevel>=faceList.Length-1)
+            if (steam.isPlaying)
             {
-                bossAngerLevel--;
+                steam.Stop();
             }
         }
    }
-    void SummonBoss()
-  {
-        if (bossAngerLevel>=faceList.Length-1)
-        {
-            //make the boss come and fuck you up
-        }
-  }
+
+   public void CheckEmails(bool _correct)
+   {
+       if (!_correct)
+       {
+           bossAngerExp += bossAngerAddition;
+       }
+   }
+
+   void States(FaceState _state)
+   {
+       switch (_state)
+       {
+           case FaceState.UI:
+               {
+                   spriteRenderer.sprite = faceList[bossAngerLevel];
+                   break;
+               }
+           case FaceState.CHASE:
+               {
+                   spriteRenderer.sprite = bossGone;
+                    
+                   break;
+               }
+       }
+   }
+
+   void SummonBoss()
+   {
+       if (bossAngerLevel >= faceList.Length - 1)
+       {
+           faceState = FaceState.CHASE;
+       }
+   }
+
+   public void ChangeStateBack()
+   {
+       faceState = FaceState.UI;
+       bossAngerLevel-=2;
+   }
+
+   public void NextEmail()
+   {
+       emailCool = 0;
+   }
+
+   public enum FaceState
+   {
+       UI,
+       CHASE,
+   }
+    public override void Reset()
+   {
+       bossAngerExp = 0;
+       bossAngerLevel = 0;
+       faceState = FaceState.UI;
+       spriteRenderer.sprite = faceList[bossAngerLevel];
+       emailCool = 0;
+       playerCool = 0;
+       steam.Stop();
+   }
 }

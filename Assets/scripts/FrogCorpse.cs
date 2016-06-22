@@ -12,7 +12,7 @@ public class FrogCorpse : WorldObject
             blood.Play();
         }
     }
-    public void Reset()
+    public override void Reset()
     {
         RemoveFromWorld();
     }
