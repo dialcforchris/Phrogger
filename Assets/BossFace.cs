@@ -19,6 +19,7 @@ public class BossFace : WorldObject
     float playerMaxCool= 1.5f;
     Tile playerTile;
     float bossAngerExp = 0;
+    float XPtoAdd = 0;
     int bossAngerLevel = 0;
     FaceState faceState;
 	// Use this for initialization
@@ -34,12 +35,18 @@ public class BossFace : WorldObject
 	
     public void addEmailAngerXP()
     {
-        bossAngerExp += (emailCool/emailMaxCool)*bossAngerAddition;
+        XPtoAdd += (emailCool/emailMaxCool)*bossAngerAddition;
     }
 
 	// Update is called once per frame
 	void Update () 
     {
+        if (XPtoAdd > 0)
+        {
+            XPtoAdd -= 0.01f;
+            bossAngerExp += 0.01f;
+        }
+
         XPbar.value = bossAngerExp;
         MoveEyes();
         ManyFacedBoss();
@@ -81,7 +88,7 @@ public class BossFace : WorldObject
             {
                 if (playerTile == TileManager.instance.GetTile(player.transform.position))
                 {
-                    bossAngerExp += bossAngerAddition;
+                    XPtoAdd += bossAngerAddition;
                 }
                 playerCool = 0;
             }
@@ -148,7 +155,7 @@ public class BossFace : WorldObject
    {
        if (!_correct)
        {
-           bossAngerExp += bossAngerAddition;
+           XPtoAdd += bossAngerAddition;
        }
    }
 
@@ -177,6 +184,7 @@ public class BossFace : WorldObject
 
    public void ChangeStateBack()
    {
+        XPtoAdd = 0;
         bossAngerExp = 0;
         bossAngerLevel -= 2;
         ChangeState(FaceState.UI);
@@ -194,6 +202,7 @@ public class BossFace : WorldObject
    }
     public override void Reset()
    {
+        XPtoAdd = 0;
        bossAngerExp = 0;
        bossAngerLevel = 0;
         ChangeState(FaceState.UI);
