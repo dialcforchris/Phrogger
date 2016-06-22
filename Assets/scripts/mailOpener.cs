@@ -1,5 +1,4 @@
-﻿
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEditor;
 using UnityEngine.UI;
 using System.Collections;
@@ -60,6 +59,7 @@ public class mailOpener : MonoBehaviour
         //Change cameras over
         StartCoroutine(camTransition(true));
     }
+
     IEnumerator camTransition(bool InOut) //True for entering email mode, false for exiting it
     {
         computerSounds.DOFade((InOut) ? SoundManager.instance.volumeMultiplayer: 0, 2);
@@ -70,7 +70,7 @@ public class mailOpener : MonoBehaviour
         float lerpy = 1;
         while (lerpy > 0)
         {
-            lerpy -= Time.deltaTime;
+            lerpy -= Time.deltaTime*2;
 
             if (!InOut)
                 monCamTransition.material.SetFloat("_SliceAmount", lerpy);
@@ -80,6 +80,7 @@ public class mailOpener : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
 
+        yield return new WaitForSeconds(0.1f);
         mainCam.enabled = !InOut;
         monitorCamera.enabled = InOut;
 
@@ -100,35 +101,51 @@ public class mailOpener : MonoBehaviour
         {
             //Intro animation
             monitorAnimator.Play("mail_intro");
+            pickEmail();
 
-            //pick a random list
-            selectedList =  messages[Random.Range(0, messages.Count - 1)];
-            
-            //Remove this email from the list so we can't get it twice
-        //    messages.Remove(currentMail);
-            messages.TrimExcess();
-            if (selectedList.randomSelection)
-            {
-                //Pick a random message form the selected list
-                currentMail = selectedList.messages[Random.Range(0, selectedList.messages.Count - 1)];
-                //Remove this email from the list so we can't get it twice
-                selectedList.messages.Remove(currentMail);
-            }
-            else
-            {
-                currentMail = selectedList.messages[selectedList.index];
-                selectedList.index++;
-                if (selectedList.index > selectedList.messages.Count - 1)
-                    messages.Remove(selectedList);
-            }
-            emailContent.sprite = currentMail.image;
-            
             StopCoroutine("zoomInOut");
             StartCoroutine(zoomInOut(7.5f));
         }
         else
-            GameStateManager.instance.ChangeState(GameStates.STATE_GAMEPLAY);
-        
+            GameStateManager.instance.ChangeState(GameStates.STATE_GAMEPLAY);        
+    }
+
+    int nonFrogMail=0;
+
+    void pickEmail()
+    {
+        if (nonFrogMail > 5)
+        {
+            nonFrogMail = 0;
+            selectedList = messages[0];
+        }
+        else
+        {
+            //Pick a random list of emails to display messages from
+            selectedList = messages[Random.Range(1, messages.Count - 1)];
+            nonFrogMail++;
+        }
+
+        if (selectedList.randomSelection)
+        {
+            //Pick a random message form the selected list
+            currentMail = selectedList.messages[Random.Range(0, selectedList.messages.Count - 1)];
+            //Remove this email from the list so we can't get it twice
+            selectedList.messages.Remove(currentMail);
+            if (selectedList.messages.Count == 0)
+            {
+                messages.Remove(selectedList);
+            }
+        }
+        else
+        {
+            currentMail = selectedList.messages[selectedList.index];
+            selectedList.index++;
+            if (selectedList.index > selectedList.messages.Count - 1)
+                messages.Remove(selectedList);
+        }
+
+        emailContent.sprite = currentMail.image;
     }
 
     IEnumerator zoomInOut(float newSize)
@@ -136,7 +153,7 @@ public class mailOpener : MonoBehaviour
         yield return new WaitForSeconds(1);
         while (Mathf.Abs(monitorCamera.orthographicSize - newSize) > 0.1f)
         {
-            monitorCamera.orthographicSize = Mathf.Lerp(monitorCamera.orthographicSize, newSize, Time.deltaTime);
+            monitorCamera.orthographicSize = Mathf.Lerp(monitorCamera.orthographicSize, newSize, Time.deltaTime*2);
             if (GameStateManager.instance.GetState() == GameStates.STATE_GAMEPLAY)
             {
                 monitorCamera.orthographicSize = 11;
@@ -251,23 +268,29 @@ public class mailOpener : MonoBehaviour
                         newMail.junk = true;
                         newMail.correctAnswer = true;
                         dayTimer.instance.todaysEmails.Add(newMail);
+
                         StopCoroutine("zoomInOut");
                         StartCoroutine(zoomInOut(11));
 
-                        Invoke("exitView", 4);
+                        Invoke("exitView",3.5f);
                     }
                     else
                     {
                         Debug.Log("You put a safe email in the junk pile, YOU WALLY");
                         //You put a safe email in the junk pile
                         //oooooo
-                        BossFace.instance.CheckEmails(false);
                         StatTracker.instance.scoreToAdd -= (int)(.8f*selectedList.score);
                         StatTracker.instance.safeEmailsWrong++;
+                        BossFace.instance.CheckEmails(false);
+                        dayTimer.completedEmail newMail;
+                        newMail.junk = false;
+                        newMail.correctAnswer = false;
+                        dayTimer.instance.todaysEmails.Add(newMail);
+
                         StopCoroutine("zoomInOut");
                         StartCoroutine(zoomInOut(11));
 
-                        Invoke("exitView", 4);
+                        Invoke("exitView", 3.5f);
                     }
                 }
                 else if (emailPos < 0) //If email is in the SAFE zone
@@ -281,9 +304,14 @@ public class mailOpener : MonoBehaviour
                         Debug.Log("You put junk in the safe pile");
                         //You put junk in the safe pile
                         //- points
-                        BossFace.instance.CheckEmails(false);
                         StatTracker.instance.scoreToAdd -= 100;
                         StatTracker.instance.junkEmailsWrong++;
+                        BossFace.instance.CheckEmails(false);
+                        dayTimer.completedEmail newMail;
+                        newMail.junk = true;
+                        newMail.correctAnswer = false;
+                        dayTimer.instance.todaysEmails.Add(newMail);
+
                         StopCoroutine("zoomInOut");
                         StartCoroutine(zoomInOut(11));
 
@@ -297,8 +325,14 @@ public class mailOpener : MonoBehaviour
                         StatTracker.instance.scoreToAdd += 100;
                         StatTracker.instance.safeEmailsCorrect++;
                         BossFace.instance.CheckEmails(true);
+                        dayTimer.completedEmail newMail;
+                        newMail.junk = false;
+                        newMail.correctAnswer = true;
+                        dayTimer.instance.todaysEmails.Add(newMail);
+
                         StopCoroutine("zoomInOut");
                         StartCoroutine(zoomInOut(11));
+
                         Invoke("exitView", 2.5f);
                     }
                 }
