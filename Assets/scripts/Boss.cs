@@ -11,7 +11,6 @@ public class Boss : WorldObject
     [SerializeField] private AnimationOverride animOverride= null;
 
     private List<Tile> tileSearch = new List<Tile>();
-
     private float speed = 2.0f;
     
 

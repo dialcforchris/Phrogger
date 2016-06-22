@@ -46,4 +46,8 @@ public class WorldObject : MonoBehaviour
     {
         return tiles[_index];
     }
+    public virtual void Reset()
+    {
+
+    }
 }
