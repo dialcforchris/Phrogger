@@ -21,8 +21,11 @@ public class mailOpener : MonoBehaviour
     public AudioSource computerSounds;
     public Slider angerMeter;
     public bool activeCountdown;
-
+    Vector2 angerMeterOrigin;
+    public ParticleSystem angryParticles;
     public List<mailColection> messages; //All the possible emails the player might have to deal with
+
+    public float multi;
 
     private mailColection selectedList;
     private mail currentMail;
@@ -46,6 +49,7 @@ public class mailOpener : MonoBehaviour
     }
     void Awake()
     {
+        angerMeterOrigin = angerMeter.GetComponent<RectTransform>().anchoredPosition;
         instance = this;
         //Always remember to seed your random :)
         Random.seed = System.DateTime.Now.Millisecond;
@@ -63,6 +67,11 @@ public class mailOpener : MonoBehaviour
 
     IEnumerator camTransition(bool InOut) //True for entering email mode, false for exiting it
     {
+        if (InOut)
+        {
+            pop = false;
+            angerMeter.value = 0;
+        }
         computerSounds.DOFade((InOut) ? SoundManager.instance.volumeMultiplayer : 0, 2);
         Random.seed = System.DateTime.Now.Millisecond;
         mainCamTransition.material.SetTexture("_SliceGuide", gradients[Random.Range(0, gradients.Length)]);
@@ -112,6 +121,7 @@ public class mailOpener : MonoBehaviour
         {
             GameStateManager.instance.ChangeState(GameStates.STATE_GAMEPLAY);
         }
+        angryParticles.Stop();
     }
 
     int nonFrogMail=0;
@@ -222,9 +232,33 @@ public class mailOpener : MonoBehaviour
         }
     }
 
+    bool pop;
     void Update()
     {
+        float shift = ((angerMeter.value* angerMeter.value* angerMeter.value) / angerMeter.maxValue)*multi;
+        angerMeter.GetComponent<RectTransform>().anchoredPosition = angerMeterOrigin + new Vector2(Mathf.Sin(Random.value) * shift, Mathf.Sin(Random.value) * shift);
+        if (angerMeter.value ==angerMeter.maxValue && !pop)
+        {
+            StartCoroutine(AngerMeterPop());
+        }
         InputRelated();
+    }
+
+    IEnumerator AngerMeterPop()
+    {
+        pop = true;
+        while (multi < 0.1f)
+        {
+            multi += Time.deltaTime * 0.1f;
+            yield return new WaitForEndOfFrame();
+        }
+        angryParticles.Emit(150);
+        angryParticles.Play();
+        while (multi >0 )
+        {
+            multi -= Time.deltaTime*0.2f;
+            yield return new WaitForEndOfFrame();
+        }
     }
 
     void allowSounds()
