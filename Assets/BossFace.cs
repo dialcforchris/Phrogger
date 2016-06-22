@@ -153,6 +153,7 @@ public class BossFace : WorldObject
            case FaceState.CHASE:
                {
                    spriteRenderer.sprite = bossGone;
+                    
                    break;
                }
        }
@@ -169,7 +170,7 @@ public class BossFace : WorldObject
    public void ChangeStateBack()
    {
        faceState = FaceState.UI;
-       bossAngerLevel--;
+       bossAngerLevel-=2;
    }
 
    public void NextEmail()
