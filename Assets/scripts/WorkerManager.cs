@@ -101,7 +101,9 @@ public class WorkerManager : MonoBehaviour
             string _s = bodySprites[Random.Range(0, bodySprites.Length)];
             if (_unique)
             {
-                _s = Random.value < 0.1f ? "Janitor" : _s;
+                float _rand = Random.value;
+                _s = _rand < 0.10f ? "Janitor" : _s;
+                _s = _rand < 0.25f ? "Spinning chairman" : _s;
             }
             _worker.SetupWorker(_s, hairSprites[Random.Range(0, hairSprites.Length)]);
         }

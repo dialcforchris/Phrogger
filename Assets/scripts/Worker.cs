@@ -36,7 +36,7 @@ public class Worker : WorldObject, IPoolable<Worker>
 
     private float helpCool = 0;
     private float maxHelpCool = 5.0f;
-    private float helpChance = 0.05f;
+    private float helpChance = 0.1f;
 
     public bool hasEnteredCubicle { get; set; }
 
@@ -44,7 +44,9 @@ public class Worker : WorldObject, IPoolable<Worker>
     public int cubicleId { get; set; }
 
     public bool isJanitor { get; set; }
-
+    public bool isSpinning { get; set; }
+    [SerializeField] private SpriteRenderer spinningRenderer = null;
+    [SerializeField] private Sprite[] spinningSprites = null;
 
     private bool needHelp = false;
     public bool helpNeeded { get { return needHelp; } }
@@ -72,6 +74,7 @@ public class Worker : WorldObject, IPoolable<Worker>
             isSetup = true;
             maxSitCool = Random.Range(maxSitLowerCool, maxSitUpperCool);
             isJanitor = _animName == "Janitor" ? true : false;
+            isSpinning = _animName == "Spinning chairman" ? true : false;
         }
     }
 
@@ -90,6 +93,14 @@ public class Worker : WorldObject, IPoolable<Worker>
         targetIndex = 0;
         gameObject.SetActive(true);
         hasEnteredCubicle = false;
+        if(isSpinning)
+        {
+            animator.SetBool("sit", true);
+            animator.SetBool("walk", false);
+            spinningRenderer.sprite = spinningSprites[Random.Range(0, spinningSprites.Length)];
+            spinningRenderer.gameObject.SetActive(true);
+            hairSpriteRenderer.gameObject.SetActive(false);
+        }
     }
 
     public void InitialiseToCubicle(Vector3 _direction, float _speed)
@@ -125,6 +136,10 @@ public class Worker : WorldObject, IPoolable<Worker>
     {
         transform.position += direction * Time.deltaTime * speed;
         transform.rotation = Quaternion.LookRotation(Vector3.forward, direction);
+        if (isSpinning)
+        {
+            spinningRenderer.gameObject.transform.Rotate(new Vector3(0.0f, 0.0f, 90.0f * Time.deltaTime));
+        }
         Tile _tile = TileManager.instance.GetTile(transform.position);
         if (_tile != tiles[0])
         {
@@ -177,6 +192,10 @@ public class Worker : WorldObject, IPoolable<Worker>
         sitCool = 0.0f;
         targetIndex = 0;
         StopAllCoroutines();
+        if (isSpinning)
+        {
+            spinningRenderer.gameObject.SetActive(false);
+        }
         animator.SetBool("sit", false);
         StateSwitch(WorkerState.WALKING);
         needHelp = false;
