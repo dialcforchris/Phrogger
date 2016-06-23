@@ -11,7 +11,7 @@ public class BossFace : WorldObject
     public GameObject eyes;
     public Player player;
     public Slider XPbar;
-    float bossAngerAddition = 0.35f;
+    public float bossAngerAddition = 0.35f;
     float emailCool = 0;
     float emailTimeLeniency = 0;
     float emailMaxCool = 20;
