@@ -19,7 +19,7 @@ public class CameraZoom : MonoBehaviour {
     public IEnumerator Zoom(Transform target,bool IntroZoom)
     {
         if (!IntroZoom)
-            yield return new WaitForSeconds(1.5f);
+            yield return new WaitForSeconds(0.25f);
         GameStateManager.instance.ChangeState(GameStates.STATE_DAYOVER);
         if (!IntroZoom)
         {
@@ -35,7 +35,7 @@ public class CameraZoom : MonoBehaviour {
 
         if (!IntroZoom)
         {
-            while (timer < 2)
+            while (timer < 1.25f)
             {
                 timer += Time.deltaTime;
                 Camera.main.transform.position = Vector2.Lerp(Camera.main.transform.position, target.position, Time.deltaTime * 10);

@@ -10,6 +10,8 @@ public class Boss : WorldObject
     [SerializeField] private AnimationOverride animOverride= null;
     [SerializeField] private Animator animator = null;
 
+    public Animator AngryBossText;
+
     private List<Tile> tileSearch = new List<Tile>();
 
     [SerializeField] private float speed = 2.0f;
@@ -111,9 +113,15 @@ public class Boss : WorldObject
         return true;
     }
 
+    void animateMe()
+    {
+        AngryBossText.Play("bossText_in");
+    }
+
     public void BeginChase()
     {
         CameraZoom.instance.doAZoom(false, transform);
+        Invoke("animateMe", .5f);
         tileSearch = player.GetRouteToPlayer();
         transform.position = tileSearch[0].transform.position;
         AddToWorld();
