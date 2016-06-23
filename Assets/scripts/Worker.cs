@@ -348,11 +348,11 @@ public class Worker : WorldObject, IPoolable<Worker>
             case WorkerState.HELP:
                 {
                    if (!helpMe.activeSelf)
-                   {
-                       helpMe.SetActive(true);
-                       helpMe.transform.rotation = Quaternion.Euler(Vector2.up);
-                       helpMe.transform.position = (new Vector2(transform.position.x , transform.position.y + (transform.localScale.y*0.7f)));
-                       needHelp = true;
+                    {
+                        helpMe.SetActive(true);
+                        helpMe.transform.rotation = Quaternion.Euler(Vector2.up);
+                        helpMe.GetComponentInChildren<Animator>().Play("help_intro");
+                        needHelp = true;
                     }
                     break;
                 }
