@@ -332,7 +332,7 @@ public class Worker : WorldObject, IPoolable<Worker>
                     {
                         helpMe.SetActive(true);
                         helpMe.transform.rotation = Quaternion.Euler(Vector2.up);
-                        helpMe.GetComponentInChildren<Animator>().Play("help_bob");
+                        helpMe.GetComponentInChildren<Animator>().Play("help_intro");
                         needHelp = true;
                     }
                     break;

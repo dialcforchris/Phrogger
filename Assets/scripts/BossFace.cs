@@ -13,6 +13,7 @@ public class BossFace : WorldObject
     public Slider XPbar;
     float bossAngerAddition = 0.35f;
     float emailCool = 0;
+    float emailTimeLeniency = 0;
     float emailMaxCool = 20;
     float playerCool = 0;
     float playerMaxCool = 1.5f;
@@ -66,20 +67,27 @@ public class BossFace : WorldObject
             slacker = false;
             playerCool = 0;
             workCool = 0;
-            if (emailCool < emailMaxCool)
+            //Only do when we've been going for a few seconds
+
+            if (mailOpener.instance.activeCountdown)
             {
-                if (mailOpener.instance.activeCountdown)
+                emailTimeLeniency += Time.deltaTime;
+                if (emailTimeLeniency > 2.5f)
                 {
-                    emailCool += Time.deltaTime;
-                    mailOpener.instance.angerMeter.value = emailCool;
-                    ColorBlock cols = mailOpener.instance.angerMeter.colors;
-                    cols.disabledColor = Color.Lerp(Color.green, Color.red, (emailCool / (emailMaxCool * .75f)));
-                    mailOpener.instance.angerMeter.colors = cols;
+                    if (emailCool < emailMaxCool)
+                    {
+                        emailCool += Time.deltaTime;
+                        mailOpener.instance.angerMeter.value = emailCool;
+                        ColorBlock cols = mailOpener.instance.angerMeter.colors;
+                        cols.disabledColor = Color.Lerp(Color.green, Color.red, (emailCool / (emailMaxCool * .75f)));
+                        mailOpener.instance.angerMeter.colors = cols;
+                    }
                 }
             }
         }
         else if (GameStateManager.instance.GetState() == GameStates.STATE_GAMEPLAY && player.playerState == PlayerState.ACTIVE)
         {
+            emailTimeLeniency = 0;
             emailCool = 0;
             if (playerCool < playerMaxCool)
             {
