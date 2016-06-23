@@ -43,6 +43,9 @@ public class Worker : WorldObject, IPoolable<Worker>
     public int chairId { get; set; }
     public int cubicleId { get; set; }
 
+    public bool isJanitor { get; set; }
+
+
     private bool needHelp = false;
     public bool helpNeeded { get { return needHelp; } }
 
@@ -68,6 +71,7 @@ public class Worker : WorldObject, IPoolable<Worker>
             cubicleId = 100;
             isSetup = true;
             maxSitCool = Random.Range(maxSitLowerCool, maxSitUpperCool);
+            isJanitor = _animName == "Janitor" ? true : false;
         }
     }
 
@@ -220,6 +224,13 @@ public class Worker : WorldObject, IPoolable<Worker>
                 currentTarget = positions[targetIndex];
             }
             transform.position = Vector2.MoveTowards(transform.position, currentTarget, speed * Time.deltaTime);
+            Tile _tile = TileManager.instance.GetTile(transform.position);
+            if (_tile != tiles[0])
+            {
+                RemoveFromWorld();
+                AddToWorld();
+                _tile.Interaction(this);
+            }
             float lookAngle = Mathf.Atan2((transform.position.y - currentTarget.y), (transform.position.x - currentTarget.x)) * Mathf.Rad2Deg;
             Quaternion newRot = new Quaternion();
             newRot.eulerAngles = new Vector3(0, 0, lookAngle + 90);

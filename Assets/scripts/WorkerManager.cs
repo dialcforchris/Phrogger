@@ -93,12 +93,17 @@ public class WorkerManager : MonoBehaviour
         }
     }
 
-    public Worker GetPooledWorker()
+    public Worker GetPooledWorker(bool _unique = false)
     {
         Worker _worker = workerPool.GetPooledObject();
         if (!_worker.GetIsSetup())
         {
-            _worker.SetupWorker(bodySprites[Random.Range(0, bodySprites.Length)], hairSprites[Random.Range(0, hairSprites.Length)]);
+            string _s = bodySprites[Random.Range(0, bodySprites.Length)];
+            if (_unique)
+            {
+                _s = Random.value < 0.1f ? "Janitor" : _s;
+            }
+            _worker.SetupWorker(_s, hairSprites[Random.Range(0, hairSprites.Length)]);
         }
         return _worker;
     }

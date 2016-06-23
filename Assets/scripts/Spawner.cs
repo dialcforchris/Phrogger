@@ -39,7 +39,7 @@ public class Spawner : WorldObject
 
     private void Spawn()
     {
-        Worker _worker = WorkerManager.instance.GetPooledWorker();
+        Worker _worker = WorkerManager.instance.GetPooledWorker(true);
         _worker.transform.position = transform.position;
         if(isLeft)
         { 

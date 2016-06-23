@@ -104,6 +104,8 @@ public class Cubicle : WorldObject
     {
         //filledChairs[_worker.chairId] = true;
         _worker.transform.position = chairPivots[_worker.chairId].position;
+        _worker.RemoveFromWorld();
+        _worker.AddToWorld();
 
         float lookAngle = Mathf.Atan2((chairs[_worker.chairId].position.y - chairPivots[_worker.chairId].position.y), 
             (chairs[_worker.chairId].position.x - chairPivots[_worker.chairId].position.x)) * Mathf.Rad2Deg;

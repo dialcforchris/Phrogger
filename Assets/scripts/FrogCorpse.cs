@@ -9,6 +9,17 @@ public class FrogCorpse : WorldObject
     {
         if (_obj.tag == "Worker" || _obj.tag == "Boss")
         {
+            if (((Worker)_obj).isJanitor)
+            {
+                Reset();
+            }
+            else
+            {
+                blood.Play();
+            }
+        }
+        else if (_obj.tag == "Boss")
+        {
             blood.Play();
         }
     }
