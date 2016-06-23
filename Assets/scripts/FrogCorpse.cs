@@ -15,6 +15,6 @@ public class FrogCorpse : WorldObject
     public override void Reset()
     {
         RemoveFromWorld();
-        gameObject.SetActive(false);
+        Destroy(gameObject);
     }
 }

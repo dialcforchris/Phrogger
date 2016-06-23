@@ -16,6 +16,7 @@ public class dayTimer : MonoBehaviour {
     public Animator dayFinishedText;
     public Sprite junkMailSprite;
     public List<completedEmail> todaysEmails = new List<completedEmail>();
+    private List<GameObject> emailObjects = null;
 
     [System.Serializable]
     public struct completedEmail
@@ -33,6 +34,24 @@ public class dayTimer : MonoBehaviour {
     public void NewDay()
     {
         currentTime = 0;
+        progressUI.SetActive(false);
+        dayFinishedText.Stop();
+        progressUI.GetComponent<Image>().enabled = false;
+        dayCompletedHeader.text = string.Empty;
+        dayCompletedHeader.enabled = false;
+        filedText.enabled = false;
+        for (int i = 0; i < todaysEmails.Count; i++)
+        {
+            Destroy(emailObjects[i]);
+        }
+        todaysEmails.Clear();
+        emailObjects.Clear();
+
+        performanceText.enabled = false;
+        performanceResult.text = string.Empty;
+        finishedDisplay = false;
+
+        WorkerManager.instance.SetupDefaultPositions();
     }
 
     void Awake()
@@ -61,11 +80,11 @@ public class dayTimer : MonoBehaviour {
         {
             if(Input.GetButtonDown("Fire1"))
             {
-                NewDay();
                 foreach(WorldObject _wo in FindObjectsOfType<WorldObject>())
                 {
                     _wo.Reset();
                 }
+                NewDay();
                 GameStateManager.instance.ChangeState(GameStates.STATE_GAMEPLAY);
             }
         }
@@ -91,10 +110,12 @@ public class dayTimer : MonoBehaviour {
         int top = 0, bot = 0;
         float correct = 0;
 
+        emailObjects = new List<GameObject>();
         for (int i = 0; i < todaysEmails.Count; i++)
         {
             //For each email, do a prefab.
             GameObject email = Instantiate(emailIconPrefab) as GameObject;
+            emailObjects.Add(email);
 
             if (todaysEmails[i].junk)
                 email.GetComponent<Image>().sprite = junkMailSprite;

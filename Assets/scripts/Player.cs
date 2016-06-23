@@ -309,6 +309,8 @@ public class Player : WorldObject
             RemoveFromWorld();
         }
         transform.position = playerSpawn.position;
+        anim.SetBool("Dead", false);
+        spriteRenderer.enabled = true;
         AddToWorld();
     }
 }
