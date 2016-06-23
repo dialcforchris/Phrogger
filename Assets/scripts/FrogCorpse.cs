@@ -7,7 +7,7 @@ public class FrogCorpse : WorldObject
 
     public override void Interaction(WorldObject _obj)
     {
-        if (_obj.tag == "Worker" || _obj.tag == "Boss")
+        if (_obj.tag == "Worker")
         {
             if (((Worker)_obj).isJanitor)
             {
