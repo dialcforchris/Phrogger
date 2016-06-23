@@ -18,10 +18,10 @@ public class BossFace : WorldObject
     float playerCool = 0;
     float playerMaxCool = 1.5f;
     float workCool = 0;
-    float maxWorkCool = 7;
+    float maxWorkCool = 10;
     float bossAngerExp = 0;
     float XPtoAdd = 0;
-    float venganceCool = 2;
+    float venganceCool = 2.5f;
     Tile playerTile;
     int bossAngerLevel = 0;
     private bool slacker = false;
