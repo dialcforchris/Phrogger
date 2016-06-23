@@ -18,6 +18,8 @@ public class CameraZoom : MonoBehaviour {
 
     public IEnumerator Zoom(Transform target,bool IntroZoom)
     {
+        if (!IntroZoom)
+            yield return new WaitForSeconds(1.5f);
         GameStateManager.instance.ChangeState(GameStates.STATE_DAYOVER);
         if (!IntroZoom)
         {
@@ -63,14 +65,17 @@ public class CameraZoom : MonoBehaviour {
         GameStateManager.instance.ChangeState(GameStates.STATE_GAMEPLAY);
     }
 
-    public void doAZoom(bool b)
+    public void doAZoom(bool b, Transform t = null)
     {
         GameObject player = GameObject.FindGameObjectWithTag("Player");
-        StartCoroutine(Zoom(player.transform,b));
+        if (t != null)
+            StartCoroutine(Zoom(t, b));
+        else
+            StartCoroutine(Zoom(player.transform, b));
     }
 
-	// Update is called once per frame
-	void Update () {
+    // Update is called once per frame
+    void Update () {
 	
 	}
 }

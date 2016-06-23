@@ -20,8 +20,7 @@ public class Boss : WorldObject
     [SerializeField] private ParticleSystem steam;
 
     private bool chasePlayer = false;
-
-    protected override void Awake()
+        protected override void Awake()
     {
         base.Awake();
         boss = this;
@@ -114,6 +113,7 @@ public class Boss : WorldObject
 
     public void BeginChase()
     {
+        CameraZoom.instance.doAZoom(false, transform);
         tileSearch = player.GetRouteToPlayer();
         transform.position = tileSearch[0].transform.position;
         AddToWorld();
@@ -217,5 +217,4 @@ public class Boss : WorldObject
             RemoveFromWorld();
         }
     }
-
 }
