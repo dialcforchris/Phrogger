@@ -17,6 +17,7 @@ public class dayTimer : MonoBehaviour {
     public Sprite junkMailSprite;
     public List<completedEmail> todaysEmails = new List<completedEmail>();
     private List<GameObject> emailObjects = null;
+    public AudioClip stampSound;
 
     [System.Serializable]
     public struct completedEmail
@@ -174,12 +175,14 @@ public class dayTimer : MonoBehaviour {
             email.GetComponent<RectTransform>().SetParent(filedText.transform);
             if (todaysEmails[i].correctAnswer)
             {
+                SoundManager.instance.playSound(0, .95f);
                 email.GetComponent<RectTransform>().localPosition = new Vector2(300 + (top * 35), 50);
                 top++;
                 correct++;
             }
             else
             {
+                SoundManager.instance.playSound(0, .25f);
                 email.GetComponent<RectTransform>().localPosition = new Vector2(300 + (bot * 35), -47.5f);
                 bot++;
             }
@@ -189,6 +192,8 @@ public class dayTimer : MonoBehaviour {
         performanceText.enabled = true;
         yield return new WaitForSeconds(2f);
 
+        int livesToAdd = 0;
+
         if (todaysEmails.Count == 0)
         {
             performanceResult.text = "USELESS";
@@ -196,25 +201,59 @@ public class dayTimer : MonoBehaviour {
         }
         else
         {
-
             if (correct / todaysEmails.Count < .15f)
                 performanceResult.text = "HOW DO YOU STILL HAVE A JOB??";
             else if (correct / todaysEmails.Count < .30f)
                 performanceResult.text = "SHAME";
             else if (correct / todaysEmails.Count < .45f)
+            {
                 performanceResult.text = "NEEDS IMPROVEMENT";
+                livesToAdd = 1;
+            }
             else if (correct / todaysEmails.Count < .60f)
+            {
                 performanceResult.text = "MEDIOCRE";
+                livesToAdd = 1;
+            }
             else if (correct / todaysEmails.Count < .75f)
+            {
                 performanceResult.text = "SUPRISINGLY GOOD";
+                livesToAdd = 2;
+            }
             else if (correct / todaysEmails.Count < .90f)
+            {
                 performanceResult.text = "RIBBITING!";
+                livesToAdd = 2;
+            }
             else
+            {
                 performanceResult.text = "EMPLOYEE OF THE DAY!";
+                livesToAdd = 3;
+            }
 
             performanceResult.color = Color.Lerp(Color.red, Color.green, correct / todaysEmails.Count);
         }
+        SoundManager.instance.playSound(stampSound);
         performanceResult.enabled = true;
+
+        yield return new WaitForSeconds(1.5f);
+        if (Player.instance.strikes < 4)
+        {
+            for (int i = 0; i < livesToAdd; i++)
+            {
+                Player.instance.strikes++;
+                if (Player.instance.strikes > 3)
+                {
+                    Player.instance.strikes = 3;
+                    break;
+                }
+                SoundManager.instance.playSound(0, 1.2f);
+                StatTracker.instance.changeLifeCount(Player.instance.strikes);
+                yield return new WaitForSeconds(.75f);
+            }
+        }
+
+        //Add new lives on and do a sound
 
         finishedDisplay = true;
     }

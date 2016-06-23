@@ -30,6 +30,7 @@ public class introMonitor : MonoBehaviour
     void Awake()
     {
         instance = this;
+        mainCamTransition.material.SetFloat("_SliceAmount", 0);
         Invoke("enterView",0.5f);
     }
 

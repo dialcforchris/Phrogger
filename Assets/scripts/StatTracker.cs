@@ -9,7 +9,12 @@ public class StatTracker : MonoBehaviour
     public int junkEmailsCorrect, safeEmailsCorrect, safeEmailsWrong, junkEmailsWrong,numOfDaysCompleted,messyDesks;
     int score;
     public int scoreToAdd;
-    public Text ScoreText, LivesText;
+    public Text ScoreText;
+
+    [Header("Lives UI")]
+    public Image[] LifeCounter;
+    public Sprite EmptyLifeSprite,LifeSprite;
+
     [Header("Game Over UI")]
     public GameObject GameOverUI;
     public Text causeOfDeath,daysCompleted, daysCompletedValue, emailsFiled, emailsFiledValue, emailsHandled, emailsHandledValue, professionalism, professionalismValue, finalScore, finalScoreValue;
@@ -21,9 +26,17 @@ public class StatTracker : MonoBehaviour
     {
         instance = this;
     }
-    public void changeLifeCount(int i)
+    public void changeLifeCount(int l)
     {
-        LivesText.text = "x" + i;
+        //Anything above i should change sprite
+        for (int i = 0; i < l; i++)
+        {
+            LifeCounter[i].sprite = LifeSprite;
+        }
+        for (int i=l; i < LifeCounter.Length;i++)
+        {
+            LifeCounter[l].sprite = EmptyLifeSprite;
+        }
     }
 
     // Update is called once per frame
@@ -48,8 +61,6 @@ public class StatTracker : MonoBehaviour
 
     public IEnumerator GameOverUIReveal()
     {
-        Debug.Log("GameOverState");
-
         float total = junkEmailsCorrect + junkEmailsWrong + safeEmailsCorrect + safeEmailsWrong;
         float correct = junkEmailsCorrect + safeEmailsCorrect;
 
