@@ -8,15 +8,19 @@ public class Boss : WorldObject
     public static Boss instance { get { return boss; } }
 
     [SerializeField] private AnimationOverride animOverride= null;
+    [SerializeField] private Animator animator = null;
 
     private List<Tile> tileSearch = new List<Tile>();
 
     [SerializeField] private float speed = 2.0f;
+    private float casualSpeed = 1.8f;
 
     [SerializeField] private Player player = null;
 
+    [SerializeField] private ParticleSystem steam;
+
     private bool chasePlayer = false;
-    
+
 
     protected override void Awake()
     {
@@ -33,12 +37,13 @@ public class Boss : WorldObject
 
     private void Update()
     {
+
         if (GameStateManager.instance.GetState() == GameStates.STATE_GAMEPLAY)
         {
             if (tileSearch.Count != 0)
             {
-                
-                transform.position = Vector3.MoveTowards(transform.position, tileSearch[0].transform.position, Time.deltaTime * speed);
+                float appliedSpeed = steam.gameObject.activeInHierarchy ? speed : casualSpeed;
+                transform.position = Vector3.MoveTowards(transform.position, tileSearch[0].transform.position, Time.deltaTime * appliedSpeed);
                 transform.rotation = Quaternion.LookRotation(Vector3.forward, transform.position - tileSearch[0].transform.position);
                 if (Vector3.SqrMagnitude(tileSearch[0].transform.position - transform.position) < 0.05f)
                 {
@@ -59,7 +64,7 @@ public class Boss : WorldObject
                         }
                     }
                 }
-                
+
                 Tile _tile = TileManager.instance.GetTile(transform.position);
                 if (_tile != tiles[0])
                 {
@@ -76,7 +81,13 @@ public class Boss : WorldObject
                     BossFace.instance.ChangeStateBack();
                     gameObject.SetActive(false);
                 }
-            } 
+            }
+
+            animator.enabled = true;
+        }
+        else
+        {
+            animator.enabled = false;
         }
     }
    
@@ -108,6 +119,7 @@ public class Boss : WorldObject
         transform.position = tileSearch[0].transform.position;
         AddToWorld();
         chasePlayer = true;
+        steam.gameObject.SetActive(true);
         gameObject.SetActive(true);
     }
 
@@ -118,6 +130,7 @@ public class Boss : WorldObject
             tileSearch.Clear();
             chasePlayer = false;
             GetRouteToExit();
+            steam.gameObject.SetActive(false);
         }
     }
 
