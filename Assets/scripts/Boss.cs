@@ -21,7 +21,6 @@ public class Boss : WorldObject
 
     private bool chasePlayer = false;
 
-
     protected override void Awake()
     {
         base.Awake();

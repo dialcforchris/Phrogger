@@ -17,11 +17,14 @@ public class BossFace : WorldObject
     float playerCool = 0;
     float playerMaxCool = 1.5f;
     float workCool = 0;
-    float maxWorkCool = 5;
-    Tile playerTile;
+    float maxWorkCool = 7;
     float bossAngerExp = 0;
     float XPtoAdd = 0;
+    float venganceCool = 2;
+    Tile playerTile;
     int bossAngerLevel = 0;
+    private bool slacker = false;
+
     FaceState faceState;
 
     // Use this for initialization
@@ -60,6 +63,7 @@ public class BossFace : WorldObject
     {
         if (GameStateManager.instance.GetState() == GameStates.STATE_EMAIL)
         {
+            slacker = false;
             playerCool = 0;
             workCool = 0;
             if (emailCool < emailMaxCool)
@@ -93,12 +97,14 @@ public class BossFace : WorldObject
                 }
                 playerCool = 0;
             }
-            if (workCool < maxWorkCool)
+            float appliedWorkCool = slacker ? venganceCool : maxWorkCool;
+            if (workCool < appliedWorkCool)
             {
                 workCool += Time.deltaTime;
             }
             else
             {
+                slacker = true;
                 XPtoAdd += bossAngerAddition;
                 workCool = 0;
             }
