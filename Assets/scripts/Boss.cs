@@ -62,7 +62,7 @@ public class Boss : WorldObject
                         }
                     }
                 }
-
+                
                 Tile _tile = TileManager.instance.GetTile(transform.position);
                 if (_tile != tiles[0])
                 {
@@ -82,10 +82,15 @@ public class Boss : WorldObject
             }
 
             animator.enabled = true;
+            if (steam.isPaused || !steam.isPlaying)
+            {
+                steam.Play();
+            }
         }
         else
         {
             animator.enabled = false;
+            steam.Pause();
         }
     }
    
@@ -203,7 +208,7 @@ public class Boss : WorldObject
                     return;
                 }
             }
-            _y += _direction;  
+            _y += _direction;
         }
     }
 
