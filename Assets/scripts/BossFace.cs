@@ -3,7 +3,6 @@ using UnityEngine.UI;
 using System.Collections;
 
 public class BossFace : WorldObject
-
 {
     public static BossFace instance = null;
     public Sprite[] faceList;
@@ -16,31 +15,33 @@ public class BossFace : WorldObject
     float emailCool = 0;
     float emailMaxCool = 20;
     float playerCool = 0;
-    float playerMaxCool= 1.5f;
+    float playerMaxCool = 1.5f;
+    float workCool = 0;
+    float maxWorkCool = 5;
     Tile playerTile;
     float bossAngerExp = 0;
     float XPtoAdd = 0;
     int bossAngerLevel = 0;
     FaceState faceState;
 
-	// Use this for initialization
-	protected override void Awake () 
+    // Use this for initialization
+    protected override void Awake()
     {
-        if (instance==null)
+        if (instance == null)
         {
             instance = this;
         }
         ChangeState(FaceState.UI);
         base.Awake();
-	}
-	
-    public void addEmailAngerXP()
-    {
-        XPtoAdd += (emailCool/emailMaxCool)*bossAngerAddition;
     }
 
-	// Update is called once per frame
-	void Update () 
+    public void addEmailAngerXP()
+    {
+        XPtoAdd += (emailCool / emailMaxCool) * bossAngerAddition;
+    }
+
+    // Update is called once per frame
+    void Update()
     {
         if (XPtoAdd > 0 && GameStateManager.instance.GetState() == GameStates.STATE_GAMEPLAY)
         {
@@ -53,26 +54,27 @@ public class BossFace : WorldObject
         AddToAnger();
         CoolDown();
         SteamParticles();
-	}
+    }
 
     void CoolDown()
     {
         if (GameStateManager.instance.GetState() == GameStates.STATE_EMAIL)
         {
             playerCool = 0;
-            if (emailCool< emailMaxCool)
+            workCool = 0;
+            if (emailCool < emailMaxCool)
             {
                 if (mailOpener.instance.activeCountdown)
                 {
                     emailCool += Time.deltaTime;
                     mailOpener.instance.angerMeter.value = emailCool;
                     ColorBlock cols = mailOpener.instance.angerMeter.colors;
-                    cols.disabledColor = Color.Lerp(Color.green, Color.red, (emailCool / (emailMaxCool*.75f)));
+                    cols.disabledColor = Color.Lerp(Color.green, Color.red, (emailCool / (emailMaxCool * .75f)));
                     mailOpener.instance.angerMeter.colors = cols;
                 }
             }
         }
-        else if (GameStateManager.instance.GetState() == GameStates.STATE_GAMEPLAY&&player.playerState==PlayerState.ACTIVE)
+        else if (GameStateManager.instance.GetState() == GameStates.STATE_GAMEPLAY && player.playerState == PlayerState.ACTIVE)
         {
             emailCool = 0;
             if (playerCool < playerMaxCool)
@@ -90,6 +92,15 @@ public class BossFace : WorldObject
                     XPtoAdd += bossAngerAddition;
                 }
                 playerCool = 0;
+            }
+            if (workCool < maxWorkCool)
+            {
+                workCool += Time.deltaTime;
+            }
+            else
+            {
+                XPtoAdd += bossAngerAddition;
+                workCool = 0;
             }
         }
     }
@@ -129,17 +140,17 @@ public class BossFace : WorldObject
             }
         }
     }
-   public void AngerLevelAdj(int amount = 1)
+    public void AngerLevelAdj(int amount = 1)
     {
         bossAngerLevel += amount;
     }
     void SteamParticles()
-   {
-      
-        if (bossAngerLevel==3&&faceState==FaceState.UI)
+    {
+
+        if (bossAngerLevel == 3 && faceState == FaceState.UI)
         {
             if (!steam.isPlaying)
-            steam.Play();
+                steam.Play();
         }
         else
         {
@@ -148,18 +159,18 @@ public class BossFace : WorldObject
                 steam.Stop();
             }
         }
-   }
+    }
 
-   public void CheckEmails(bool _correct)
-   {
-       if (!_correct)
-       {
-           XPtoAdd += bossAngerAddition;
-       }
-   }
+    public void CheckEmails(bool _correct)
+    {
+        if (!_correct)
+        {
+            XPtoAdd += bossAngerAddition;
+        }
+    }
 
-   void ChangeState(FaceState _state)
-   {
+    void ChangeState(FaceState _state)
+    {
         if (faceState != _state)
         {
             faceState = _state;
@@ -181,33 +192,33 @@ public class BossFace : WorldObject
         }
     }
 
-   public void ChangeStateBack()
-   {
+    public void ChangeStateBack()
+    {
         XPtoAdd = 0;
         bossAngerExp = 0;
         bossAngerLevel -= 2;
         ChangeState(FaceState.UI);
-   }
+    }
 
-   public void NextEmail()
-   {
-       emailCool = 0;
-   }
+    public void NextEmail()
+    {
+        emailCool = 0;
+    }
 
-   public enum FaceState
-   {
-       UI,
-       CHASE,
-   }
+    public enum FaceState
+    {
+        UI,
+        CHASE,
+    }
     public override void Reset()
-   {
+    {
         XPtoAdd = 0;
-       bossAngerExp = 0;
-       bossAngerLevel = 0;
+        bossAngerExp = 0;
+        bossAngerLevel = 0;
         ChangeState(FaceState.UI);
-       spriteRenderer.sprite = faceList[bossAngerLevel];
-       emailCool = 0;
-       playerCool = 0;
-       steam.Stop();
-   }
+        spriteRenderer.sprite = faceList[bossAngerLevel];
+        emailCool = 0;
+        playerCool = 0;
+        steam.Stop();
+    }
 }
