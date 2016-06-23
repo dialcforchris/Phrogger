@@ -31,12 +31,12 @@ public class Worker : WorldObject, IPoolable<Worker>
     private float sitCool = 0;
     private float maxSitCool = 8.0f;
     private float maxSitLowerCool = 4.0f;
-    private float maxSitUpperCool = 12.0f;
-    private float standChance = 0.5f;
+    private float maxSitUpperCool = 25.0f;
+    private float standChance = 0.1f;
 
     private float helpCool = 0;
     private float maxHelpCool = 5.0f;
-    private float helpChance = 0.25f;
+    private float helpChance = 0.05f;
 
     public bool hasEnteredCubicle { get; set; }
 
@@ -47,7 +47,7 @@ public class Worker : WorldObject, IPoolable<Worker>
     public bool helpNeeded { get { return needHelp; } }
 
     // help variables
-    [SerializeField] private GameObject helpMe;
+    [SerializeField] private GameObject helpMe = null;
     
     protected override void Start()
     {
@@ -67,6 +67,7 @@ public class Worker : WorldObject, IPoolable<Worker>
             animOverride.SetSpriteSheet(_animName);
             cubicleId = 100;
             isSetup = true;
+            maxSitCool = Random.Range(maxSitLowerCool, maxSitUpperCool);
         }
     }
 
@@ -109,13 +110,6 @@ public class Worker : WorldObject, IPoolable<Worker>
                 stopped = false;
             }
             StateUpdate();
-            Tile _tile = TileManager.instance.GetTile(transform.position);
-            if (_tile != tiles[0])
-            {
-                RemoveFromWorld();
-                AddToWorld();
-                _tile.Interaction(this);
-            }
         }
         else
         {
@@ -127,6 +121,13 @@ public class Worker : WorldObject, IPoolable<Worker>
     {
         transform.position += direction * Time.deltaTime * speed;
         transform.rotation = Quaternion.LookRotation(Vector3.forward, direction);
+        Tile _tile = TileManager.instance.GetTile(transform.position);
+        if (_tile != tiles[0])
+        {
+            RemoveFromWorld();
+            AddToWorld();
+            _tile.Interaction(this);
+        }
 
     }
     private void LateUpdate()
@@ -149,12 +150,16 @@ public class Worker : WorldObject, IPoolable<Worker>
     //Whether an object can move to the same position as another object
     public override bool CheckMovement(WorldObject _obj)
     {
-        if (_obj.name == "Player")
+        if (_obj.tag == "Player")
         {
             if (state == WorkerState.SITTING || state == WorkerState.HELP)
             {
                 return false;
             }
+        }
+        else if (_obj.tag == "Worker")
+        {
+            return false;
         }
         return true;
     }
@@ -224,10 +229,10 @@ public class Worker : WorldObject, IPoolable<Worker>
     }
     IEnumerator WalkFromDesk()
     {
-        Vector2 currentTarget = positions[positions.Count - 1];
+        Vector3 currentTarget = positions[positions.Count - 1];
         while (true)
         {
-            if (Vector2.Distance(transform.position, currentTarget) < 0.1f)
+            if (Vector3.SqrMagnitude(currentTarget - transform.position) < 0.001f)
             {
                 targetIndex--;
                 if (targetIndex == -1)
@@ -238,11 +243,37 @@ public class Worker : WorldObject, IPoolable<Worker>
                 }
                 currentTarget = positions[targetIndex];
             }
-            transform.position = Vector2.MoveTowards(transform.position, currentTarget, speed * Time.deltaTime);
-            float lookAngle = Mathf.Atan2((transform.position.y - currentTarget.y), (transform.position.x - currentTarget.x)) * Mathf.Rad2Deg;
-            Quaternion newRot = new Quaternion();
+
+            Vector3 _pos = Vector2.MoveTowards(transform.position, currentTarget, speed * Time.deltaTime);
+            Tile _t = TileManager.instance.GetTile(_pos);
+            float lookAngle;
+            Quaternion newRot;
+            if (tiles[0] !=  _t)
+            {
+                if (!_t.CheckMovement(this))
+                {
+                    yield return null;
+                    continue;
+                }
+                
+                transform.position = _pos;
+                RemoveFromWorld();
+                AddToWorld();
+                tiles[0].Interaction(this);
+                lookAngle = Mathf.Atan2((transform.position.y - currentTarget.y), (transform.position.x - currentTarget.x)) * Mathf.Rad2Deg;
+                newRot = new Quaternion();
+                newRot.eulerAngles = new Vector3(0, 0, lookAngle + 90);
+                transform.rotation = newRot;
+                yield return null;
+                continue;
+            }
+
+            transform.position = _pos;
+            lookAngle = Mathf.Atan2((transform.position.y - currentTarget.y), (transform.position.x - currentTarget.x)) * Mathf.Rad2Deg;
+            newRot = new Quaternion();
             newRot.eulerAngles = new Vector3(0, 0, lookAngle + 90);
             transform.rotation = newRot;
+
             yield return null;
         }
     }
