@@ -3,12 +3,14 @@ using System.Collections.Generic;
 
 public class Player : WorldObject
 {
+    public static Player instance;
+
     float angle;
     float coolDown = 0.6f;
     float maxCool = 0.4f;
     private Vector2 lastPos = Vector2.zero;
     //private members
-    private int strikes = 3;
+    public int strikes = 3;
     private int score = 0;
     private float hori;
     private float verti;
@@ -40,6 +42,7 @@ public class Player : WorldObject
 
     protected override void Awake()
     {
+        instance = this;
         base.Awake();
         transform.position = playerSpawn.position;
     }

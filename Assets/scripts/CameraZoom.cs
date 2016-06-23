@@ -56,8 +56,8 @@ public class CameraZoom : MonoBehaviour {
         Camera.main.orthographicSize = 9;
         while (overlayTop.rectTransform.anchoredPosition.y < 670)
         {
-            overlayTop.rectTransform.anchoredPosition = new Vector2(overlayTop.rectTransform.anchoredPosition.x, overlayTop.rectTransform.anchoredPosition.y + Time.deltaTime * 50);
-            overlayBot.rectTransform.anchoredPosition = new Vector2(overlayBot.rectTransform.anchoredPosition.x, overlayBot.rectTransform.anchoredPosition.y - Time.deltaTime * 50);
+            overlayTop.rectTransform.anchoredPosition = new Vector2(overlayTop.rectTransform.anchoredPosition.x, overlayTop.rectTransform.anchoredPosition.y + Time.deltaTime * 75);
+            overlayBot.rectTransform.anchoredPosition = new Vector2(overlayBot.rectTransform.anchoredPosition.x, overlayBot.rectTransform.anchoredPosition.y - Time.deltaTime * 75);
             yield return new WaitForEndOfFrame();
         }
         GameStateManager.instance.ChangeState(GameStates.STATE_GAMEPLAY);

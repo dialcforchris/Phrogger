@@ -47,7 +47,7 @@ public class WorkerManager : MonoBehaviour
         }
     }
 
-    public void SetupDefaultPositions(int _seated = 20)
+    public void SetupDefaultPositions(int _seated = 30)
     {
         int _numSeatsSpawned = 0;
         int[] _cubicleNumbers = new int[_seated];
@@ -58,6 +58,8 @@ public class WorkerManager : MonoBehaviour
         _cubicleNumbers = _cubicleNumbers.Distinct().ToArray();
 
         List<Worker> _workers = new List<Worker>();
+
+        int _help = Random.Range(0, _cubicleNumbers.Length);
 
         while (_numSeatsSpawned < _cubicleNumbers.Length)
         {
@@ -71,10 +73,11 @@ public class WorkerManager : MonoBehaviour
                     _worker.InitialiseToCubicle(cubicles[_worker.cubicleId].GetAssociatedSpawner().GetDirection(), cubicles[_worker.cubicleId].GetAssociatedSpawner().GetSpeed());
                     cubicles[_worker.cubicleId].AssignWorkerImmediately(_worker);
                     _match = true;
-                    if(_numSeatsSpawned == 1)
+                    if(_numSeatsSpawned == _help)
                     {
                         _worker.StateSwitch(WorkerState.HELP);
                     }
+                    _cubicleNumbers[i] = Random.Range(0, 2) == 0 ? _cubicleNumbers[i] : cubicles.Length;
                     break;
                 }
             }
