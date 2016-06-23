@@ -30,12 +30,13 @@ public class introMonitor : MonoBehaviour
     void Awake()
     {
         instance = this;
+        Invoke("enterView",0.5f);
     }
 
     public void enterView()
     {
         //should probably change game manager state to email viewing
-        GameStateManager.instance.ChangeState(GameStates.STATE_EMAIL);
+        GameStateManager.instance.ChangeState(GameStates.STATE_DAYOVER);
         emailPos = 0;
 
         //Change cameras over
@@ -57,7 +58,7 @@ public class introMonitor : MonoBehaviour
             if (!InOut)
                 monCamTransition.material.SetFloat("_SliceAmount", lerpy);
             else
-                mainCamTransition.material.SetFloat("_SliceAmount", lerpy);
+                lerpy = 0;
 
             yield return new WaitForEndOfFrame();
         }
@@ -65,6 +66,15 @@ public class introMonitor : MonoBehaviour
         yield return new WaitForSeconds(0.1f);
         mainCam.enabled = !InOut;
         monitorCamera.enabled = InOut;
+
+        if (!InOut)
+        {
+            Camera.main.orthographicSize = 2;
+            Camera.main.transform.position = GameObject.FindGameObjectWithTag("Player").transform.position;
+            Camera.main.transform.position = new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y, -10);
+        }
+
+        mainCamTransition.transform.localScale = new Vector3(7.15f, 4, 1);//Look, it works. I'm not proud of it but it works.
 
         lerpy = 0;
         while (lerpy < 1)
@@ -79,6 +89,7 @@ public class introMonitor : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
 
+        mainCamTransition.transform.localScale = new Vector3(32, 18, 1);//Look, it works. I'm not proud of it but it works.
         if (InOut)
         {
             //Intro animation
@@ -89,7 +100,9 @@ public class introMonitor : MonoBehaviour
             StartCoroutine(zoomInOut(7.5f));
         }
         else
-            GameStateManager.instance.ChangeState(GameStates.STATE_GAMEPLAY);
+        {
+            CameraZoom.instance.doAZoom(true);
+        }
     }
 
     int nonFrogMail = 0;

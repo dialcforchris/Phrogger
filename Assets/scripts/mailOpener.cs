@@ -97,7 +97,7 @@ public class mailOpener : MonoBehaviour
         lerpy = 0;
         while (lerpy < 1)
         {
-            lerpy += Time.deltaTime;
+            lerpy += Time.deltaTime*2;
 
             if (InOut)
                 monCamTransition.material.SetFloat("_SliceAmount", lerpy);

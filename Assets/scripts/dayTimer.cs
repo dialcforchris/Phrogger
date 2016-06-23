@@ -29,6 +29,9 @@ public class dayTimer : MonoBehaviour {
     public Text dayCompletedHeader;
     public Text filedText, performanceText, performanceResult;
 
+    [Header("Day transition UI")]
+    public Text DayText;
+    public Image background;
     private bool finishedDisplay = false;
 
     public void NewDay()
@@ -52,6 +55,9 @@ public class dayTimer : MonoBehaviour {
         finishedDisplay = false;
 
         WorkerManager.instance.SetupDefaultPositions();
+
+        transitioning = false;
+        GameStateManager.instance.ChangeState(GameStates.STATE_GAMEPLAY);
     }
 
     void Awake()
@@ -78,16 +84,28 @@ public class dayTimer : MonoBehaviour {
         }
         if(GameStateManager.instance.GetState() == GameStates.STATE_DAYOVER && finishedDisplay)
         {
-            if(Input.GetButtonDown("Fire1"))
+            if(Input.GetButtonDown("Fire1") && !transitioning)
             {
-                foreach(WorldObject _wo in FindObjectsOfType<WorldObject>())
-                {
-                    _wo.Reset();
-                }
-                NewDay();
-                GameStateManager.instance.ChangeState(GameStates.STATE_GAMEPLAY);
+                transitioning = true;
+                StartCoroutine(NextDayTransition());
             }
         }
+    }
+
+    bool transitioning;
+
+    IEnumerator NextDayTransition()
+    {
+        //Fade to black
+        //Fade in day text
+
+        yield return new WaitForEndOfFrame();
+
+        foreach (WorldObject _wo in FindObjectsOfType<WorldObject>())
+        {
+            _wo.Reset();
+        }
+        NewDay();
     }
 
     IEnumerator endOfDay()

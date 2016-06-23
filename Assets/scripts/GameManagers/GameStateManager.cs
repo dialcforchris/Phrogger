@@ -18,7 +18,7 @@ public class GameStateManager : MonoBehaviour
     public static GameStateManager instance { get { return singleton; } }
 
     private GameState[] states = new GameState[(int)GameStates.GAMESTATES_COUNT];
-    private GameStates currentState = GameStates.STATE_GAMEPLAY;
+    private GameStates currentState = GameStates.STATE_DAYOVER;
     public GameStates previousState;
 
     private void Awake()
