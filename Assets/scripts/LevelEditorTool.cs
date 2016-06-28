@@ -73,7 +73,7 @@ public class LevelEditorTool : MonoBehaviour
                         WorldObject _obj = (WorldObject)Instantiate(spawn, transform.position, Quaternion.identity);
                         Tile _tile = TileManager.instance.GetTile(transform.position);
                         _obj.name = spawnName + _tile.IndexName();
-                        _obj.transform.SetParent(spawnParent.transform);
+                        _obj.transform.SetParent(_tile.transform);
                         //_tile.Place(_obj);
                     }
                     break;
@@ -83,7 +83,10 @@ public class LevelEditorTool : MonoBehaviour
                     if (Input.GetKeyDown(KeyCode.Space))
                     {
                         Tile _tile = TileManager.instance.GetTile(transform.position);
-                        _tile.UpdateSprite(tileSprite);
+                            GameObject _obj = (GameObject)Instantiate(spawnParent, transform.position, Quaternion.identity);
+                            _obj.name = spawnName + _tile.IndexName();
+                            _obj.transform.SetParent(_tile.transform);
+                            //_tile.UpdateSprite(tileSprite);
                     }
                     break;
                 }

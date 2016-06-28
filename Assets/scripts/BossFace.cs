@@ -2,9 +2,10 @@
 using UnityEngine.UI;
 using System.Collections;
 
-public class BossFace : WorldObject
+public class BossFace :MonoBehaviour
 {
     public static BossFace instance = null;
+    [SerializeField] private SpriteRenderer spriteRenderer = null;
     public Sprite[] faceList;
     public Sprite bossGone;
     public ParticleSystem steam;
@@ -29,14 +30,13 @@ public class BossFace : WorldObject
     FaceState faceState;
 
     // Use this for initialization
-    protected override void Awake()
+    private void Awake()
     {
         if (instance == null)
         {
             instance = this;
         }
         ChangeState(FaceState.UI);
-        base.Awake();
     }
 
     public void addEmailAngerXP()
@@ -224,7 +224,7 @@ public class BossFace : WorldObject
         UI,
         CHASE,
     }
-    public override void Reset()
+    public void Reset()
     {
         XPtoAdd = 0;
         bossAngerExp = 0;

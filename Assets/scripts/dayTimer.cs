@@ -105,6 +105,7 @@ public class dayTimer : MonoBehaviour {
         }
         TileManager.instance.UpgradeSpawners(0.8f, 0.8f, 1.1f);
         Boss.instance.ModifyBoss(1.1f);
+        BossFace.instance.Reset();
         currentTime = 0;
         progressUI.SetActive(false);
         dayFinishedText.Stop();
