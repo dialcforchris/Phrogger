@@ -7,6 +7,7 @@ public class KnockableObjects : Wall
     public bool reversable;
     bool alternateSprites;
     Sprite image;
+   
     protected override void Start()
     {
         base.Start();
@@ -24,6 +25,7 @@ public class KnockableObjects : Wall
             spriteRenderer.sprite = altImage;
            StatTracker.instance.messyDesks++;
         }
+        SoundManager.instance.playSound(0);
     }
     public override bool CheckMovement(WorldObject _obj)
     {
