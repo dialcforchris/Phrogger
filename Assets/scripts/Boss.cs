@@ -22,7 +22,7 @@ public class Boss : WorldObject
     [SerializeField] private ParticleSystem steam;
 
     private bool chasePlayer = false;
-        protected override void Awake()
+    protected override void Awake()
     {
         base.Awake();
         boss = this;
@@ -229,5 +229,10 @@ public class Boss : WorldObject
         {
             RemoveFromWorld();
         }
+    }
+
+    public void ModifyBoss(float _speed)
+    {
+        speed *= _speed;
     }
 }

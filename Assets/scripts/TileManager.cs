@@ -103,5 +103,14 @@ public class TileManager : MonoBehaviour
         }
         return spawners[_index].GetTile(0);
     }
+    
+    public void UpgradeSpawners(float _min, float _max, float _speed)
+    {
+        foreach(Spawner _s in spawners)
+        {
+            _s.ModifySpawner(_min, _max, _speed);
+        }
+    }
+
 }
 

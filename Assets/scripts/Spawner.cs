@@ -63,4 +63,17 @@ public class Spawner : WorldObject
     {
         return laneSpeed;
     }
+
+    public void ModifySpawner(float _min, float _max, float _speed)
+    {
+        minSpawnCooldown *= _min;
+        maxSpawnCooldown *= _max;
+        laneSpeed *= _speed;
+        spawnCooldown = Random.Range(minSpawnCooldown, maxSpawnCooldown);
+    }
+
+    public override void Reset()
+    {
+        cooldown = 0.0f;
+    }
 }
