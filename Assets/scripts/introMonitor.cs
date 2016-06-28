@@ -48,8 +48,8 @@ public class introMonitor : MonoBehaviour
     {
         computerSounds.DOFade((InOut) ? SoundManager.instance.volumeMultiplayer : 0, 2);
         Random.seed = System.DateTime.Now.Millisecond;
-        mainCamTransition.material.SetTexture("_SliceGuide", gradients[Random.Range(0, gradients.Length)]);
-        monCamTransition.material.SetTexture("_SliceGuide", gradients[Random.Range(0, gradients.Length)]);
+        mainCamTransition.material.SetTexture("_SliceGuide", gradients[1]);
+        monCamTransition.material.SetTexture("_SliceGuide", gradients[1]);
 
         float lerpy = 1;
         while (lerpy > 0)
@@ -221,14 +221,14 @@ public class introMonitor : MonoBehaviour
                         StopCoroutine("zoomInOut");
                         StartCoroutine(zoomInOut(11));
 
-                        Invoke("exitView", 3.5f);
+                        Invoke("exitView", 2.5f);
                     }
                     else
                     {
                         StopCoroutine("zoomInOut");
                         StartCoroutine(zoomInOut(11));
 
-                        Invoke("exitView", 3.5f);
+                        Invoke("exitView", 2.5f);
                     }
                 }
                 else if (emailPos < 0) //If email is in the SAFE zone

@@ -11,7 +11,7 @@ public class BossFace :MonoBehaviour
     public ParticleSystem steam;
     public GameObject eyes;
     public Player player;
-    public Slider XPbar;
+    public Slider[] XPbar;
     float bossAngerAddition = 0.35f;
     float emailCool = 0;
     float emailTimeLeniency = 0;
@@ -52,7 +52,8 @@ public class BossFace :MonoBehaviour
             XPtoAdd -= 0.01f;
             bossAngerExp += 0.01f;
         }
-        XPbar.value = bossAngerExp;
+        XPbar[0].value = bossAngerExp;
+        XPbar[1].value = bossAngerExp;
         MoveEyes();
         ManyFacedBoss();
         AddToAnger();
@@ -78,9 +79,11 @@ public class BossFace :MonoBehaviour
                     {
                         emailCool += Time.deltaTime;
                         mailOpener.instance.angerMeter.value = emailCool;
-                        ColorBlock cols = mailOpener.instance.angerMeter.colors;
-                        cols.disabledColor = Color.Lerp(Color.green, Color.red, (emailCool / (emailMaxCool * .75f)));
-                        mailOpener.instance.angerMeter.colors = cols;
+
+                        //Anger bar colour lerp from green to red
+                        //ColorBlock cols = mailOpener.instance.angerMeter.colors;
+                        //cols.disabledColor = Color.Lerp(Color.green, Color.red, (emailCool / (emailMaxCool * .75f)));
+                        //mailOpener.instance.angerMeter.colors = cols;
                     }
                 }
             }

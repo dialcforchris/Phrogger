@@ -19,6 +19,9 @@ public class Player : WorldObject
     [SerializeField]
     private AudioClip splat;
 
+    [SerializeField]
+    private ParticleSystem respawnParticles;
+
     [SerializeField] private Transform playerSpawn = null;
     
     [SerializeField] private Animator anim = null;
@@ -174,7 +177,7 @@ public class Player : WorldObject
         state = PlayerState.DEAD;
         FrogCorpse frogCorpse = (FrogCorpse)Instantiate(corpse, transform.position, transform.rotation);
         frogCorpse.blood.transform.position = frogCorpse.transform.position;
-        
+
         spriteRenderer.enabled = false;
         transform.position = playerSpawn.position;
         RemoveFromWorld();
@@ -195,6 +198,7 @@ public class Player : WorldObject
         {
             if (state == PlayerState.ACTIVE)
             {
+                StatTracker.instance.causeOfDeath.text = "A co-wroker stepped on you";
                 Die();
                 SoundManager.instance.playSound(splat);
             }
@@ -203,6 +207,7 @@ public class Player : WorldObject
         {
             if (state == PlayerState.ACTIVE)
             {
+                StatTracker.instance.causeOfDeath.text = "Your boss stepped on you";
                 Die();
                 SoundManager.instance.playSound(splat);
             }
@@ -215,6 +220,11 @@ public class Player : WorldObject
         {
             if (deathCool < maxDeathcool)
             {
+                if (deathCool > maxDeathcool - .8f && !respawnParticles.isPlaying)
+                {
+                    Debug.Log("playing particles");
+                    respawnParticles.Play();
+                }
                 deathCool += Time.deltaTime;
             }
             else

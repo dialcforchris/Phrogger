@@ -108,7 +108,6 @@ public class Boss : WorldObject
         {
             EndChase();
             ((Player)_obj).Die();
-            StatTracker.instance.causeOfDeath.text = "Your boss stepped on you";
         }
     }
 

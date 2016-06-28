@@ -17,13 +17,27 @@ public class CameraZoom : MonoBehaviour {
     }
 
     public IEnumerator Zoom(Transform target,bool IntroZoom)
-    {
+    {float lerpy = 0;
         if (!IntroZoom)
-            yield return new WaitForSeconds(0.25f); //Wait for the boss to appear
+        {
+            //yield return new WaitForSeconds(0.25f); //Wait for the boss to appear
+            
+            while (lerpy < 1)
+            {
+                lerpy += Time.deltaTime * 5;
+                if (lerpy > 1)
+                    lerpy = 1;
 
+                //Black bars yo
+                overlayBot.rectTransform.anchoredPosition = Vector2.Lerp(new Vector2(960, -410), new Vector2(960, -540), 1 - lerpy);
+                instance.overlayTop.rectTransform.anchoredPosition = Vector2.Lerp(new Vector2(960, 540), new Vector2(960, 670), 1 - lerpy);
+                yield return new WaitForEndOfFrame();
+            }
+        }
         GameStateManager.instance.ChangeState(GameStates.STATE_DAYOVER);
         if (!IntroZoom)
         {
+
             while (Camera.main.orthographicSize > 2)
             {
                 Camera.main.orthographicSize -= Time.deltaTime * 20;
@@ -55,13 +69,21 @@ public class CameraZoom : MonoBehaviour {
             Camera.main.transform.position = new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y, -10);
             yield return new WaitForEndOfFrame();
         }
+
         Camera.main.transform.position = origin;
         Camera.main.transform.position = new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y, -10);
         Camera.main.orthographicSize = 9;
-        while (overlayTop.rectTransform.anchoredPosition.y < 670)
+
+        lerpy = 0;
+        while (lerpy < 1)
         {
-            overlayTop.rectTransform.anchoredPosition = new Vector2(overlayTop.rectTransform.anchoredPosition.x, overlayTop.rectTransform.anchoredPosition.y + Time.deltaTime * 150);
-            overlayBot.rectTransform.anchoredPosition = new Vector2(overlayBot.rectTransform.anchoredPosition.x, overlayBot.rectTransform.anchoredPosition.y - Time.deltaTime * 150);
+            lerpy += Time.deltaTime * 5;
+            if (lerpy > 1)
+                lerpy = 1;
+
+            //Black bars yo
+            overlayBot.rectTransform.anchoredPosition = Vector2.Lerp(new Vector2(960, -410), new Vector2(960, -540),  lerpy);
+            instance.overlayTop.rectTransform.anchoredPosition = Vector2.Lerp(new Vector2(960, 540), new Vector2(960, 670),lerpy);
             yield return new WaitForEndOfFrame();
         }
         GameStateManager.instance.ChangeState(GameStates.STATE_GAMEPLAY);

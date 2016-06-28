@@ -7,17 +7,27 @@ using DG.Tweening;
 public class dayTimer : MonoBehaviour {
 
     public static dayTimer instance;
-
-    public int secondsPerDay;
-    public float currentTime;
-    public GameObject progressUI;
-    public Image bigHand, smallHand;
-    public GameObject emailIconPrefab;
-    public Animator dayFinishedText;
-    public Sprite junkMailSprite;
-    public List<completedEmail> todaysEmails = new List<completedEmail>();
+    [SerializeField]
+    private int secondsPerDay;
+    [SerializeField]
+    private float currentTime;
+    [SerializeField]
+    private GameObject progressUI;
+    [SerializeField]
+    private Image bigHand, smallHand;
+    [SerializeField]
+    private GameObject emailIconPrefab;
+    [SerializeField]
+    private Animator dayFinishedText;
+    [SerializeField]
+    private Sprite junkMailSprite;
+    public  List<completedEmail> todaysEmails = new List<completedEmail>();
+    [SerializeField]
     private List<GameObject> emailObjects = null;
-    public AudioClip stampSound;
+    [SerializeField]
+    private AudioClip stampSound;
+    [SerializeField]
+    private Slider timeSlider;
 
     [System.Serializable]
     public struct completedEmail
@@ -62,6 +72,8 @@ public class dayTimer : MonoBehaviour {
 
             //go from 0 to 2880
             bigHand.rectTransform.rotation = Quaternion.Euler(0, 0, (currentTime / secondsPerDay * -2880));
+
+            timeSlider.value = currentTime / secondsPerDay;
         }
         if(GameStateManager.instance.GetState() == GameStates.STATE_DAYOVER && finishedDisplay)
         {

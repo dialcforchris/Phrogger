@@ -76,9 +76,25 @@ public class mailOpener : MonoBehaviour
         Random.seed = System.DateTime.Now.Millisecond;
         mainCamTransition.material.SetTexture("_SliceGuide", gradients[Random.Range(0, gradients.Length)]);
         monCamTransition.material.SetTexture("_SliceGuide", gradients[Random.Range(0, gradients.Length)]);
-        
-        //Zoom in
+
         float lerpy = 0;
+
+        //TEMPOARY SHIT
+        lerpy = 1;
+        while (lerpy > 0)
+        {
+            lerpy -= Time.deltaTime * 1.5f;
+
+            if (!InOut)
+                monCamTransition.material.SetFloat("_SliceAmount", lerpy);
+            else
+            {
+                mainCamTransition.material.SetFloat("_SliceAmount", lerpy);
+            }
+            yield return new WaitForEndOfFrame();
+        }
+
+        //Zoom in
         if (InOut)
         {
             while (lerpy < 1)
@@ -90,7 +106,7 @@ public class mailOpener : MonoBehaviour
                 //Black bars yo
                 CameraZoom.instance.overlayBot.rectTransform.anchoredPosition = Vector2.Lerp(new Vector2(960, -410), new Vector2(960, -540), 1 - lerpy);
                 CameraZoom.instance.overlayTop.rectTransform.anchoredPosition = Vector2.Lerp(new Vector2(960, 540), new Vector2(960, 670), 1 - lerpy);
-                yield return new WaitForEndOfFrame();
+                //yield return new WaitForEndOfFrame();
             }
             lerpy = 0;
             while (Camera.main.orthographicSize > 2)
@@ -104,11 +120,10 @@ public class mailOpener : MonoBehaviour
                 
                 Camera.main.orthographicSize = Mathf.Lerp(9, 2, lerpy);
                 mainCamTransition.transform.localScale = Vector3.Lerp(new Vector3(32, 18, 1), new Vector3(7.15f, 4, 1), lerpy);
-
-                yield return new WaitForEndOfFrame();
+                //yield return new WaitForEndOfFrame();
             }
         }
-
+        /*lerpy = 1;
         while (lerpy > 0)
         {
             lerpy -= Time.deltaTime*2;
@@ -119,18 +134,17 @@ public class mailOpener : MonoBehaviour
             {
                 mainCamTransition.material.SetFloat("_SliceAmount", lerpy);
             }
-
             yield return new WaitForEndOfFrame();
-        }
+        }*/
 
         yield return new WaitForSeconds(0.1f);
         mainCam.enabled = !InOut;
         monitorCamera.enabled = InOut;
-
+        
         lerpy = 0;
         while (lerpy < 1)
         {
-            lerpy += Time.deltaTime*2;
+            lerpy += Time.deltaTime*1.5f;
 
             if (InOut)
                 monCamTransition.material.SetFloat("_SliceAmount", lerpy);
@@ -156,7 +170,7 @@ public class mailOpener : MonoBehaviour
         {
             while (Camera.main.orthographicSize < 9)
             {
-                lerpy -= Time.deltaTime*1.25f;
+                lerpy -= Time.deltaTime*1.5f;
                 if (lerpy < 0)
                     lerpy = 0;
                 Camera.main.transform.position = Vector3.Lerp(new Vector3(0, 6.5f, -10), Player.instance.transform.position, lerpy);
@@ -374,7 +388,7 @@ public class mailOpener : MonoBehaviour
                         StopCoroutine("zoomInOut");
                         StartCoroutine(zoomInOut(11));
 
-                        Invoke("exitView",3.5f);
+                        Invoke("exitView",2.5f);
                     }
                     else
                     {
@@ -391,7 +405,7 @@ public class mailOpener : MonoBehaviour
                         StopCoroutine("zoomInOut");
                         StartCoroutine(zoomInOut(11));
 
-                        Invoke("exitView", 3.5f);
+                        Invoke("exitView", 2.5f);
                     }
                 }
                 else if (emailPos < 0) //If email is in the SAFE zone
