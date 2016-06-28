@@ -16,6 +16,8 @@ public class Player : WorldObject
     private float verti;
     public ParticleSystem bloodSplatter;
     [SerializeField] private FrogCorpse corpse;
+    [SerializeField]
+    private AudioClip splat;
 
     [SerializeField] private Transform playerSpawn = null;
     
@@ -194,6 +196,7 @@ public class Player : WorldObject
             if (state == PlayerState.ACTIVE)
             {
                 Die();
+                SoundManager.instance.playSound(splat);
             }
         }
         else if(_obj.tag == "Boss")
@@ -201,6 +204,7 @@ public class Player : WorldObject
             if (state == PlayerState.ACTIVE)
             {
                 Die();
+                SoundManager.instance.playSound(splat);
             }
         }
     }

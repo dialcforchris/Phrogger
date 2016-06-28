@@ -5,6 +5,8 @@ public class KnockableObjects : Wall
 {
     public Sprite altImage;
     public bool reversable;
+    [SerializeField]
+    private AudioClip knockedSound;
     bool alternateSprites;
     Sprite image;
    
@@ -25,7 +27,7 @@ public class KnockableObjects : Wall
             spriteRenderer.sprite = altImage;
            StatTracker.instance.messyDesks++;
         }
-        SoundManager.instance.playSound(0);
+        SoundManager.instance.playSound(knockedSound);
     }
     public override bool CheckMovement(WorldObject _obj)
     {
