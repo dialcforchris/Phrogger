@@ -49,6 +49,7 @@ public class WorkerManager : MonoBehaviour
 
     public void SetupDefaultPositions(int _seated = 30)
     {
+        Worker.numPeopleNeedHelp = 0;
         int _numSeatsSpawned = 0;
         int[] _cubicleNumbers = new int[_seated];
         for(int i = 0; i < _seated; ++i)

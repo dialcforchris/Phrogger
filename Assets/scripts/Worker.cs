@@ -36,7 +36,10 @@ public class Worker : WorldObject, IPoolable<Worker>
 
     private float helpCool = 0;
     private float maxHelpCool = 5.0f;
-    private float helpChance = 0.1f;
+    private float helpChance = 0.01f;
+
+    public static int numPeopleNeedHelp = 0;
+    private int numTimesNeededHelp = 0;
 
     public bool hasEnteredCubicle { get; set; }
 
@@ -200,6 +203,7 @@ public class Worker : WorldObject, IPoolable<Worker>
         StateSwitch(WorkerState.WALKING);
         needHelp = false;
         helpMe.SetActive(false);
+        numTimesNeededHelp = 0;
     }
 
     public void ReturnPool()
@@ -327,6 +331,13 @@ public class Worker : WorldObject, IPoolable<Worker>
                 }
             case WorkerState.SITTING:
                 {
+                    if (numPeopleNeedHelp == 0)
+                    {
+                        if (Random.value < 0.1f / ((numTimesNeededHelp + 1) * (numTimesNeededHelp + 1)))
+                        {
+                            StateSwitch(WorkerState.HELP);
+                        }
+                    }
                     SitCooldown();
                     break;
                 }
@@ -349,6 +360,8 @@ public class Worker : WorldObject, IPoolable<Worker>
                 {
                    if (!helpMe.activeSelf)
                     {
+                        ++numPeopleNeedHelp;
+                        ++numTimesNeededHelp;
                         helpMe.SetActive(true);
                         helpMe.transform.rotation = Quaternion.Euler(Vector2.up);
                         helpMe.GetComponentInChildren<Animator>().Play("help_intro");
@@ -396,6 +409,7 @@ public class Worker : WorldObject, IPoolable<Worker>
 
     public void FinishedHelping()
     {
+        --numPeopleNeedHelp;
         needHelp = false;
         helpMe.SetActive(false);
         StateSwitch(WorkerState.SITTING);
