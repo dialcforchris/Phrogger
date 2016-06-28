@@ -19,7 +19,8 @@ public class CameraZoom : MonoBehaviour {
     public IEnumerator Zoom(Transform target,bool IntroZoom)
     {
         if (!IntroZoom)
-            yield return new WaitForSeconds(0.25f);
+            yield return new WaitForSeconds(0.25f); //Wait for the boss to appear
+
         GameStateManager.instance.ChangeState(GameStates.STATE_DAYOVER);
         if (!IntroZoom)
         {
@@ -46,6 +47,7 @@ public class CameraZoom : MonoBehaviour {
         else
             yield return new WaitForSeconds(0.5f);
 
+
         while (Camera.main.orthographicSize < 8.9f)
         {
             Camera.main.orthographicSize = Mathf.Lerp(Camera.main.orthographicSize,9, Time.deltaTime * ((IntroZoom) ? 1 : 20));
@@ -58,8 +60,8 @@ public class CameraZoom : MonoBehaviour {
         Camera.main.orthographicSize = 9;
         while (overlayTop.rectTransform.anchoredPosition.y < 670)
         {
-            overlayTop.rectTransform.anchoredPosition = new Vector2(overlayTop.rectTransform.anchoredPosition.x, overlayTop.rectTransform.anchoredPosition.y + Time.deltaTime * 75);
-            overlayBot.rectTransform.anchoredPosition = new Vector2(overlayBot.rectTransform.anchoredPosition.x, overlayBot.rectTransform.anchoredPosition.y - Time.deltaTime * 75);
+            overlayTop.rectTransform.anchoredPosition = new Vector2(overlayTop.rectTransform.anchoredPosition.x, overlayTop.rectTransform.anchoredPosition.y + Time.deltaTime * 150);
+            overlayBot.rectTransform.anchoredPosition = new Vector2(overlayBot.rectTransform.anchoredPosition.x, overlayBot.rectTransform.anchoredPosition.y - Time.deltaTime * 150);
             yield return new WaitForEndOfFrame();
         }
         GameStateManager.instance.ChangeState(GameStates.STATE_GAMEPLAY);
@@ -73,11 +75,6 @@ public class CameraZoom : MonoBehaviour {
         else
             StartCoroutine(Zoom(player.transform, b));
     }
-
-    // Update is called once per frame
-    void Update () {
-	
-	}
 }
 
 

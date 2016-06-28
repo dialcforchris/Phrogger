@@ -75,7 +75,7 @@ public class dayTimer : MonoBehaviour {
 
     bool transitioning;
 
-    IEnumerator NextDayTransition()
+    IEnumerator NextDayTransition() //Fades the screen to black, display the day # text and fades back in
     {
         //Fade to black
         while(background.color.a < 1)
@@ -195,42 +195,85 @@ public class dayTimer : MonoBehaviour {
         yield return new WaitForSeconds(2f);
 
         int livesToAdd = 0;
-
+        //8 ranks
+        int performanceRank;
         if (todaysEmails.Count == 0)
         {
-            performanceResult.text = "USELESS";
+            performanceRank = 0;
             performanceResult.color = Color.red;
         }
         else
         {
             if (correct / todaysEmails.Count < .15f)
-                performanceResult.text = "HOW DO YOU STILL HAVE A JOB??";
+            {
+                performanceRank = 1;
+            }
             else if (correct / todaysEmails.Count < .30f)
-                performanceResult.text = "SHAME";
+            {
+                performanceRank = 2;
+            }
             else if (correct / todaysEmails.Count < .45f)
             {
-                performanceResult.text = "NEEDS IMPROVEMENT";
+                performanceRank = 3;
                 livesToAdd = 1;
             }
             else if (correct / todaysEmails.Count < .60f)
             {
-                performanceResult.text = "MEDIOCRE";
+                performanceRank = 4;
                 livesToAdd = 1;
             }
             else if (correct / todaysEmails.Count < .75f)
             {
-                performanceResult.text = "SUPRISINGLY GOOD";
+                performanceRank = 5;
                 livesToAdd = 2;
             }
             else if (correct / todaysEmails.Count < .90f)
             {
-                performanceResult.text = "RIBBITING!";
+                performanceRank = 6;
                 livesToAdd = 2;
             }
             else
             {
-                performanceResult.text = "EMPLOYEE OF THE DAY!";
+                performanceRank = 7;
                 livesToAdd = 3;
+            }
+
+
+            int min = 8 + StatTracker.instance.numOfDaysCompleted;
+
+            if (todaysEmails.Count < min)
+            {
+                performanceRank -= min - todaysEmails.Count;
+            }
+
+            StatTracker.instance.addDayPerformance(performanceRank);
+
+            switch (performanceRank)
+            {
+                case 0:
+                    performanceResult.text = "USELESS";
+                    break;
+                case 1:
+                    performanceResult.text = "HOW DO YOU STILL HAVE A JOB??";
+                    break;
+                case 2:
+                    performanceResult.text = "SHAME";
+                    break;
+                case 3:
+                    performanceResult.text = "NEEDS IMPROVEMENT";
+                    break;
+                case 4:
+                    performanceResult.text = "MEDIOCRE";
+                    break;
+                case 5:
+                    performanceResult.text = "SUPRISINGLY GOOD";
+                    break;
+                case 6:
+                    performanceResult.text = "RIBBITING!";
+                    break;
+                case 7:
+                    performanceResult.text = "EMPLOYEE OF THE DAY!";
+                    break;
             }
 
             performanceResult.color = Color.Lerp(Color.red, Color.green, correct / todaysEmails.Count);

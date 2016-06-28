@@ -45,7 +45,7 @@ public class mailOpener : MonoBehaviour
     public struct mail
     {
         public Sprite image;
-        public bool isJunk;
+        public bool isJunk,repeating;
     }
     void Awake()
     {
@@ -76,16 +76,49 @@ public class mailOpener : MonoBehaviour
         Random.seed = System.DateTime.Now.Millisecond;
         mainCamTransition.material.SetTexture("_SliceGuide", gradients[Random.Range(0, gradients.Length)]);
         monCamTransition.material.SetTexture("_SliceGuide", gradients[Random.Range(0, gradients.Length)]);
+        
+        //Zoom in
+        float lerpy = 0;
+        if (InOut)
+        {
+            while (lerpy < 1)
+            {
+                lerpy += Time.deltaTime*2.5f;
+                if (lerpy > 1)
+                    lerpy = 1;
 
-        float lerpy = 1;
+                //Black bars yo
+                CameraZoom.instance.overlayBot.rectTransform.anchoredPosition = Vector2.Lerp(new Vector2(960, -410), new Vector2(960, -540), 1 - lerpy);
+                CameraZoom.instance.overlayTop.rectTransform.anchoredPosition = Vector2.Lerp(new Vector2(960, 540), new Vector2(960, 670), 1 - lerpy);
+                yield return new WaitForEndOfFrame();
+            }
+            lerpy = 0;
+            while (Camera.main.orthographicSize > 2)
+            {
+                lerpy += Time.deltaTime*1.25f;
+                if (lerpy > 1)
+                    lerpy = 1;
+                
+                Camera.main.transform.position = Vector3.Lerp(new Vector3(0, 6.5f, -10), Player.instance.transform.position, lerpy);
+                Camera.main.transform.position = new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y, -10);
+                
+                Camera.main.orthographicSize = Mathf.Lerp(9, 2, lerpy);
+                mainCamTransition.transform.localScale = Vector3.Lerp(new Vector3(32, 18, 1), new Vector3(7.15f, 4, 1), lerpy);
+
+                yield return new WaitForEndOfFrame();
+            }
+        }
+
         while (lerpy > 0)
         {
-            lerpy -= Time.deltaTime * 2;
+            lerpy -= Time.deltaTime*2;
 
             if (!InOut)
                 monCamTransition.material.SetFloat("_SliceAmount", lerpy);
             else
+            {
                 mainCamTransition.material.SetFloat("_SliceAmount", lerpy);
+            }
 
             yield return new WaitForEndOfFrame();
         }
@@ -102,7 +135,9 @@ public class mailOpener : MonoBehaviour
             if (InOut)
                 monCamTransition.material.SetFloat("_SliceAmount", lerpy);
             else
+            {
                 mainCamTransition.material.SetFloat("_SliceAmount", lerpy);
+            }
 
             yield return new WaitForEndOfFrame();
         }
@@ -119,6 +154,29 @@ public class mailOpener : MonoBehaviour
         }
         else
         {
+            while (Camera.main.orthographicSize < 9)
+            {
+                lerpy -= Time.deltaTime*1.25f;
+                if (lerpy < 0)
+                    lerpy = 0;
+                Camera.main.transform.position = Vector3.Lerp(new Vector3(0, 6.5f, -10), Player.instance.transform.position, lerpy);
+                Camera.main.transform.position = new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y, -10);
+                Camera.main.orthographicSize = Mathf.Lerp(9, 2, lerpy);
+                mainCamTransition.transform.localScale = Vector3.Lerp(new Vector3(32, 18, 1), new Vector3(7.15f, 4, 1), lerpy);
+                yield return new WaitForEndOfFrame();
+            }
+            
+            while (lerpy < 1)
+            {
+                lerpy += Time.deltaTime*2.5f;
+                if (lerpy > 1)
+                    lerpy = 1;
+
+                //Black bars yo
+                CameraZoom.instance.overlayBot.rectTransform.anchoredPosition = Vector2.Lerp(new Vector2(960, -410), new Vector2(960, -540), lerpy);
+                CameraZoom.instance.overlayTop.rectTransform.anchoredPosition = Vector2.Lerp(new Vector2(960, 540), new Vector2(960, 670),lerpy);
+                yield return new WaitForEndOfFrame();
+            }
             GameStateManager.instance.ChangeState(GameStates.STATE_GAMEPLAY);
         }
         angryParticles.Stop();
@@ -145,7 +203,9 @@ public class mailOpener : MonoBehaviour
             //Pick a random message form the selected list
             currentMail = selectedList.messages[Random.Range(0, selectedList.messages.Count)];
             //Remove this email from the list so we can't get it twice
-            selectedList.messages.Remove(currentMail);
+            if (!currentMail.repeating)
+                selectedList.messages.Remove(currentMail);
+
             if (selectedList.messages.Count == 0)
             {
                 messages.Remove(selectedList);
@@ -162,7 +222,7 @@ public class mailOpener : MonoBehaviour
         emailContent.sprite = currentMail.image;
     }
 
-    IEnumerator zoomInOut(float newSize)
+    IEnumerator zoomInOut(float newSize) //Used for slight zoom in monitor view
     {
         yield return new WaitForSeconds(1);
         while (Mathf.Abs(monitorCamera.orthographicSize - newSize) > 0.1f)

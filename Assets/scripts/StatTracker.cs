@@ -1,23 +1,25 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using System.Collections.Generic;
 
 public class StatTracker : MonoBehaviour
 {
     public static StatTracker instance;
 
-    public int junkEmailsCorrect, safeEmailsCorrect, safeEmailsWrong, junkEmailsWrong,numOfDaysCompleted,messyDesks;
+    public int junkEmailsCorrect, safeEmailsCorrect, safeEmailsWrong, junkEmailsWrong, numOfDaysCompleted, messyDesks;
     int score;
     public int scoreToAdd;
     public Text ScoreText;
+    List<int> dayPerformances = new List<int>();
 
     [Header("Lives UI")]
     public Image[] LifeCounter;
-    public Sprite EmptyLifeSprite,LifeSprite;
+    public Sprite EmptyLifeSprite, LifeSprite;
 
     [Header("Game Over UI")]
     public GameObject GameOverUI;
-    public Text causeOfDeath,daysCompleted, daysCompletedValue, emailsFiled, emailsFiledValue, emailsHandled, emailsHandledValue, professionalism, professionalismValue, finalScore, finalScoreValue;
+    public Text causeOfDeath, daysCompleted, daysCompletedValue, emailsFiled, emailsFiledValue, emailsHandled, emailsHandledValue, professionalism, professionalismValue, finalScore, finalScoreValue;
 
     [Header("")]
     public float bossAngerLevel;
@@ -33,10 +35,15 @@ public class StatTracker : MonoBehaviour
         {
             LifeCounter[i].sprite = LifeSprite;
         }
-        for (int i=l; i < LifeCounter.Length;i++)
+        for (int i = l; i < LifeCounter.Length; i++)
         {
             LifeCounter[l].sprite = EmptyLifeSprite;
         }
+    }
+
+    public void addDayPerformance(int performance)
+    {
+        dayPerformances.Add(performance);
     }
 
     // Update is called once per frame
@@ -66,15 +73,15 @@ public class StatTracker : MonoBehaviour
 
         //.25f pitch for bad
         //normal for good
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(.75f);
         GameOverUI.SetActive(true);
         SoundManager.instance.playSound(0,.25f);
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(.75f);
         causeOfDeath.enabled = true;
 
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(.5f);
         daysCompleted.enabled = true;
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(.75f);
         daysCompletedValue.text = "" + numOfDaysCompleted;
         daysCompletedValue.enabled = true;
         if (numOfDaysCompleted < 3)
@@ -82,9 +89,9 @@ public class StatTracker : MonoBehaviour
         else
             SoundManager.instance.playSound(0, 0.95f);
 
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(.5f);
         emailsFiled.enabled = true;
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(.75f);
         if (correct != 0)
             emailsFiledValue.text = (int)(correct / total * 100) + "%";
         else
@@ -95,9 +102,9 @@ public class StatTracker : MonoBehaviour
         else
             SoundManager.instance.playSound(0, 0.95f);
 
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(.5f);
         emailsHandled.enabled = true;
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(.75f);
         emailsHandledValue.text = "" + total;
         emailsHandledValue.enabled = true;
         if (total < 8)
@@ -105,9 +112,9 @@ public class StatTracker : MonoBehaviour
         else
             SoundManager.instance.playSound(0, .95f);
 
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(.5f);
         professionalism.enabled = true;
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(.75f);
         if (messyDesks != 0)
             professionalismValue.text = 100-(int)(messyDesks/47f*100) + "%";//NOT A MAGIC NUMBER HONEST, 28 is the current number of desks you can mess up
         else
@@ -119,9 +126,9 @@ public class StatTracker : MonoBehaviour
             SoundManager.instance.playSound(0, .95f);
 
 
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(.5f);
         finalScore.enabled = true;
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(1f);
         finalScoreValue.enabled = true;
 
         score += scoreToAdd;
