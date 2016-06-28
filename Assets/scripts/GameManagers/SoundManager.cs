@@ -52,9 +52,10 @@ public class SoundManager : MonoBehaviour
         }
     }
 
-    public void playSound(AudioClip sound)
+    public void playSound(AudioClip sound,float volume = 1)
     {
         int c = 0;
+        changeVolume(volume);
         while (c < audioSrcs.Count)
         {
             if (!audioSrcs[c].isPlaying)

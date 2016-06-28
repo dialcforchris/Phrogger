@@ -21,13 +21,17 @@ public class KnockableObjects : Wall
         {
             spriteRenderer.sprite = alternateSprites ? image : altImage;
             alternateSprites = !alternateSprites;
+            SoundManager.instance.playSound(knockedSound);
         }
         else
         {
-            spriteRenderer.sprite = altImage;
-           StatTracker.instance.messyDesks++;
+            if (spriteRenderer.sprite != altImage)
+            {
+                spriteRenderer.sprite = altImage;
+                StatTracker.instance.messyDesks++;
+                SoundManager.instance.playSound(knockedSound);
+            }
         }
-        SoundManager.instance.playSound(knockedSound);
     }
     public override bool CheckMovement(WorldObject _obj)
     {
