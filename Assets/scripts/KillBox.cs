@@ -38,6 +38,10 @@ public class KillBox : WorldObject
                 {
                     ((Worker)_obj).Reset();
                 }
+                else if (_obj.tag == "FroggerObject")
+                {
+                    ((FroggerObject)_obj).OffLevel();
+                }
                 break;
             default:
                 break;

@@ -212,6 +212,31 @@ public class Player : WorldObject
                 SoundManager.instance.playSound(splat);
             }
         }
+        else if (_obj.tag == "FroggerObject")
+        {
+            if (state == PlayerState.ACTIVE)
+            {
+                if(((FroggerObject)_obj).kill)
+                {
+                    OriginalFroggerDeath(((FroggerObject)_obj).death);
+                }
+            }
+        }
+    }
+
+    public void OriginalFroggerDeath(FroggerDeathType _deathType)
+    {
+        //Reset posiiton and play appropriate sound
+        //Play appropriate sound
+        switch(_deathType)
+        {
+            case FroggerDeathType.RUNOVER:
+                break;
+            case FroggerDeathType.CROCO:
+                break;
+            case FroggerDeathType.DROWN:
+                break;
+        }
     }
 
     void DeathCooler()
