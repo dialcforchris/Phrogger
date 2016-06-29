@@ -7,6 +7,7 @@ public enum GameStates
     STATE_EMAIL,
     STATE_GAMEOVER,
     STATE_DAYOVER,
+    STATE_FROGGER,
     GAMESTATES_COUNT
 }
 
@@ -36,7 +37,10 @@ public class GameStateManager : MonoBehaviour
             states[(int)GameStates.STATE_EMAIL] = new EmailState();
             states[(int)GameStates.STATE_GAMEOVER] = new GameOverState();
             states[(int)GameStates.STATE_DAYOVER] = new DayOverState();
+            states[(int)GameStates.STATE_FROGGER] = new FroggerState();
+            ChangeState(GameStates.STATE_FROGGER);
         }
+        
     }
 
     private void Update()

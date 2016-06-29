@@ -19,6 +19,8 @@ public class introMonitor : MonoBehaviour
 
     public mail currentMail;
 
+    [SerializeField] private RectTransform top = null, bottom = null, left = null, right = null;
+
     //An email object, might need variables for score and such in the future
     [System.Serializable]
     public struct mail
@@ -30,8 +32,24 @@ public class introMonitor : MonoBehaviour
     void Awake()
     {
         instance = this;
+        gameObject.SetActive(false);
+    }
+
+    public void BeginGame()
+    {
+        WorkerManager.instance.SetupDefaultPositions();
         mainCamTransition.material.SetFloat("_SliceAmount", 0);
-        Invoke("enterView",0.5f);
+        Invoke("enterView", 0.5f);
+        //top.anchorMin = new Vector2(0, 1.0f - 0.05714286f);
+        //bottom.anchorMax = new Vector2(0, 0.05714286f);
+        //right.anchorMin = new Vector2(1.0f, 0.0f);
+        //left.anchorMax = new Vector2(0.0f, 1.0f);
+
+        top.gameObject.SetActive(true);
+        bottom.gameObject.SetActive(true);
+        left.gameObject.SetActive(false);
+        right.gameObject.SetActive(false);
+        gameObject.SetActive(true);
     }
 
     public void enterView()

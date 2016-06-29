@@ -6,6 +6,7 @@ public enum FroggerDeathType
     RUNOVER = 0,
     CROCO,
     DROWN,
+    OFFSCREEN,
     COUNT
 }
 
@@ -16,8 +17,8 @@ public class FroggerObject : WorldObject, IPoolable<FroggerObject>
     public PoolData<FroggerObject> poolData { get; set; }
     #endregion
 
-    private Vector3 direction;
-    private float speed;
+    protected Vector3 direction;
+    protected float speed;
 
     [SerializeField] private bool killOnTouch = false;
     [SerializeField] private FroggerDeathType deathType;
@@ -46,7 +47,7 @@ public class FroggerObject : WorldObject, IPoolable<FroggerObject>
 
     protected virtual void Update()
     {
-        if (GameStateManager.instance.GetState() == GameStates.STATE_GAMEPLAY)
+        if (GameStateManager.instance.GetState() == GameStates.STATE_FROGGER)
         {
             transform.position += direction * Time.deltaTime * speed;
             transform.rotation = Quaternion.LookRotation(Vector3.forward, Quaternion.AngleAxis(90, Vector3.forward) * direction);
