@@ -28,6 +28,8 @@ public class dayTimer : MonoBehaviour {
     private AudioClip stampSound;
     [SerializeField]
     private Slider timeSlider;
+    [SerializeField]
+    private Text emailTargetText;
 
     [System.Serializable]
     public struct completedEmail
@@ -36,12 +38,21 @@ public class dayTimer : MonoBehaviour {
         public bool correctAnswer;
     }
 
+    enum weekDays
+    {
+        Monday,
+        Tuesday,
+        Wednesday,
+        Thursday,
+        Friday
+    }
+
     [Header("Day Over UI")]
     public Text dayCompletedHeader;
     public Text filedText, performanceText, performanceResult;
 
     [Header("Day transition UI")]
-    public Text DayText;
+    public Text DayText,TimeText;
     public Image background;
     private bool finishedDisplay = false;
 
@@ -53,9 +64,9 @@ public class dayTimer : MonoBehaviour {
 
     void Awake()
     {
-        instance = this;
+           instance = this;
     }
-
+        
     void Update()
     {
         if (GameStateManager.instance.GetState() == GameStates.STATE_GAMEPLAY && currentTime < secondsPerDay)
@@ -90,15 +101,17 @@ public class dayTimer : MonoBehaviour {
     IEnumerator NextDayTransition() //Fades the screen to black, display the day # text and fades back in
     {
         //Fade to black
-        while(background.color.a < 1)
+        while (background.color.a < 1)
         {
             Color col = background.color;
             col.a += Time.deltaTime;
             background.color = col;
             yield return new WaitForEndOfFrame();
         }
+        
+        DayText.text = (weekDays)StatTracker.instance.numOfDaysCompleted+ "\n <size=64>" + (StatTracker.instance.numOfDaysCompleted + 4)+ "th May 1981</size> \n";
 
-        DayText.text = "Day " + (StatTracker.instance.numOfDaysCompleted +1);
+        emailTargetText.text = "Todays target: " + (8 + StatTracker.instance.numOfDaysCompleted) + " emails";
 
         //Fade in day text
         while (DayText.color.a < 1)
@@ -109,7 +122,15 @@ public class dayTimer : MonoBehaviour {
             yield return new WaitForEndOfFrame();
         }
 
-        yield return new WaitForSeconds(1.5f);
+        while (TimeText.color.a < 1)
+        {
+            Color col = TimeText.color;
+            col.a += Time.deltaTime;
+            TimeText.color = col;
+            yield return new WaitForEndOfFrame();
+        }
+
+        yield return new WaitForSeconds(1);
 
         foreach (WorldObject _wo in FindObjectsOfType<WorldObject>())
         {
@@ -148,6 +169,7 @@ public class dayTimer : MonoBehaviour {
             Color colA = DayText.color;
             colA.a -= Time.deltaTime;
             DayText.color = colA;
+            TimeText.color = colA;
             Color colB = background.color;
             colB.a -= Time.deltaTime;
             background.color = colB;
@@ -187,18 +209,26 @@ public class dayTimer : MonoBehaviour {
             if (todaysEmails[i].junk)
                 email.GetComponent<Image>().sprite = junkMailSprite;
 
-            email.GetComponent<RectTransform>().SetParent(filedText.transform);
+            email.GetComponent<RectTransform>().SetParent(filedText.transform.parent);
             if (todaysEmails[i].correctAnswer)
             {
                 SoundManager.instance.playSound(0, .95f);
-                email.GetComponent<RectTransform>().localPosition = new Vector2(300 + (top * 35), 50);
+                email.GetComponent<RectTransform>().localPosition = new Vector2(-25 + (top * 35), 75);
+                if (email.GetComponent<RectTransform>().localPosition.x > 650)
+                    email.GetComponent<RectTransform>().localPosition = new Vector2(-25 + (top * 35) - 675, 50);
+
                 top++;
                 correct++;
             }
             else
             {
+                //if xpos is greater than 625, go to a new line
+                //New line should be y = 25
                 SoundManager.instance.playSound(0, .25f);
-                email.GetComponent<RectTransform>().localPosition = new Vector2(300 + (bot * 35), -47.5f);
+                email.GetComponent<RectTransform>().localPosition = new Vector2(-25 + (bot * 35), -75);
+                if (email.GetComponent<RectTransform>().localPosition.x > 650)
+                    email.GetComponent<RectTransform>().localPosition = new Vector2(-25 + (bot * 35) - 675, -100);
+
                 bot++;
             }
             yield return new WaitForSeconds(.35f);
@@ -213,44 +243,25 @@ public class dayTimer : MonoBehaviour {
         if (todaysEmails.Count == 0)
         {
             performanceRank = 0;
+            performanceResult.text = "USELESS";
             performanceResult.color = Color.red;
         }
         else
         {
             if (correct / todaysEmails.Count < .15f)
-            {
                 performanceRank = 1;
-            }
             else if (correct / todaysEmails.Count < .30f)
-            {
                 performanceRank = 2;
-            }
             else if (correct / todaysEmails.Count < .45f)
-            {
                 performanceRank = 3;
-                livesToAdd = 1;
-            }
             else if (correct / todaysEmails.Count < .60f)
-            {
                 performanceRank = 4;
-                livesToAdd = 1;
-            }
             else if (correct / todaysEmails.Count < .75f)
-            {
                 performanceRank = 5;
-                livesToAdd = 2;
-            }
             else if (correct / todaysEmails.Count < .90f)
-            {
                 performanceRank = 6;
-                livesToAdd = 2;
-            }
             else
-            {
                 performanceRank = 7;
-                livesToAdd = 3;
-            }
-
 
             int min = 8 + StatTracker.instance.numOfDaysCompleted;
 
@@ -258,6 +269,12 @@ public class dayTimer : MonoBehaviour {
             {
                 performanceRank -= min - todaysEmails.Count;
             }
+
+            if (performanceRank < 0)
+                performanceRank = 0;
+
+            if (performanceRank > 0)
+                livesToAdd = (int)(performanceRank / 3.33f);
 
             StatTracker.instance.addDayPerformance(performanceRank);
 
@@ -289,7 +306,7 @@ public class dayTimer : MonoBehaviour {
                     break;
             }
 
-            performanceResult.color = Color.Lerp(Color.red, Color.green, correct / todaysEmails.Count);
+            performanceResult.color = Color.Lerp(Color.red, Color.green, (performanceRank +1) / 8);
         }
         SoundManager.instance.playSound(stampSound);
         performanceResult.enabled = true;

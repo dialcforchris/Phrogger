@@ -12,7 +12,7 @@ public class BossFace :MonoBehaviour
     public GameObject eyes;
     public Player player;
     public Slider[] XPbar;
-    float bossAngerAddition = 0.35f;
+    public float bossAngerAddition = 0.35f;
     float emailCool = 0;
     float emailTimeLeniency = 0;
     float emailMaxCool = 20;
@@ -52,8 +52,9 @@ public class BossFace :MonoBehaviour
             XPtoAdd -= 0.01f;
             bossAngerExp += 0.01f;
         }
-        XPbar[0].value = bossAngerExp;
-        XPbar[1].value = bossAngerExp;
+
+        XPbar[0].value = bossAngerLevel+ bossAngerExp;
+        XPbar[1].value = bossAngerLevel + bossAngerExp;
         MoveEyes();
         ManyFacedBoss();
         AddToAnger();

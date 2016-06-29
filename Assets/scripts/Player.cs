@@ -247,7 +247,6 @@ public class Player : WorldObject
             {
                 if (deathCool > maxDeathcool - .8f && !respawnParticles.isPlaying)
                 {
-                    Debug.Log("playing particles");
                     respawnParticles.Play();
                 }
                 deathCool += Time.deltaTime;
