@@ -31,8 +31,14 @@ public class LeaderBoard : MonoBehaviour
     {
         if (!once)
         {
-            ReadScoreFile();
-            CreateScoreFile();
+            if (CheckScoreFile())
+            {
+                ReadScoreFile();
+            }
+            else
+            {
+                CreateScoreFile();
+            }
             once = true;
         }
        
@@ -64,13 +70,16 @@ public class LeaderBoard : MonoBehaviour
     /// </summary>
     void SortScores()
     {
-        for (int i = 0; i < scores.Count - 1; i++)
+        for (int j = 0; j < scores.Count; j++)
         {
-            if (scores[i].Value < scores[i + 1].Value)
+            for (int i = 0; i < scores.Count - 1; i++)
             {
-                KeyValuePair<string, int> temp = scores[i];
-                scores[i] = scores[i + 1];
-                scores[i + 1] = temp;
+                if (scores[i].Value < scores[i + 1].Value)
+                {
+                    KeyValuePair<string, int> temp = scores[i];
+                    scores[i] = scores[i + 1];
+                    scores[i + 1] = temp;
+                }
             }
         }
     }
@@ -81,10 +90,11 @@ public class LeaderBoard : MonoBehaviour
     /// </summary>
     void TrimList()
     {
-        if (scores.Count>10)
+        for (int i = scores.Count - 1; i > 9; i--)
         {
-            scores.RemoveAt(scores.Count);
+            scores.RemoveAt(i);
         }
+        scores.TrimExcess();
     }
 
     /// <summary>
@@ -99,29 +109,41 @@ public class LeaderBoard : MonoBehaviour
         }
     } 
 
+    void WriteToFile()
+    {
+        StreamWriter write = new StreamWriter(gameName + "Scores.dat", false);
+        foreach (KeyValuePair<string, int> k in scores)
+        {
+            write.WriteLine(k.Key + " " + k.Value);
+        }
+        write.Close();
+    }
     /// <summary>
     /// read in the high Score file
     /// </summary>
     void ReadScoreFile()
     {
-        string[] fileInput = new string[10];
-        int index = 0;
+        List<string> fileInput = new List<string>();
+     //   int index = 0;
         StreamReader highScores = new StreamReader(gameName + "Scores.dat");
         while (!highScores.EndOfStream)
         {
-            fileInput[index] = highScores.ReadLine();
-            index++;
+            fileInput.Add(highScores.ReadLine());
+        //    index++;
         }
-        for (int i = 0; i < 3;i++ )
+        for (int i = 0; i < fileInput.Count;i++ )
         {
            string entry = fileInput[i].Substring(0,stringLength);
            int _score = int.Parse(fileInput[i].Substring(stringLength+1));
            AddToList(_score, entry);
         }
+        highScores.Close();
         AddToList(playerScore, playerName);
         SortScores();
-
-        //for (int i=0;i<scores.Count;i++)
+        TrimList();
+        WriteToFile();
+        scores.Clear();
+        //for (int i = 0; i < scores.Count; i++)
         //{
         //    Debug.Log(scores[i].Key + " " + scores[i].Value);
         //}

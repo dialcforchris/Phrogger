@@ -331,7 +331,7 @@ public class Worker : WorldObject, IPoolable<Worker>
                 }
             case WorkerState.SITTING:
                 {
-                    if (numPeopleNeedHelp == 0)
+                    if (numPeopleNeedHelp <= 1)
                     {
                         if (Random.value < 0.1f / ((numTimesNeededHelp + 1) * (numTimesNeededHelp + 1)))
                         {
