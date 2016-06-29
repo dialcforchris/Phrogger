@@ -36,14 +36,19 @@ public class FrogCorpse : WorldObject
     void Alpha()
     {
         stomps -= 0.1f;
+        if (stomps < 0)
+            stomps = 0;
+
         if (stomps > 0)
         {
             blood.Play();
+            spriteRenderer.color = new Color(1, 1, 1, stomps);
+            SoundManager.instance.playSound(splat);
         }
-        if (stomps >=0)
+        if (stomps ==0)
         {
             spriteRenderer.color = new Color(1, 1, 1, stomps);
-            SoundManager.instance.playSound(splat, stomps);
+            SoundManager.instance.playSound(splat);
         }
     }
 }
