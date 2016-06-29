@@ -47,8 +47,8 @@ public class FrogCorpse : WorldObject
         }
         if (stomps ==0)
         {
-            spriteRenderer.color = new Color(1, 1, 1, stomps);
-            SoundManager.instance.playSound(splat);
+            Destroy(gameObject);
+            
         }
     }
 }

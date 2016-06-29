@@ -37,6 +37,7 @@ public class introMonitor : MonoBehaviour
 
     public void BeginGame()
     {
+        gameObject.SetActive(true);
         WorkerManager.instance.SetupDefaultPositions();
         mainCamTransition.material.SetFloat("_SliceAmount", 0);
         Invoke("enterView", 0.5f);
@@ -45,11 +46,11 @@ public class introMonitor : MonoBehaviour
         //right.anchorMin = new Vector2(1.0f, 0.0f);
         //left.anchorMax = new Vector2(0.0f, 1.0f);
 
-        top.gameObject.SetActive(true);
-        bottom.gameObject.SetActive(true);
-        left.gameObject.SetActive(false);
-        right.gameObject.SetActive(false);
-        gameObject.SetActive(true);
+        //top.gameObject.SetActive(true);
+        //bottom.gameObject.SetActive(true);
+        //left.gameObject.SetActive(false);
+        //right.gameObject.SetActive(false);
+        //gameObject.SetActive(true);
     }
 
     public void enterView()

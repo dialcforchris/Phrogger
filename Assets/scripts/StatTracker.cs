@@ -8,6 +8,7 @@ public class StatTracker : MonoBehaviour
     public static StatTracker instance;
 
     public int junkEmailsCorrect, safeEmailsCorrect, safeEmailsWrong, junkEmailsWrong, numOfDaysCompleted, messyDesks;
+    public int totalDeaths, bossDeaths, bossAngered;
     int score;
     public int scoreToAdd;
     public Text ScoreText;
@@ -39,6 +40,17 @@ public class StatTracker : MonoBehaviour
         {
             LifeCounter[l].sprite = EmptyLifeSprite;
         }
+    }
+
+    public float getAveragePerformance()
+    {
+        float total=0;
+        for (int i=0; i < dayPerformances.Count;i++)
+        {
+            total += dayPerformances[i];
+        }
+
+        return total / dayPerformances.Count;
     }
 
     public void addDayPerformance(int performance)
@@ -116,7 +128,7 @@ public class StatTracker : MonoBehaviour
         professionalism.enabled = true;
         yield return new WaitForSeconds(.75f);
         if (messyDesks != 0)
-            professionalismValue.text = 100-(int)(messyDesks/47f*100) + "%";//NOT A MAGIC NUMBER HONEST, 28 is the current number of desks you can mess up
+            professionalismValue.text = 100-(int)(messyDesks/47f*100) + "%";//NOT A MAGIC NUMBER HONEST, 47 is the current number of desks you can mess up
         else
             professionalismValue.text = "100%";
         professionalismValue.enabled = true;

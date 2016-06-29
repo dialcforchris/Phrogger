@@ -106,6 +106,7 @@ public class Boss : WorldObject
     {
         if (_obj.tag == "Player")
         {
+            StatTracker.instance.bossDeaths++;
             EndChase();
             ((Player)_obj).Die();
         }
@@ -124,6 +125,7 @@ public class Boss : WorldObject
 
     public void BeginChase()
     {
+        StatTracker.instance.bossAngered++;
         CameraZoom.instance.doAZoom(false, transform);
         Invoke("animateMe", .5f);
         tileSearch = player.GetRouteToPlayer();

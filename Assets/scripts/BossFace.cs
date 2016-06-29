@@ -5,14 +5,17 @@ using System.Collections;
 public class BossFace :MonoBehaviour
 {
     public static BossFace instance = null;
-    [SerializeField] private SpriteRenderer spriteRenderer = null;
+    [SerializeField]
+    private SpriteRenderer spriteRenderer = null;
+    [SerializeField]
+    private Animator bossFaceAnimator = null;
     public Sprite[] faceList;
     public Sprite bossGone;
     public ParticleSystem steam;
     public GameObject eyes;
     public Player player;
     public Slider[] XPbar;
-    float bossAngerAddition = 0.35f;
+    public float bossAngerAddition = 0.35f;
     float emailCool = 0;
     float emailTimeLeniency = 0;
     float emailMaxCool = 20;
@@ -26,6 +29,7 @@ public class BossFace :MonoBehaviour
     Tile playerTile;
     int bossAngerLevel = 0;
     private bool slacker = false;
+
 
     FaceState faceState;
 
@@ -52,8 +56,9 @@ public class BossFace :MonoBehaviour
             XPtoAdd -= 0.01f;
             bossAngerExp += 0.01f;
         }
-        XPbar[0].value = bossAngerExp;
-        XPbar[1].value = bossAngerExp;
+
+        XPbar[0].value = bossAngerLevel+ bossAngerExp;
+        XPbar[1].value = bossAngerLevel + bossAngerExp;
         MoveEyes();
         ManyFacedBoss();
         AddToAnger();
@@ -201,12 +206,17 @@ public class BossFace :MonoBehaviour
                 case FaceState.CHASE:
                     {
                         spriteRenderer.sprite = bossGone;
-                        Boss.instance.BeginChase();
-
+                        bossFaceAnimator.Play("boss_leave");
+                        Invoke("bossChase", .5f);
                         break;
                     }
             }
         }
+    }
+
+    void bossChase()
+    {
+        Boss.instance.BeginChase();
     }
 
     public void ChangeStateBack()

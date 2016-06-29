@@ -28,6 +28,19 @@ public class dayTimer : MonoBehaviour {
     private AudioClip stampSound;
     [SerializeField]
     private Slider timeSlider;
+    [SerializeField]
+    private Text emailTargetText;
+
+
+    [Header("Ending stats")]
+    [SerializeField]
+    private Text StatsTitle;
+    [SerializeField]
+    private Text StatsDeath,StatsEmail,StatsProf,StatsBossAnger,StatsBossDeath,ContinuePrompt;
+    [SerializeField]
+    private Image endingScreen,StatsBox;
+    [SerializeField]
+    private Sprite PromotionScreen, FiredScreen,DeathScreen;
 
     [System.Serializable]
     public struct completedEmail
@@ -36,12 +49,22 @@ public class dayTimer : MonoBehaviour {
         public bool correctAnswer;
     }
 
+    enum weekDays
+    {
+        Monday,
+        Tuesday,
+        Wednesday,
+        Thursday,
+        Friday
+    }
+
     [Header("Day Over UI")]
     public Text dayCompletedHeader;
     public Text filedText, performanceText, performanceResult;
 
     [Header("Day transition UI")]
     public Text DayText;
+    public Text TimeText;
     public Image background;
     private bool finishedDisplay = false;
 
@@ -53,11 +76,12 @@ public class dayTimer : MonoBehaviour {
 
     void Awake()
     {
-        instance = this;
+           instance = this;
     }
-
+        
     void Update()
     {
+        //Clock and timer based things
         if (GameStateManager.instance.GetState() == GameStates.STATE_GAMEPLAY && currentTime < secondsPerDay)
         {
             currentTime += Time.deltaTime;
@@ -75,22 +99,43 @@ public class dayTimer : MonoBehaviour {
 
             timeSlider.value = currentTime / secondsPerDay;
         }
-        if(GameStateManager.instance.GetState() == GameStates.STATE_DAYOVER && finishedDisplay)
+
+        if (GameFinished)
+        {
+            if (Input.GetButtonDown("Fire1"))
+                StatsBox.gameObject.SetActive(false);
+            if (Input.GetButtonUp("Fire1"))
+                StatsBox.gameObject.SetActive(true);
+
+
+            if (Input.GetButton("Fire1") && Input.GetAxis("Vertical") < 0)
+                Debug.Log("close");
+        }
+
+        if (GameStateManager.instance.GetState() == GameStates.STATE_DAYOVER && finishedDisplay)
         {
             if(Input.GetButtonDown("Fire1") && !transitioning)
             {
-                transitioning = true;
-                StartCoroutine(NextDayTransition());
+                if (StatTracker.instance.numOfDaysCompleted < 1)
+                {
+                    transitioning = true;
+                    StartCoroutine(NextDayTransition());
+                }
+                else
+                {
+                    transitioning = true;
+                    StartCoroutine(FinishGame());
+                }
             }
         }
     }
 
-    bool transitioning;
+    bool transitioning,GameFinished;
 
-    IEnumerator NextDayTransition() //Fades the screen to black, display the day # text and fades back in
+    IEnumerator FinishGame()
     {
         //Fade to black
-        while(background.color.a < 1)
+        while (background.color.a < 1)
         {
             Color col = background.color;
             col.a += Time.deltaTime;
@@ -98,7 +143,99 @@ public class dayTimer : MonoBehaviour {
             yield return new WaitForEndOfFrame();
         }
 
-        DayText.text = "Day " + (StatTracker.instance.numOfDaysCompleted +1);
+
+        //Display stats window
+        endingScreen.gameObject.SetActive(true);
+
+        float performance = StatTracker.instance.getAveragePerformance();
+
+        if (performance > 6)
+        {
+            endingScreen.sprite = PromotionScreen;
+            StatsTitle.text = "You were promoted! \n <size=32>Congrulations, sir!</size>";
+        }
+        else if (StatTracker.instance.bossDeaths > 8)
+        {
+            endingScreen.sprite = DeathScreen;
+            StatsTitle.text = "You kept your job \n <size=32>but your boss did not...</size>";
+        }
+        else
+        {
+            endingScreen.sprite = FiredScreen;
+            StatsTitle.text = "You were fired! \n <size=32>Better luck next time</size>";
+        }
+        
+        yield return new WaitForSeconds(1);
+
+        //Fade the black out
+        while (background.color.a > 0)
+        {
+            Color col = background.color;
+            col.a -= Time.deltaTime;
+            background.color = col;
+            yield return new WaitForEndOfFrame();
+        }
+
+        yield return new WaitForSeconds(2);
+        SoundManager.instance.playSound(0, .95f);
+
+        StatsBox.enabled = true;
+        StatsTitle.enabled = true;
+
+        yield return new WaitForSeconds(1.5f);
+        SoundManager.instance.playSound(0, .95f);
+
+        StatsDeath.text = "You died a total of <color=red>"+ StatTracker.instance.totalDeaths+"</color> times";
+        StatsDeath.enabled = true;
+
+        yield return new WaitForSeconds(1.5f);
+        SoundManager.instance.playSound(0, .95f);
+
+        StatsBossDeath.text = "Your boss killed you <color=red>" + StatTracker.instance.bossDeaths + "</color> times";
+        StatsBossDeath.enabled = true;
+
+        yield return new WaitForSeconds(1.5f);
+        SoundManager.instance.playSound(0, .95f);
+
+        float correct = StatTracker.instance.safeEmailsCorrect + StatTracker.instance.junkEmailsCorrect;
+        float total = StatTracker.instance.junkEmailsWrong + StatTracker.instance.safeEmailsWrong + StatTracker.instance.safeEmailsCorrect + StatTracker.instance.junkEmailsCorrect;
+
+        if (correct > 0)
+            StatsEmail.text = "You processed <color=red>" + total + "</color> emails and sorted <color=red>" + (int)(correct / total * 100) + "%</color> of them correctly";
+        else
+            StatsEmail.text = "You processed <color=red>" + total + "</color> emails and sorted <color=red>0%</color> of them correctly";
+        StatsEmail.enabled = true;
+
+        yield return new WaitForSeconds(1.5f);
+        SoundManager.instance.playSound(0, .95f);
+
+        StatsProf.text = "Your overall professionalism is <color=red>"+(100 - (int)(StatTracker.instance.messyDesks / 47f * 100)) + "%</color>"; //REDO THIS M9
+        StatsProf.enabled = true;
+
+        yield return new WaitForSeconds(1.5f);
+        SoundManager.instance.playSound(0, .95f);
+
+        StatsBossAnger.text = "You angered your boss <color=red>"+StatTracker.instance.bossAngered+"</color> times";
+        StatsBossAnger.enabled = true;
+
+        yield return new WaitForSeconds(1);
+        GameFinished = true;
+    }
+
+    IEnumerator NextDayTransition() //Fades the screen to black, display the day # text and fades back in
+    {
+        //Fade to black
+        while (background.color.a < 1)
+        {
+            Color col = background.color;
+            col.a += Time.deltaTime;
+            background.color = col;
+            yield return new WaitForEndOfFrame();
+        }
+        
+        DayText.text = (weekDays)StatTracker.instance.numOfDaysCompleted+ "\n <size=64>" + (StatTracker.instance.numOfDaysCompleted + 4)+ "th May 1981</size> \n";
+
+        emailTargetText.text = "Todays target: " + (8 + StatTracker.instance.numOfDaysCompleted) + " emails";
 
         //Fade in day text
         while (DayText.color.a < 1)
@@ -109,7 +246,15 @@ public class dayTimer : MonoBehaviour {
             yield return new WaitForEndOfFrame();
         }
 
-        yield return new WaitForSeconds(1.5f);
+        while (TimeText.color.a < 1)
+        {
+            Color col = TimeText.color;
+            col.a += Time.deltaTime;
+            TimeText.color = col;
+            yield return new WaitForEndOfFrame();
+        }
+
+        yield return new WaitForSeconds(1);
 
         foreach (WorldObject _wo in FindObjectsOfType<WorldObject>())
         {
@@ -148,6 +293,7 @@ public class dayTimer : MonoBehaviour {
             Color colA = DayText.color;
             colA.a -= Time.deltaTime;
             DayText.color = colA;
+            TimeText.color = colA;
             Color colB = background.color;
             colB.a -= Time.deltaTime;
             background.color = colB;
@@ -166,7 +312,9 @@ public class dayTimer : MonoBehaviour {
 
         yield return new WaitForSeconds(2.5f);
         progressUI.GetComponent<Image>().enabled = true;
+        
         StatTracker.instance.numOfDaysCompleted++;
+
         dayCompletedHeader.text = "Day "+StatTracker.instance.numOfDaysCompleted + " completed";
         dayCompletedHeader.enabled = true;
         yield return new WaitForSeconds(1.5f);
@@ -187,18 +335,26 @@ public class dayTimer : MonoBehaviour {
             if (todaysEmails[i].junk)
                 email.GetComponent<Image>().sprite = junkMailSprite;
 
-            email.GetComponent<RectTransform>().SetParent(filedText.transform);
+            email.GetComponent<RectTransform>().SetParent(filedText.transform.parent);
             if (todaysEmails[i].correctAnswer)
             {
                 SoundManager.instance.playSound(0, .95f);
-                email.GetComponent<RectTransform>().localPosition = new Vector2(300 + (top * 35), 50);
+                email.GetComponent<RectTransform>().localPosition = new Vector2(-25 + (top * 35), 75);
+                if (email.GetComponent<RectTransform>().localPosition.x > 650)
+                    email.GetComponent<RectTransform>().localPosition = new Vector2(-25 + (top * 35) - 675, 50);
+
                 top++;
                 correct++;
             }
             else
             {
+                //if xpos is greater than 625, go to a new line
+                //New line should be y = 25
                 SoundManager.instance.playSound(0, .25f);
-                email.GetComponent<RectTransform>().localPosition = new Vector2(300 + (bot * 35), -47.5f);
+                email.GetComponent<RectTransform>().localPosition = new Vector2(-25 + (bot * 35), -75);
+                if (email.GetComponent<RectTransform>().localPosition.x > 650)
+                    email.GetComponent<RectTransform>().localPosition = new Vector2(-25 + (bot * 35) - 675, -100);
+
                 bot++;
             }
             yield return new WaitForSeconds(.35f);
@@ -213,44 +369,25 @@ public class dayTimer : MonoBehaviour {
         if (todaysEmails.Count == 0)
         {
             performanceRank = 0;
+            performanceResult.text = "USELESS";
             performanceResult.color = Color.red;
         }
         else
         {
             if (correct / todaysEmails.Count < .15f)
-            {
                 performanceRank = 1;
-            }
             else if (correct / todaysEmails.Count < .30f)
-            {
                 performanceRank = 2;
-            }
             else if (correct / todaysEmails.Count < .45f)
-            {
                 performanceRank = 3;
-                livesToAdd = 1;
-            }
             else if (correct / todaysEmails.Count < .60f)
-            {
                 performanceRank = 4;
-                livesToAdd = 1;
-            }
             else if (correct / todaysEmails.Count < .75f)
-            {
                 performanceRank = 5;
-                livesToAdd = 2;
-            }
             else if (correct / todaysEmails.Count < .90f)
-            {
                 performanceRank = 6;
-                livesToAdd = 2;
-            }
             else
-            {
                 performanceRank = 7;
-                livesToAdd = 3;
-            }
-
 
             int min = 8 + StatTracker.instance.numOfDaysCompleted;
 
@@ -258,6 +395,12 @@ public class dayTimer : MonoBehaviour {
             {
                 performanceRank -= min - todaysEmails.Count;
             }
+
+            if (performanceRank < 0)
+                performanceRank = 0;
+
+            if (performanceRank > 0)
+                livesToAdd = (int)(performanceRank / 3.33f);
 
             StatTracker.instance.addDayPerformance(performanceRank);
 
@@ -289,12 +432,13 @@ public class dayTimer : MonoBehaviour {
                     break;
             }
 
-            performanceResult.color = Color.Lerp(Color.red, Color.green, correct / todaysEmails.Count);
+            performanceResult.color = Color.Lerp(Color.red, Color.green, (performanceRank +1) / 8);
         }
         SoundManager.instance.playSound(stampSound);
         performanceResult.enabled = true;
 
         yield return new WaitForSeconds(1.5f);
+
         if (Player.instance.strikes < 4)
         {
             for (int i = 0; i < livesToAdd; i++)

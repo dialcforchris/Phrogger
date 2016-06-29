@@ -5,14 +5,14 @@ using System.Collections.Generic;
 
 public class LeaderBoard : MonoBehaviour 
 {
-    //Find file, if file doesn't exist, create one
-    //save scores and names in file
-    //read name and score from file on start up
-    //add to List<keyvaluePair<int, string>>();
-    //add current score and name to List<KVP<Int, String>>
-    //sort in descending order of score
+   //ask for player name
     //assign on UI
     //great job!
+    private static LeaderBoard leader = null;
+    public static LeaderBoard instance
+    {
+        get { return leader; }
+    }
     bool once = false;
     public string playerName;
     public string gameName;
@@ -23,7 +23,10 @@ public class LeaderBoard : MonoBehaviour
 	// Use this for initialization
 	void Awake () 
     {
-	    
+	    if (leader==null)
+        {
+            leader = this;
+        }
 	}
 	
 	// Update is called once per frame
@@ -55,7 +58,6 @@ public class LeaderBoard : MonoBehaviour
         scores.Add(newPlayer);
     }
 
-
     /// <summary>
     /// Custom comparison. Sorts by value
     /// </summary>
@@ -64,7 +66,6 @@ public class LeaderBoard : MonoBehaviour
         return _a.Value.CompareTo(_b.Value);
     }
    
-
     /// <summary>
     /// Sorts the scores in descending order
     /// </summary>
@@ -118,6 +119,7 @@ public class LeaderBoard : MonoBehaviour
         }
         write.Close();
     }
+
     /// <summary>
     /// read in the high Score file
     /// </summary>
@@ -125,6 +127,7 @@ public class LeaderBoard : MonoBehaviour
     {
         List<string> fileInput = new List<string>();
      //   int index = 0;
+        scores.Clear();
         StreamReader highScores = new StreamReader(gameName + "Scores.dat");
         while (!highScores.EndOfStream)
         {
@@ -142,7 +145,7 @@ public class LeaderBoard : MonoBehaviour
         SortScores();
         TrimList();
         WriteToFile();
-        scores.Clear();
+       // scores.Clear();
         //for (int i = 0; i < scores.Count; i++)
         //{
         //    Debug.Log(scores[i].Key + " " + scores[i].Value);
@@ -166,5 +169,17 @@ public class LeaderBoard : MonoBehaviour
     public void SetScore(int _score)
     {
         playerScore = _score;
+    }
+
+    public bool CheckIfHighScore(int _score)
+    {
+        if (scores[10].Value < _score)
+        {
+            playerScore = _score;
+            return true;
+            //do something with asking for name
+        }
+        else
+            return false;
     }
 }
