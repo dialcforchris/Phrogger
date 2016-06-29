@@ -36,6 +36,8 @@ public class Player : WorldObject
     float deathCool = 0;
     float maxDeathcool = 3;
 
+    [SerializeField] private Vector2 waterZone = Vector2.zero; //This is dirty, I know a way around it, I do not care, this is the only water zone
+
     //public members
     public int Score
     {
@@ -94,9 +96,25 @@ public class Player : WorldObject
         {
             if (state == PlayerState.ACTIVE)
             {
-                ConvertToPos();
-                Movement();
-                MoveCooldown();
+                if (joyOrDPad)
+                {
+                    ConvertToPos("HorizontalStick", "VerticalStick");
+                    JoyStickMovement();
+                    JoyMoveCoolDown();
+                }
+                else
+                {
+                    ConvertToPos("Horizontal", "Vertical");
+                    Movement();
+                    MoveCooldown();
+                }
+                if (!transform.parent)
+                {
+                    if (transform.position.y > waterZone.x && transform.position.y < waterZone.y)
+                    {
+                        OriginalFroggerDeath(FroggerDeathType.DROWN);
+                    }
+                }
             }
             DeathCooler();
         }
@@ -116,12 +134,14 @@ public class Player : WorldObject
                 moveX = Input.GetAxis("HorizontalStick") > 0 ? 1 : -1;
                 //if (lastPos.x != moveX)
                 {
-                    Tile _tile = TileManager.instance.GetTile(new Vector2((transform.position.x + moveX), transform.position.y));
+                    Vector2 _newPos = new Vector2((transform.position.x + moveX), transform.position.y);
+                    Tile _tile = TileManager.instance.GetTile(_newPos);
                     if (_tile.CheckMovement(this))
                     {
-                        transform.position = _tile.transform.position;
+                        transform.position = _newPos;// _tile.transform.position;
                         RemoveFromWorld();
                         AddToWorld();
+                        transform.SetParent(null);
                         _tile.Interaction(this);
                         if (Boss.instance.isActiveAndEnabled)
                         {
@@ -143,12 +163,14 @@ public class Player : WorldObject
                 moveY = Input.GetAxis("VerticalStick") > 0 ? 1 : -1;
              //   if (lastPos.y != moveY)
                 {
-                    Tile _tile = TileManager.instance.GetTile(new Vector2(transform.position.x, (transform.position.y + moveY)));
+                    Vector2 _newPos = new Vector2(transform.position.x, (transform.position.y + moveY));
+                    Tile _tile = TileManager.instance.GetTile(_newPos);
                     if (_tile.CheckMovement(this))
                     {
-                        transform.position = _tile.transform.position;
+                        transform.position = _newPos;// _tile.transform.position;
                         RemoveFromWorld();
                         AddToWorld();
+                        transform.SetParent(null);
                         _tile.Interaction(this);
                         if (Boss.instance.isActiveAndEnabled)
                         {
@@ -188,12 +210,14 @@ public class Player : WorldObject
                 moveX = Input.GetAxis("Horizontal") > 0 ? 1 : -1;
                 if (lastPos.x != moveX)
                 {
-                    Tile _tile = TileManager.instance.GetTile(new Vector2((transform.position.x + moveX), transform.position.y));
+                    Vector2 _newPos = new Vector2((transform.position.x + moveX), transform.position.y);
+                    Tile _tile = TileManager.instance.GetTile(_newPos);
                     if (_tile.CheckMovement(this))
                     {
-                        transform.position = _tile.transform.position;
+                        transform.position = _newPos;// _tile.transform.position;
                         RemoveFromWorld();
                         AddToWorld();
+                        transform.SetParent(null);
                         _tile.Interaction(this);
                         if(Boss.instance.isActiveAndEnabled)
                         {
@@ -215,12 +239,14 @@ public class Player : WorldObject
                 moveY = Input.GetAxis("Vertical") > 0 ? 1 : -1;
                 if (lastPos.y != moveY)
                 {
-                    Tile _tile = TileManager.instance.GetTile(new Vector2(transform.position.x, (transform.position.y + moveY)));
+                    Vector2 _newPos = new Vector2(transform.position.x, (transform.position.y + moveY));
+                    Tile _tile = TileManager.instance.GetTile(_newPos);
                     if (_tile.CheckMovement(this))
                     {
-                        transform.position = _tile.transform.position;
+                        transform.position = _newPos;// _tile.transform.position;
                         RemoveFromWorld();
                         AddToWorld();
+                        transform.SetParent(null);
                         _tile.Interaction(this);
                         if (Boss.instance.isActiveAndEnabled)
                         {

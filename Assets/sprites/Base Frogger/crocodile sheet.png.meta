@@ -1,9 +1,11 @@
 fileFormatVersion: 2
 guid: 11db1b0470f97454fac8b7db2285f714
-timeCreated: 1466594567
-licenseType: Free
+timeCreated: 1467204522
+licenseType: Pro
 TextureImporter:
-  fileIDToRecycleName: {}
+  fileIDToRecycleName:
+    21300000: crocodile sheet_0
+    21300002: crocodile sheet_1
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -38,7 +40,7 @@ TextureImporter:
   rGBM: 0
   compressionQuality: 50
   allowsAlphaSplitting: 0
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -49,7 +51,44 @@ TextureImporter:
   textureType: 8
   buildTargetSettings: []
   spriteSheet:
-    sprites: []
+    sprites:
+    - name: crocodile sheet_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 192
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -5, y: 28}
+        - {x: -75, y: 14}
+        - {x: -86, y: -6}
+        - {x: -86, y: -28}
+        - {x: 90, y: -28}
+        - {x: 90, y: 8}
+        - {x: 77, y: 28}
+    - name: crocodile sheet_1
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 0
+        width: 192
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -64, y: 17}
+        - {x: -86, y: 2}
+        - {x: -86, y: -24}
+        - {x: -67, y: -26}
+        - {x: 56, y: -26}
+        - {x: 90, y: -18}
+        - {x: 90, y: 5}
+        - {x: 31, y: 17}
     outline: []
   spritePackingTag: 
   userData: 
