@@ -18,6 +18,7 @@ public class Player : WorldObject
     [SerializeField] private FrogCorpse corpse;
     [SerializeField]
     private AudioClip splat;
+    public bool joyOrDPad = false; //true for joy, false for dpad
 
     [SerializeField]
     private ParticleSystem respawnParticles;
@@ -72,10 +73,20 @@ public class Player : WorldObject
         {
             if (state == PlayerState.ACTIVE)
             {
-                ConvertToPos();
-                Movement();
+               
                 HelpWorker();
-                MoveCooldown();
+                if (joyOrDPad)
+                {
+                    ConvertToPos("HorizontalStick", "VerticalStick");
+                    JoyStickMovement();
+                    JoyMoveCoolDown();
+                }
+                else
+                {
+                    ConvertToPos("Horizontal", "Vertical");
+                    Movement();
+                    MoveCooldown();
+                }
             }
             DeathCooler();
         }
@@ -88,6 +99,77 @@ public class Player : WorldObject
                 MoveCooldown();
             }
             DeathCooler();
+        }
+    }
+    void JoyStickMovement()
+    {
+        if ((Input.GetAxis("VerticalStick") != 0 || Input.GetAxis("HorizontalStick") != 0) && !MoveCooldown())
+            anim.Play("PlayerWalk");
+
+        float moveX = 0;
+        float moveY = 0;
+
+        if (hori > verti)
+        {
+            if (Input.GetAxis("HorizontalStick") != 0 && JoyMoveCoolDown())
+            {
+                moveX = Input.GetAxis("HorizontalStick") > 0 ? 1 : -1;
+                //if (lastPos.x != moveX)
+                {
+                    Tile _tile = TileManager.instance.GetTile(new Vector2((transform.position.x + moveX), transform.position.y));
+                    if (_tile.CheckMovement(this))
+                    {
+                        transform.position = _tile.transform.position;
+                        RemoveFromWorld();
+                        AddToWorld();
+                        _tile.Interaction(this);
+                        if (Boss.instance.isActiveAndEnabled)
+                        {
+                            Boss.instance.ChasePlayer(_tile);
+                        }
+                    }
+
+                    SoundManager.instance.playSound(0);
+                    angle = Input.GetAxis("HorizontalStick") > 0 ? 270 : 90;
+                    coolDown = 0;
+                    lastPos.x = moveX;
+                }
+            }
+        }
+        else
+        {
+            if (Input.GetAxis("VerticalStick") != 0 && JoyMoveCoolDown())
+            {
+                moveY = Input.GetAxis("VerticalStick") > 0 ? 1 : -1;
+             //   if (lastPos.y != moveY)
+                {
+                    Tile _tile = TileManager.instance.GetTile(new Vector2(transform.position.x, (transform.position.y + moveY)));
+                    if (_tile.CheckMovement(this))
+                    {
+                        transform.position = _tile.transform.position;
+                        RemoveFromWorld();
+                        AddToWorld();
+                        _tile.Interaction(this);
+                        if (Boss.instance.isActiveAndEnabled)
+                        {
+                            Boss.instance.ChasePlayer(_tile);
+                        }
+                    }
+                    SoundManager.instance.playSound(0);
+                    angle = Input.GetAxis("VerticalStick") > 0 ? 0 : 180;
+                    coolDown = 0;
+                    lastPos.y = moveY;
+                }
+            }
+        }
+        transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
+        if (Input.GetAxis("HorizontalStick") == 0)
+        {
+            lastPos.x = 0;
+        }
+        if (Input.GetAxis("VerticalStick") == 0)
+        {
+            lastPos.y = 0;
         }
     }
 
@@ -163,6 +245,15 @@ public class Player : WorldObject
         }
        
     }
+    bool JoyMoveCoolDown()
+    {
+        if (coolDown< 0.8f)
+        {
+            coolDown += Time.deltaTime;
+            return false;
+        }
+        return true;
+    }
 
     bool MoveCooldown()
     {
@@ -175,10 +266,10 @@ public class Player : WorldObject
     }
 
     //movement related function
-    void ConvertToPos()
+    void ConvertToPos(string ho, string ve)
     {
-        hori = Input.GetAxis("Horizontal");
-        verti = Input.GetAxis("Vertical");
+        hori = Input.GetAxis(ho);
+        verti = Input.GetAxis(ve);
         if (hori < 0)
         {
             hori -= hori * 2;
