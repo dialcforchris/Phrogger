@@ -22,7 +22,7 @@ public class FrogCorpse : WorldObject
                 Alpha();
             }
         }
-        else if (_obj.tag == "Boss")
+        else if (_obj.tag == "Boss" || _obj.tag == "FroggerObject")
         {
             Alpha();
         }

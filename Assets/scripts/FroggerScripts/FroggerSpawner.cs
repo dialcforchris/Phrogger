@@ -26,7 +26,7 @@ public class FroggerSpawner : WorldObject
 
     private void Update()
     {
-        if(GameStateManager.instance.GetState() == GameStates.STATE_GAMEPLAY)
+        if(GameStateManager.instance.GetState() == GameStates.STATE_FROGGER)
         {
             cooldown += Time.deltaTime;
             if(cooldown >= spawnRate)

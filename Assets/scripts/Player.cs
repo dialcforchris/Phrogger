@@ -23,6 +23,8 @@ public class Player : WorldObject
     private ParticleSystem respawnParticles;
 
     [SerializeField] private Transform playerSpawn = null;
+    [SerializeField] private Transform froggerSpawn = null;
+    private bool froggerCompleted = false;
     
     [SerializeField] private Animator anim = null;
     private PlayerState state = PlayerState.ACTIVE;
@@ -49,9 +51,9 @@ public class Player : WorldObject
     {
         instance = this;
         base.Awake();
-        transform.position = playerSpawn.position;
+        transform.position = froggerSpawn.position;
     }
-        protected override void Start()
+    protected override void Start()
     {
         base.Start();
     }
@@ -59,6 +61,13 @@ public class Player : WorldObject
     // Update is called once per frame
     void Update()
     {
+        if(Input.GetKeyDown(KeyCode.V))
+        {
+            froggerCompleted = true;
+            GameStateManager.instance.ChangeState(GameStates.STATE_DAYOVER);
+            introMonitor.instance.BeginGame();
+        }
+
         if (GameStateManager.instance.GetState() == GameStates.STATE_GAMEPLAY)
         {
             if (state == PlayerState.ACTIVE)
@@ -66,6 +75,16 @@ public class Player : WorldObject
                 ConvertToPos();
                 Movement();
                 HelpWorker();
+                MoveCooldown();
+            }
+            DeathCooler();
+        }
+        else if(GameStateManager.instance.GetState() == GameStates.STATE_FROGGER)
+        {
+            if (state == PlayerState.ACTIVE)
+            {
+                ConvertToPos();
+                Movement();
                 MoveCooldown();
             }
             DeathCooler();
@@ -172,6 +191,11 @@ public class Player : WorldObject
 
     public void Die()
     {
+        if(!froggerCompleted)
+        {
+            OriginalFroggerDeath(FroggerDeathType.OFFSCREEN);
+            return;
+        }
         Boss.instance.EndChase();
         //   bloodSplatter.Play();
         state = PlayerState.DEAD;
@@ -179,7 +203,7 @@ public class Player : WorldObject
         frogCorpse.blood.transform.position = frogCorpse.transform.position;
 
         spriteRenderer.enabled = false;
-        transform.position = playerSpawn.position;
+        transform.position = froggerCompleted ? playerSpawn.position : froggerSpawn.position;
         RemoveFromWorld();
         //Rather than this leave behind a corpse call remove from world, move position then add to world immediately
         strikes -= 1;
@@ -226,17 +250,24 @@ public class Player : WorldObject
 
     public void OriginalFroggerDeath(FroggerDeathType _deathType)
     {
+        state = PlayerState.DEAD;
+        spriteRenderer.enabled = false;
+        RemoveFromWorld();
+
         //Reset posiiton and play appropriate sound
         //Play appropriate sound
         switch(_deathType)
         {
             case FroggerDeathType.RUNOVER:
+                FrogCorpse frogCorpse = (FrogCorpse)Instantiate(corpse, transform.position, transform.rotation);
+                frogCorpse.blood.transform.position = frogCorpse.transform.position;
                 break;
             case FroggerDeathType.CROCO:
                 break;
             case FroggerDeathType.DROWN:
                 break;
         }
+        transform.position = froggerCompleted ? playerSpawn.position : froggerSpawn.position;
     }
 
     void DeathCooler()
