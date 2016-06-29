@@ -93,7 +93,6 @@ public class Player : WorldObject
         {
             if (state == PlayerState.ACTIVE)
             {
-<<<<<<< HEAD
                 HelpWorker();
                 if (joyOrDPad)
                 {
@@ -107,11 +106,9 @@ public class Player : WorldObject
                     Movement();
                     MoveCooldown();
                 }
-=======
                 ConvertToPos("Horizontal", "Vertical");
                 Movement();
                 MoveCooldown();
->>>>>>> origin/master
             }
             DeathCooler();
         }
