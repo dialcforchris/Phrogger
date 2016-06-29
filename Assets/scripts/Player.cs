@@ -94,9 +94,19 @@ public class Player : WorldObject
         {
             if (state == PlayerState.ACTIVE)
             {
-                ConvertToPos();
-                Movement();
-                MoveCooldown();
+                HelpWorker();
+                if (joyOrDPad)
+                {
+                    ConvertToPos("HorizontalStick", "VerticalStick");
+                    JoyStickMovement();
+                    JoyMoveCoolDown();
+                }
+                else
+                {
+                    ConvertToPos("Horizontal", "Vertical");
+                    Movement();
+                    MoveCooldown();
+                }
             }
             DeathCooler();
         }
