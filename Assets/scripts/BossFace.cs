@@ -5,7 +5,10 @@ using System.Collections;
 public class BossFace :MonoBehaviour
 {
     public static BossFace instance = null;
-    [SerializeField] private SpriteRenderer spriteRenderer = null;
+    [SerializeField]
+    private SpriteRenderer spriteRenderer = null;
+    [SerializeField]
+    private Animator bossFaceAnimator = null;
     public Sprite[] faceList;
     public Sprite bossGone;
     public ParticleSystem steam;
@@ -26,6 +29,7 @@ public class BossFace :MonoBehaviour
     Tile playerTile;
     int bossAngerLevel = 0;
     private bool slacker = false;
+
 
     FaceState faceState;
 
@@ -202,12 +206,17 @@ public class BossFace :MonoBehaviour
                 case FaceState.CHASE:
                     {
                         spriteRenderer.sprite = bossGone;
-                        Boss.instance.BeginChase();
-
+                        bossFaceAnimator.Play("boss_leave");
+                        Invoke("bossChase", .5f);
                         break;
                     }
             }
         }
+    }
+
+    void bossChase()
+    {
+        Boss.instance.BeginChase();
     }
 
     public void ChangeStateBack()
