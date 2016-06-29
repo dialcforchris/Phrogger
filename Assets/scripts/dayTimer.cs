@@ -31,6 +31,17 @@ public class dayTimer : MonoBehaviour {
     [SerializeField]
     private Text emailTargetText;
 
+
+    [Header("Ending stats")]
+    [SerializeField]
+    private Text StatsTitle;
+    [SerializeField]
+    private Text StatsDeath,StatsEmail,StatsProf,StatsBossAnger,StatsBossDeath,ContinuePrompt;
+    [SerializeField]
+    private Image endingScreen,StatsBox;
+    [SerializeField]
+    private Sprite PromotionScreen, FiredScreen,DeathScreen;
+
     [System.Serializable]
     public struct completedEmail
     {
@@ -52,7 +63,8 @@ public class dayTimer : MonoBehaviour {
     public Text filedText, performanceText, performanceResult;
 
     [Header("Day transition UI")]
-    public Text DayText,TimeText;
+    public Text DayText;
+    public Text TimeText;
     public Image background;
     private bool finishedDisplay = false;
 
@@ -69,6 +81,7 @@ public class dayTimer : MonoBehaviour {
         
     void Update()
     {
+        //Clock and timer based things
         if (GameStateManager.instance.GetState() == GameStates.STATE_GAMEPLAY && currentTime < secondsPerDay)
         {
             currentTime += Time.deltaTime;
@@ -86,17 +99,128 @@ public class dayTimer : MonoBehaviour {
 
             timeSlider.value = currentTime / secondsPerDay;
         }
-        if(GameStateManager.instance.GetState() == GameStates.STATE_DAYOVER && finishedDisplay)
+
+        if (GameFinished)
+        {
+            if (Input.GetButtonDown("Fire1"))
+                StatsBox.gameObject.SetActive(false);
+            if (Input.GetButtonUp("Fire1"))
+                StatsBox.gameObject.SetActive(true);
+
+
+            if (Input.GetButton("Fire1") && Input.GetAxis("Vertical") < 0)
+                Debug.Log("close");
+        }
+
+        if (GameStateManager.instance.GetState() == GameStates.STATE_DAYOVER && finishedDisplay)
         {
             if(Input.GetButtonDown("Fire1") && !transitioning)
             {
-                transitioning = true;
-                StartCoroutine(NextDayTransition());
+                if (StatTracker.instance.numOfDaysCompleted < 1)
+                {
+                    transitioning = true;
+                    StartCoroutine(NextDayTransition());
+                }
+                else
+                {
+                    transitioning = true;
+                    StartCoroutine(FinishGame());
+                }
             }
         }
     }
 
-    bool transitioning;
+    bool transitioning,GameFinished;
+
+    IEnumerator FinishGame()
+    {
+        //Fade to black
+        while (background.color.a < 1)
+        {
+            Color col = background.color;
+            col.a += Time.deltaTime;
+            background.color = col;
+            yield return new WaitForEndOfFrame();
+        }
+
+
+        //Display stats window
+        endingScreen.gameObject.SetActive(true);
+
+        float performance = StatTracker.instance.getAveragePerformance();
+
+        if (performance > 6)
+        {
+            endingScreen.sprite = PromotionScreen;
+            StatsTitle.text = "You were promoted! \n <size=32>Congrulations, sir!</size>";
+        }
+        else if (StatTracker.instance.bossDeaths > 8)
+        {
+            endingScreen.sprite = DeathScreen;
+            StatsTitle.text = "You kept your job \n <size=32>but your boss did not...</size>";
+        }
+        else
+        {
+            endingScreen.sprite = FiredScreen;
+            StatsTitle.text = "You were fired! \n <size=32>Better luck next time</size>";
+        }
+        
+        yield return new WaitForSeconds(1);
+
+        //Fade the black out
+        while (background.color.a > 0)
+        {
+            Color col = background.color;
+            col.a -= Time.deltaTime;
+            background.color = col;
+            yield return new WaitForEndOfFrame();
+        }
+
+        yield return new WaitForSeconds(2);
+        SoundManager.instance.playSound(0, .95f);
+
+        StatsBox.enabled = true;
+        StatsTitle.enabled = true;
+
+        yield return new WaitForSeconds(1.5f);
+        SoundManager.instance.playSound(0, .95f);
+
+        StatsDeath.text = "You died a total of <color=red>"+ StatTracker.instance.totalDeaths+"</color> times";
+        StatsDeath.enabled = true;
+
+        yield return new WaitForSeconds(1.5f);
+        SoundManager.instance.playSound(0, .95f);
+
+        StatsBossDeath.text = "Your boss killed you <color=red>" + StatTracker.instance.bossDeaths + "</color> times";
+        StatsBossDeath.enabled = true;
+
+        yield return new WaitForSeconds(1.5f);
+        SoundManager.instance.playSound(0, .95f);
+
+        float correct = StatTracker.instance.safeEmailsCorrect + StatTracker.instance.junkEmailsCorrect;
+        float total = StatTracker.instance.junkEmailsWrong + StatTracker.instance.safeEmailsWrong + StatTracker.instance.safeEmailsCorrect + StatTracker.instance.junkEmailsCorrect;
+
+        if (correct > 0)
+            StatsEmail.text = "You processed <color=red>" + total + "</color> emails and sorted <color=red>" + (int)(correct / total * 100) + "%</color> of them correctly";
+        else
+            StatsEmail.text = "You processed <color=red>" + total + "</color> emails and sorted <color=red>0%</color> of them correctly";
+        StatsEmail.enabled = true;
+
+        yield return new WaitForSeconds(1.5f);
+        SoundManager.instance.playSound(0, .95f);
+
+        StatsProf.text = "Your overall professionalism is <color=red>"+(100 - (int)(StatTracker.instance.messyDesks / 47f * 100)) + "%</color>"; //REDO THIS M9
+        StatsProf.enabled = true;
+
+        yield return new WaitForSeconds(1.5f);
+        SoundManager.instance.playSound(0, .95f);
+
+        StatsBossAnger.text = "You angered your boss <color=red>"+StatTracker.instance.bossAngered+"</color> times";
+        StatsBossAnger.enabled = true;
+
+        yield return new WaitForSeconds(1);
+        GameFinished = true;
+    }
 
     IEnumerator NextDayTransition() //Fades the screen to black, display the day # text and fades back in
     {
@@ -188,8 +312,7 @@ public class dayTimer : MonoBehaviour {
 
         yield return new WaitForSeconds(2.5f);
         progressUI.GetComponent<Image>().enabled = true;
-
-        if (StatTracker.instance.numOfDaysCompleted<5)
+        
         StatTracker.instance.numOfDaysCompleted++;
 
         dayCompletedHeader.text = "Day "+StatTracker.instance.numOfDaysCompleted + " completed";

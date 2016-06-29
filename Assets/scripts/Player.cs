@@ -73,7 +73,6 @@ public class Player : WorldObject
         {
             if (state == PlayerState.ACTIVE)
             {
-               
                 HelpWorker();
                 if (joyOrDPad)
                 {
@@ -94,7 +93,7 @@ public class Player : WorldObject
         {
             if (state == PlayerState.ACTIVE)
             {
-                ConvertToPos();
+                ConvertToPos("Horizontal", "Vertical");
                 Movement();
                 MoveCooldown();
             }
@@ -282,6 +281,7 @@ public class Player : WorldObject
 
     public void Die()
     {
+        StatTracker.instance.totalDeaths++;
         if(!froggerCompleted)
         {
             OriginalFroggerDeath(FroggerDeathType.OFFSCREEN);
@@ -313,6 +313,7 @@ public class Player : WorldObject
         {
             if (state == PlayerState.ACTIVE)
             {
+                StatTracker.instance.totalDeaths++;
                 StatTracker.instance.causeOfDeath.text = "A co-wroker stepped on you";
                 Die();
                 SoundManager.instance.playSound(splat);
@@ -322,6 +323,7 @@ public class Player : WorldObject
         {
             if (state == PlayerState.ACTIVE)
             {
+                StatTracker.instance.bossDeaths++;
                 StatTracker.instance.causeOfDeath.text = "Your boss stepped on you";
                 Die();
                 SoundManager.instance.playSound(splat);
