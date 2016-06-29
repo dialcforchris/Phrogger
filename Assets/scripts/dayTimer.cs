@@ -188,7 +188,10 @@ public class dayTimer : MonoBehaviour {
 
         yield return new WaitForSeconds(2.5f);
         progressUI.GetComponent<Image>().enabled = true;
+
+        if (StatTracker.instance.numOfDaysCompleted<5)
         StatTracker.instance.numOfDaysCompleted++;
+
         dayCompletedHeader.text = "Day "+StatTracker.instance.numOfDaysCompleted + " completed";
         dayCompletedHeader.enabled = true;
         yield return new WaitForSeconds(1.5f);
@@ -312,6 +315,7 @@ public class dayTimer : MonoBehaviour {
         performanceResult.enabled = true;
 
         yield return new WaitForSeconds(1.5f);
+
         if (Player.instance.strikes < 4)
         {
             for (int i = 0; i < livesToAdd; i++)
