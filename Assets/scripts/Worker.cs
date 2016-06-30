@@ -188,6 +188,8 @@ public class Worker : WorldObject, IPoolable<Worker>
 
     public override void Reset()
     {
+        animator.SetBool("sit", false);
+        StateSwitch(WorkerState.WALKING);
         gameObject.SetActive(false);
         RemoveFromWorld();
         ReturnPool();
@@ -199,8 +201,6 @@ public class Worker : WorldObject, IPoolable<Worker>
         {
             spinningRenderer.gameObject.SetActive(false);
         }
-        animator.SetBool("sit", false);
-        StateSwitch(WorkerState.WALKING);
         needHelp = false;
         helpMe.SetActive(false);
         numTimesNeededHelp = 0;

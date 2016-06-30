@@ -21,6 +21,9 @@ public class introMonitor : MonoBehaviour
 
     [SerializeField] private RectTransform top = null, bottom = null, left = null, right = null;
 
+    private bool introDisplayed = false;
+    public bool gameIntro { get { return introDisplayed; } }
+
     //An email object, might need variables for score and such in the future
     [System.Serializable]
     public struct mail
@@ -35,24 +38,42 @@ public class introMonitor : MonoBehaviour
         gameObject.SetActive(false);
     }
 
+    public void InitialiseMonitor()
+    {
+        mainCamTransition.material.SetTexture("_SliceGuide", gradients[1]);
+        monCamTransition.material.SetTexture("_SliceGuide", gradients[1]);
+        mainCamTransition.material.SetFloat("_SliceAmount", 0);
+        //Invoke("enterView", 0.5f);
+        mainCam.transform.position = new Vector3(0.0f, 9.5f, -10.0f);
+
+        mainCam.enabled = false;
+        monitorCamera.enabled = true;
+        mainCamTransition.transform.localScale = new Vector3(7.15f, 4, 1);//Look, it works. I'm not proud of it but it works.
+        monCamTransition.material.SetFloat("_SliceAmount", 1.0f);
+        introDisplayed = true;
+
+        mainCamTransition.transform.localScale = new Vector3(32, 18, 1);//Look, it works. I'm not proud of it but it works.
+    }
+
     public void BeginGame()
     {
-      //  gameObject.SetActive(true);
-        Player.instance.Reset();
-        WorkerManager.instance.SetupDefaultPositions();
-        mainCamTransition.material.SetFloat("_SliceAmount", 0);
-        Invoke("enterView", 0.5f);
-        mainCam.transform.position = new Vector3(0.0f, 9.5f, -10.0f);
-        //top.anchorMin = new Vector2(0, 1.0f - 0.05714286f);
-        //bottom.anchorMax = new Vector2(0, 0.05714286f);
-        //right.anchorMin = new Vector2(1.0f, 0.0f);
-        //left.anchorMax = new Vector2(0.0f, 1.0f);
-
         top.gameObject.SetActive(true);
         bottom.gameObject.SetActive(true);
         left.gameObject.SetActive(false);
         right.gameObject.SetActive(false);
-        gameObject.SetActive(true);
+
+        Player.instance.Reset();
+
+        GameStateManager.instance.ChangeState(GameStates.STATE_DAYOVER);
+        emailPos = 0;
+
+        monitorAnimator.Play("mail_intro");
+        emailContent.sprite = currentMail.image;
+
+        StopCoroutine("zoomInOut");
+        StartCoroutine(zoomInOut(7.5f));
+
+        introDisplayed = true;
     }
 
     public void enterView()
@@ -69,6 +90,7 @@ public class introMonitor : MonoBehaviour
     {
         computerSounds.DOFade((InOut) ? SoundManager.instance.volumeMultiplayer : 0, 2);
         Random.seed = System.DateTime.Now.Millisecond;
+
         mainCamTransition.material.SetTexture("_SliceGuide", gradients[1]);
         monCamTransition.material.SetTexture("_SliceGuide", gradients[1]);
 
@@ -86,18 +108,20 @@ public class introMonitor : MonoBehaviour
         }
 
         yield return new WaitForSeconds(0.1f);
+        
         mainCam.enabled = !InOut;
         monitorCamera.enabled = InOut;
 
         if (!InOut)
         {
             Camera.main.orthographicSize = 2;
-            Camera.main.transform.position = GameObject.FindGameObjectWithTag("Player").transform.position;
+            Camera.main.transform.position = Player.instance.transform.position;
             Camera.main.transform.position = new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y, -10);
         }
 
         mainCamTransition.transform.localScale = new Vector3(7.15f, 4, 1);//Look, it works. I'm not proud of it but it works.
 
+        
         lerpy = 0;
         while (lerpy < 1)
         {
@@ -110,7 +134,7 @@ public class introMonitor : MonoBehaviour
 
             yield return new WaitForEndOfFrame();
         }
-
+       
         mainCamTransition.transform.localScale = new Vector3(32, 18, 1);//Look, it works. I'm not proud of it but it works.
         if (InOut)
         {
