@@ -9,8 +9,10 @@ public class dayTimer : MonoBehaviour {
     public static dayTimer instance;
     [SerializeField]
     private int secondsPerDay;
+    public float secondsDay { get { return secondsPerDay; } }
     [SerializeField]
     private float currentTime;
+    public float time { get { return currentTime; } }
     [SerializeField]
     private GameObject progressUI;
     [SerializeField]
@@ -456,7 +458,7 @@ public class dayTimer : MonoBehaviour {
                     break;
             }
 
-            performanceResult.color = Color.Lerp(Color.red, Color.green, (performanceRank +1) / 8);
+            performanceResult.color = Color.Lerp(Color.red, Color.green, (performanceRank +1.0f) / 8.0f);
         }
         SoundManager.instance.playSound(stampSound);
         performanceResult.enabled = true;

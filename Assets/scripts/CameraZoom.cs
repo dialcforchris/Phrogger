@@ -86,7 +86,10 @@ public class CameraZoom : MonoBehaviour {
             instance.overlayTop.rectTransform.anchoredPosition = Vector2.Lerp(new Vector2(960, 540), new Vector2(960, 670),lerpy);
             yield return new WaitForEndOfFrame();
         }
-        GameStateManager.instance.ChangeState(GameStates.STATE_GAMEPLAY);
+        if(dayTimer.instance.time < dayTimer.instance.secondsDay)
+        {
+            GameStateManager.instance.ChangeState(GameStates.STATE_GAMEPLAY);
+        }
     }
 
     public void doAZoom(bool b, Transform t = null)
