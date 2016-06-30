@@ -18,7 +18,6 @@ public class EventManager : MonoBehaviour
         else
         {
             singleton = this;
-            DontDestroyOnLoad(gameObject);
         }
     }
 
