@@ -31,7 +31,6 @@ public class GameStateManager : MonoBehaviour
         else
         {
             singleton = this;
-            DontDestroyOnLoad(gameObject);
             states[(int)GameStates.STATE_GAMEPLAY] = new GameplayState();
             states[(int)GameStates.STATE_PAUSE] = new PauseState();
             states[(int)GameStates.STATE_EMAIL] = new EmailState();
