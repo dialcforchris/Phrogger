@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
 
 public class Player : WorldObject
@@ -75,7 +76,7 @@ public class Player : WorldObject
         {
             if (state == PlayerState.ACTIVE)
             {
-               
+
                 HelpWorker();
                 if (joyOrDPad)
                 {
@@ -92,43 +93,98 @@ public class Player : WorldObject
             }
             DeathCooler();
         }
-        else if(GameStateManager.instance.GetState() == GameStates.STATE_FROGGER)
+        else if (GameStateManager.instance.GetState() == GameStates.STATE_FROGGER)
         {
-            if (state == PlayerState.ACTIVE)
+            if (!froggerCompleted)
             {
-                if (joyOrDPad)
+                if (state == PlayerState.ACTIVE)
                 {
-                    ConvertToPos("HorizontalStick", "VerticalStick");
-                    JoyStickMovement();
-                    JoyMoveCoolDown();
-                }
-                else
-                {
-                    ConvertToPos("Horizontal", "Vertical");
-                    Movement();
-                    MoveCooldown();
-                }
-                if (!transform.parent)
-                {
-                    if (transform.position.y > waterZone.x && transform.position.y < waterZone.y)
+                    if (joyOrDPad)
                     {
-                        OriginalFroggerDeath(FroggerDeathType.DROWN);
+                        ConvertToPos("HorizontalStick", "VerticalStick");
+                        JoyStickMovement();
+                        JoyMoveCoolDown();
+                    }
+                    else
+                    {
+                        ConvertToPos("Horizontal", "Vertical");
+                        Movement();
+                        MoveCooldown();
+                    }
+                    if (!transform.parent)
+                    {
+                        if (transform.position.y > waterZone.x && transform.position.y < waterZone.y)
+                        {
+                            OriginalFroggerDeath(FroggerDeathType.DROWN);
+                        }
+                    }
+                    else
+                    {
+                        Tile _tile = TileManager.instance.GetTile(transform.position);
+                        if (_tile != tiles[0])
+                        {
+                            RemoveFromWorld();
+                            AddToWorld();
+                            _tile.Interaction(this);
+                        }
+                    }
+                    if (transform.position.y > -4.5f)
+                    {
+                        coolDown = 0.0f;
+                        froggerCompleted = true;
+                        StartCoroutine("OriginalFroggerFinished");
                     }
                 }
-                else
-                {
-                    Tile _tile = TileManager.instance.GetTile(transform.position);
-                    if (_tile != tiles[0])
-                    {
-                        RemoveFromWorld();
-                        AddToWorld();
-                        _tile.Interaction(this);
-                    }
-                }
+                DeathCooler();
             }
-            DeathCooler();
         }
     }
+
+    private IEnumerator OriginalFroggerFinished()
+    {
+        while (true)
+        {
+            coolDown += Time.deltaTime;
+            if (transform.position.x > 1.0f)
+            {
+                if (coolDown >= maxCool)
+                {
+                    coolDown = 0.0f;
+                    transform.position = new Vector2(Mathf.Ceil(transform.position.x) - 1.5f, -4.0f);
+                    transform.rotation = Quaternion.Euler(new Vector3(0, 0, 90));
+                }
+                yield return null;
+            }
+            else if (transform.position.x < -1.0f)
+            {
+                if (coolDown >= maxCool)
+                {
+                    coolDown = 0.0f;
+                    transform.position = new Vector2(Mathf.Floor(transform.position.x) + 1.5f, -4.0f);
+                    transform.rotation = Quaternion.Euler(new Vector3(0, 0, 270));
+                }
+                yield return null;
+            }
+            else if (transform.position.y < -0.5f)
+            {
+                if (coolDown >= maxCool)
+                {
+                    coolDown = 0.0f;
+                    transform.position = new Vector2(transform.position.x, transform.position.y + 1.0f);
+                    transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
+                }
+                yield return null;
+            }
+            else
+            {
+                coolDown = 0.0f;
+                GameStateManager.instance.ChangeState(GameStates.STATE_DAYOVER);
+                introMonitor.instance.BeginGame();
+                yield break;
+            }
+        }
+    }
+
     void JoyStickMovement()
     {
         if ((Input.GetAxis("VerticalStick") != 0 || Input.GetAxis("HorizontalStick") != 0) && !MoveCooldown())

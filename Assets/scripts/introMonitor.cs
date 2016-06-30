@@ -42,6 +42,7 @@ public class introMonitor : MonoBehaviour
         WorkerManager.instance.SetupDefaultPositions();
         mainCamTransition.material.SetFloat("_SliceAmount", 0);
         Invoke("enterView", 0.5f);
+        mainCam.transform.position = new Vector3(0.0f, 9.5f, -10.0f);
         //top.anchorMin = new Vector2(0, 1.0f - 0.05714286f);
         //bottom.anchorMax = new Vector2(0, 0.05714286f);
         //right.anchorMin = new Vector2(1.0f, 0.0f);

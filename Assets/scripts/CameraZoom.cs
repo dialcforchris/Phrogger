@@ -12,7 +12,7 @@ public class CameraZoom : MonoBehaviour {
     // Use this for initialization
     void Start()
     {
-        origin = Camera.main.transform.position;
+        origin = new Vector3(0.0f, 9.5f, -10.0f);
         instance = this;
     }
 
