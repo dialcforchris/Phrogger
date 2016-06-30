@@ -41,6 +41,10 @@ public class FroggerPlatform : FroggerObject
                 {
                     ((Player)_obj).OriginalFroggerDeath(deathType);
                 }
+                else
+                {
+                    _obj.transform.SetParent(transform);
+                }
             }
             else if (!turtleDropped)
             {

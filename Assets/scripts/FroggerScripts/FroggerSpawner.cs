@@ -30,6 +30,18 @@ public class FroggerSpawner : WorldObject
         }
     }
 
+    protected override void Start()
+    {
+        base.Start();
+        for (int i = 1; i <  Mathf.Floor((19/laneSpeed) /  maxSpawnRate); ++i)
+        {
+            FroggerObject _obj = objectPool.GetPooledObject();
+            _obj.transform.position = transform.position;
+            _obj.transform.position += ((((isLeft ? Vector3.right : Vector3.left) * laneSpeed * Time.deltaTime) * Mathf.Floor(maxSpawnRate / Time.deltaTime)) * i);
+            _obj.Initialise(isLeft ? Vector3.right : Vector3.left, laneSpeed);
+        }
+    }
+
     private void Update()
     {
         if(GameStateManager.instance.GetState() == GameStates.STATE_FROGGER)
