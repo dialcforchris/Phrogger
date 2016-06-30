@@ -115,7 +115,7 @@ public class mailOpener : MonoBehaviour
                 if (lerpy > 1)
                     lerpy = 1;
                 
-                Camera.main.transform.position = Vector3.Lerp(new Vector3(0, 6.5f, -10), Player.instance.transform.position, lerpy);
+                Camera.main.transform.position = Vector3.Lerp(new Vector3(0, 9.5f, -10), Player.instance.transform.position, lerpy);
                 Camera.main.transform.position = new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y, -10);
                 
                 Camera.main.orthographicSize = Mathf.Lerp(9, 2, lerpy);
@@ -173,7 +173,7 @@ public class mailOpener : MonoBehaviour
                 lerpy -= Time.deltaTime*1.5f;
                 if (lerpy < 0)
                     lerpy = 0;
-                Camera.main.transform.position = Vector3.Lerp(new Vector3(0, 6.5f, -10), Player.instance.transform.position, lerpy);
+                Camera.main.transform.position = Vector3.Lerp(new Vector3(0, 9.5f, -10), Player.instance.transform.position, lerpy);
                 Camera.main.transform.position = new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y, -10);
                 Camera.main.orthographicSize = Mathf.Lerp(9, 2, lerpy);
                 mainCamTransition.transform.localScale = Vector3.Lerp(new Vector3(32, 18, 1), new Vector3(7.15f, 4, 1), lerpy);
