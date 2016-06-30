@@ -6,12 +6,14 @@ public class EnterName : MonoBehaviour
 {
     public Text[] box;
     int[] currentCharacter;
+    public Text score;
     int selectBox = 0;
     int selectChar= 0;
     float coolDown = 0;
     float maxCool = 0.3f;
     string theName = string.Empty;
     bool selectOnce = false;
+    [SerializeField] Canvas enterNameUI;
 	// Use this for initialization
 	void Start () 
     {
@@ -26,12 +28,16 @@ public class EnterName : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
     {
-        MenuInput();
-        box[selectBox].text = ((char)currentCharacter[selectBox]).ToString();
-        Debug.Log("select box " + selectBox);
-        ChangeTextColour();
-        if (!selectOnce)
-        SelectName();
+       // if (enterNameUI.enabled)
+        {
+            MenuInput();
+            box[selectBox].text = ((char)currentCharacter[selectBox]).ToString();
+            Debug.Log("select box " + selectBox);
+            ChangeTextColour();
+            score.text = "Score: " +StatTracker.instance.GetScore().ToString();
+            if (!selectOnce)
+                SelectName();
+        }
     }
 
     void MenuInput()
@@ -60,6 +66,7 @@ public class EnterName : MonoBehaviour
                     selectBox--;
                 }
             }
+            selectChar = currentCharacter[selectBox];
             coolDown = 0;
         }
         else if (Input.GetAxis("Vertical") != 0 && SelectCoolDown())
@@ -130,6 +137,7 @@ public class EnterName : MonoBehaviour
             {
                 theName = theName + box[i].text;
             }
+            LeaderBoard.instance.SetName(theName);
             selectOnce = true;
             Debug.Log(theName);
            

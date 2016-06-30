@@ -167,5 +167,10 @@ public class StatTracker : MonoBehaviour
             }
 
         }
+        LeaderBoard.instance.SetScore(score);
+    }
+    public int GetScore()
+    {
+        return score;
     }
 }

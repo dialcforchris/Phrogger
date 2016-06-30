@@ -110,6 +110,7 @@ public class dayTimer : MonoBehaviour {
 
             if (Input.GetButton("Fire1") && Input.GetAxis("Vertical") < 0)
                 Debug.Log("close");
+            LeaderBoard.instance.SetScore(StatTracker.instance.GetScore());
         }
 
         if (GameStateManager.instance.GetState() == GameStates.STATE_DAYOVER && finishedDisplay)

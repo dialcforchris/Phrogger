@@ -14,7 +14,7 @@ public class LeaderBoard : MonoBehaviour
         get { return leader; }
     }
     bool once = false;
-    public string playerName;
+    string playerName;
     public string gameName;
     int playerScore;
     public int stringLength = 3;
@@ -168,7 +168,15 @@ public class LeaderBoard : MonoBehaviour
     }
     public void SetScore(int _score)
     {
-        playerScore = _score;
+     //   playerScore = _score;
+        if (CheckIfHighScore(_score))
+        {
+           
+        }
+    }
+    public void SetName(string _name)
+    {
+        playerName = _name;
     }
 
     public bool CheckIfHighScore(int _score)
@@ -177,7 +185,6 @@ public class LeaderBoard : MonoBehaviour
         {
             playerScore = _score;
             return true;
-            //do something with asking for name
         }
         else
             return false;
