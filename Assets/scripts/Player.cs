@@ -115,6 +115,16 @@ public class Player : WorldObject
                         OriginalFroggerDeath(FroggerDeathType.DROWN);
                     }
                 }
+                else
+                {
+                    Tile _tile = TileManager.instance.GetTile(transform.position);
+                    if (_tile != tiles[0])
+                    {
+                        RemoveFromWorld();
+                        AddToWorld();
+                        _tile.Interaction(this);
+                    }
+                }
             }
             DeathCooler();
         }
@@ -320,7 +330,7 @@ public class Player : WorldObject
         frogCorpse.blood.transform.position = frogCorpse.transform.position;
 
         spriteRenderer.enabled = false;
-        transform.position = froggerCompleted ? playerSpawn.position : froggerSpawn.position;
+        transform.position = playerSpawn.position;
         RemoveFromWorld();
         //Rather than this leave behind a corpse call remove from world, move position then add to world immediately
         strikes -= 1;
@@ -331,6 +341,7 @@ public class Player : WorldObject
             //Game over
             GameStateManager.instance.ChangeState(GameStates.STATE_GAMEOVER);
         }
+        SoundManager.instance.playSound(splat);
     }
 
     public override void Interaction(WorldObject _obj)
@@ -341,7 +352,6 @@ public class Player : WorldObject
             {
                 StatTracker.instance.causeOfDeath.text = "A co-wroker stepped on you";
                 Die();
-                SoundManager.instance.playSound(splat);
             }
         }
         else if(_obj.tag == "Boss")
@@ -350,7 +360,6 @@ public class Player : WorldObject
             {
                 StatTracker.instance.causeOfDeath.text = "Your boss stepped on you";
                 Die();
-                SoundManager.instance.playSound(splat);
             }
         }
         else if (_obj.tag == "FroggerObject")
@@ -378,13 +387,15 @@ public class Player : WorldObject
             case FroggerDeathType.RUNOVER:
                 FrogCorpse frogCorpse = (FrogCorpse)Instantiate(corpse, transform.position, transform.rotation);
                 frogCorpse.blood.transform.position = frogCorpse.transform.position;
+                SoundManager.instance.playSound(splat);
                 break;
             case FroggerDeathType.CROCO:
                 break;
             case FroggerDeathType.DROWN:
                 break;
         }
-        transform.position = froggerCompleted ? playerSpawn.position : froggerSpawn.position;
+        transform.SetParent(null);
+        transform.position = froggerSpawn.position;
     }
 
     void DeathCooler()

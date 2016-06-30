@@ -35,17 +35,14 @@ public class FroggerPlatform : FroggerObject
             {
                 ((Player)_obj).OriginalFroggerDeath(deathType);
             }
-            else
+            else if (isCrocodile)
             {
-                if(isCrocodile)
+                if (_obj.GetTile(0) == tiles[0])
                 {
-                    if(_obj.GetTile(0) == tiles[0])
-                    {
-                        ((Player)_obj).OriginalFroggerDeath(deathType);
-                    }
+                    ((Player)_obj).OriginalFroggerDeath(deathType);
                 }
             }
-            if (!turtleDropped)
+            else if (!turtleDropped)
             {
                 _obj.transform.SetParent(transform);
             }
@@ -68,7 +65,7 @@ public class FroggerPlatform : FroggerObject
                         {
                             cooldown = 0.0f;
                             turtleDropping = true;
-                            turtleDrop = 0.75f;
+                            turtleDrop = 2.25f;
                             foreach (Animator _a in turtles)
                             {
                                 _a.SetTrigger("Dive");
@@ -93,7 +90,7 @@ public class FroggerPlatform : FroggerObject
                                         }
                                     }
                                     cooldown = 0.0f;
-                                    turtleDrop = 1.0f;
+                                    turtleDrop = 0.25f;
                                 }
                                 else if (turtleDropped)
                                 {
@@ -120,15 +117,22 @@ public class FroggerPlatform : FroggerObject
 
     public override void Reset()
     {
-        base.Reset();
-        turtleDropped = false;
-        turtleDropping = false;
-        turtleRising = false;
-        cooldown = 0.0f;
-        foreach (Animator _a in turtles)
+        --length;
+        if (length == 0)
         {
-            _a.ResetTrigger("Dive");
-        }
+            length = pivots.Length;
 
+            turtleDropped = false;
+            turtleDropping = false;
+            turtleRising = false;
+            cooldown = 0.0f;
+            foreach (Animator _a in turtles)
+            {
+                _a.ResetTrigger("Dive");
+            }
+
+            gameObject.SetActive(false);
+            poolData.ReturnPool(this);
+        }
     }
 }

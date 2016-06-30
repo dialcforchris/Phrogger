@@ -47,7 +47,7 @@ public class FrogCorpse : WorldObject
         }
         if (stomps ==0)
         {
-            Destroy(gameObject);
+            Reset();
             
         }
     }
