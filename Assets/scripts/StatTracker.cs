@@ -29,6 +29,7 @@ public class StatTracker : MonoBehaviour
     void Awake()
     {
         instance = this;
+        numOfDaysCompleted = 0;
     }
     public void changeLifeCount(int l)
     {

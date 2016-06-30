@@ -67,9 +67,10 @@ public class Player : WorldObject
     {
         if(Input.GetKeyDown(KeyCode.V))
         {
+            coolDown = 0.0f;
             froggerCompleted = true;
-            GameStateManager.instance.ChangeState(GameStates.STATE_DAYOVER);
-            introMonitor.instance.BeginGame();
+            respawnParticles.transform.position = playerSpawn.position;
+            dayTimer.instance.NewDayTransition();
         }
 
         if (GameStateManager.instance.GetState() == GameStates.STATE_GAMEPLAY)
@@ -132,6 +133,7 @@ public class Player : WorldObject
                     {
                         coolDown = 0.0f;
                         froggerCompleted = true;
+                        respawnParticles.transform.position = playerSpawn.position;
                         StartCoroutine("OriginalFroggerFinished");
                     }
                 }
@@ -178,8 +180,7 @@ public class Player : WorldObject
             else
             {
                 coolDown = 0.0f;
-                GameStateManager.instance.ChangeState(GameStates.STATE_DAYOVER);
-                introMonitor.instance.BeginGame();
+                dayTimer.instance.NewDayTransition();
                 yield break;
             }
         }

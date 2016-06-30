@@ -70,8 +70,21 @@ public class dayTimer : MonoBehaviour {
 
     public void NewDay()
     {
-        transitioning = false;
-        GameStateManager.instance.ChangeState(GameStates.STATE_GAMEPLAY);
+        if (StatTracker.instance.numOfDaysCompleted == 0)
+        {
+            GameStateManager.instance.ChangeState(GameStates.STATE_DAYOVER);
+            introMonitor.instance.BeginGame();
+        }
+        else
+        {
+            transitioning = false;
+            GameStateManager.instance.ChangeState(GameStates.STATE_GAMEPLAY);
+        }
+    }
+
+    public void NewDayTransition()
+    {
+        StartCoroutine("NextDayTransition");
     }
 
     void Awake()
@@ -121,7 +134,7 @@ public class dayTimer : MonoBehaviour {
         {
             if(Input.GetButtonDown("Fire1") && !transitioning)
             {
-                if (StatTracker.instance.numOfDaysCompleted < 1)
+                if (StatTracker.instance.numOfDaysCompleted < 5)
                 {
                     transitioning = true;
                     StartCoroutine(NextDayTransition());
@@ -262,6 +275,11 @@ public class dayTimer : MonoBehaviour {
 
         yield return new WaitForSeconds(1);
 
+        if(!introMonitor.instance.gameIntro)
+        {
+            introMonitor.instance.gameObject.SetActive(true);
+            introMonitor.instance.InitialiseMonitor();
+        }
         foreach (WorldObject _wo in FindObjectsOfType<WorldObject>())
         {
             _wo.Reset();
@@ -395,7 +413,7 @@ public class dayTimer : MonoBehaviour {
             else
                 performanceRank = 7;
 
-            int min = 8 + StatTracker.instance.numOfDaysCompleted;
+            int min = 6 + StatTracker.instance.numOfDaysCompleted;
 
             if (todaysEmails.Count < min)
             {
