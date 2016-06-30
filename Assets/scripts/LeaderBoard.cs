@@ -116,6 +116,7 @@ public class LeaderBoard : MonoBehaviour
         {
             makeFile.WriteLine(k.Key + " " + k.Value);
         }
+        makeFile.Close();
     } 
 
     void WriteToFile()
