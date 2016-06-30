@@ -110,7 +110,6 @@ public class dayTimer : MonoBehaviour {
 
             if (Input.GetButton("Fire1") && Input.GetAxis("Vertical") < 0)
                 Debug.Log("close");
-            LeaderBoard.instance.SetScore(StatTracker.instance.GetScore());
         }
 
         if (GameStateManager.instance.GetState() == GameStates.STATE_DAYOVER && finishedDisplay)
@@ -221,6 +220,11 @@ public class dayTimer : MonoBehaviour {
 
         yield return new WaitForSeconds(1);
         GameFinished = true;
+        LeaderBoard.instance.SetScore(StatTracker.instance.GetScore());
+       foreach (Text t in endingScreen.GetComponentsInChildren<Text>())
+       {
+           t.enabled = false;
+       }
     }
 
     IEnumerator NextDayTransition() //Fades the screen to black, display the day # text and fades back in
@@ -236,7 +240,7 @@ public class dayTimer : MonoBehaviour {
         
         DayText.text = (weekDays)StatTracker.instance.numOfDaysCompleted+ "\n <size=64>" + (StatTracker.instance.numOfDaysCompleted + 4)+ "th May 1981</size> \n";
 
-        emailTargetText.text = "Todays target: " + (8 + StatTracker.instance.numOfDaysCompleted) + " emails";
+        emailTargetText.text = "Todays target: " + (6 + StatTracker.instance.numOfDaysCompleted) + " emails";
 
         //Fade in day text
         while (DayText.color.a < 1)

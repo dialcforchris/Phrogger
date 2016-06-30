@@ -20,7 +20,8 @@ public class StatTracker : MonoBehaviour
 
     [Header("Game Over UI")]
     public GameObject GameOverUI;
-    public Text causeOfDeath, daysCompleted, daysCompletedValue, emailsFiled, emailsFiledValue, emailsHandled, emailsHandledValue, professionalism, professionalismValue, finalScore, finalScoreValue;
+    public Text causeOfDeath, daysCompleted, daysCompletedValue, emailsFiled, emailsFiledValue, emailsHandled,
+        emailsHandledValue, professionalism, professionalismValue, finalScore, finalScoreValue;
 
     [Header("")]
     public float bossAngerLevel;
@@ -39,6 +40,7 @@ public class StatTracker : MonoBehaviour
         for (int i = l; i < LifeCounter.Length; i++)
         {
             LifeCounter[l].sprite = EmptyLifeSprite;
+            totalDeaths++;
         }
     }
 
@@ -167,6 +169,7 @@ public class StatTracker : MonoBehaviour
             }
 
         }
+        GameOverUI.SetActive(false);
         LeaderBoard.instance.SetScore(score);
     }
     public int GetScore()

@@ -13,6 +13,7 @@ public class LeaderBoard : MonoBehaviour
     {
         get { return leader; }
     }
+    public GameObject enterName;
     bool once = false;
     string playerName;
     public string gameName;
@@ -27,23 +28,31 @@ public class LeaderBoard : MonoBehaviour
         {
             leader = this;
         }
+        if (CheckScoreFile())
+        {
+            ReadScoreFile();
+        }
+        else
+        {
+            CreateScoreFile();
+        }
 	}
 	
 	// Update is called once per frame
 	void Update () 
     {
-        if (!once)
-        {
-            if (CheckScoreFile())
-            {
-                ReadScoreFile();
-            }
-            else
-            {
-                CreateScoreFile();
-            }
-            once = true;
-        }
+        //if (!once)
+        //{
+        //    if (CheckScoreFile())
+        //    {
+        //        ReadScoreFile();
+        //    }
+        //    else
+        //    {
+        //        CreateScoreFile();
+        //    }
+        //    once = true;
+        //}
        
 	}
 
@@ -126,13 +135,11 @@ public class LeaderBoard : MonoBehaviour
     void ReadScoreFile()
     {
         List<string> fileInput = new List<string>();
-     //   int index = 0;
         scores.Clear();
         StreamReader highScores = new StreamReader(gameName + "Scores.dat");
         while (!highScores.EndOfStream)
         {
             fileInput.Add(highScores.ReadLine());
-        //    index++;
         }
         for (int i = 0; i < fileInput.Count;i++ )
         {
@@ -141,17 +148,20 @@ public class LeaderBoard : MonoBehaviour
            AddToList(_score, entry);
         }
         highScores.Close();
-        AddToList(playerScore, playerName);
-        SortScores();
-        TrimList();
-        WriteToFile();
+       
        // scores.Clear();
         //for (int i = 0; i < scores.Count; i++)
         //{
         //    Debug.Log(scores[i].Key + " " + scores[i].Value);
         //}
     }
-
+    void AddNewScoreToLB()
+    {
+        AddToList(playerScore, playerName);
+        SortScores();
+        TrimList();
+        WriteToFile();
+    }
     /// <summary>
     /// Check a high score file exists
     /// </summary>
@@ -171,7 +181,11 @@ public class LeaderBoard : MonoBehaviour
      //   playerScore = _score;
         if (CheckIfHighScore(_score))
         {
-           
+            enterName.SetActive(true);
+        }
+        else
+        {
+            //go to splash
         }
     }
     public void SetName(string _name)
@@ -181,12 +195,15 @@ public class LeaderBoard : MonoBehaviour
 
     public bool CheckIfHighScore(int _score)
     {
-        if (scores[10].Value < _score)
-        {
-            playerScore = _score;
-            return true;
+        for (int i = scores.Count-1; i >0 ;i-- )
+        { 
+            if (scores[i].Value < _score)
+            {
+                playerScore = _score;
+                return true;
+            }
         }
-        else
-            return false;
+                 
+              return false;
     }
 }

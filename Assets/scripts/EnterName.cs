@@ -10,10 +10,9 @@ public class EnterName : MonoBehaviour
     int selectBox = 0;
     int selectChar= 0;
     float coolDown = 0;
-    float maxCool = 0.3f;
+    float maxCool = 0.2f;
     string theName = string.Empty;
     bool selectOnce = false;
-    [SerializeField] Canvas enterNameUI;
 	// Use this for initialization
 	void Start () 
     {
@@ -130,7 +129,7 @@ public class EnterName : MonoBehaviour
     }
     void SelectName()
     {
-        if (Input.GetButton("Fire1")&&SelectCoolDown())
+        if (Input.GetButton("Fire1"))
         {
 
             for (int i = 0; i < box.Length; i++)
@@ -140,6 +139,7 @@ public class EnterName : MonoBehaviour
             LeaderBoard.instance.SetName(theName);
             selectOnce = true;
             Debug.Log(theName);
+            gameObject.SetActive(false);
            
         }
 
