@@ -42,14 +42,12 @@ public class introMonitor : MonoBehaviour
     {
         mainCamTransition.material.SetTexture("_SliceGuide", gradients[1]);
         monCamTransition.material.SetTexture("_SliceGuide", gradients[1]);
-        mainCamTransition.material.SetFloat("_SliceAmount", 0);
-        //Invoke("enterView", 0.5f);
+        mainCamTransition.material.SetFloat("_SliceAmount", 0.0f);
         mainCam.transform.position = new Vector3(0.0f, 9.5f, -10.0f);
 
         mainCam.enabled = false;
         monitorCamera.enabled = true;
-        mainCamTransition.transform.localScale = new Vector3(7.15f, 4, 1);//Look, it works. I'm not proud of it but it works.
-        monCamTransition.material.SetFloat("_SliceAmount", 1.0f);
+        monCamTransition.material.SetFloat("_SliceAmount", 1.001f);
         introDisplayed = true;
 
         mainCamTransition.transform.localScale = new Vector3(32, 18, 1);//Look, it works. I'm not proud of it but it works.
