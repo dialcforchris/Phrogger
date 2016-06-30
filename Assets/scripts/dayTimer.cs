@@ -256,7 +256,7 @@ public class dayTimer : MonoBehaviour {
         
         DayText.text = (weekDays)StatTracker.instance.numOfDaysCompleted+ "\n <size=64>" + (StatTracker.instance.numOfDaysCompleted + 4)+ "th May 1981</size> \n";
 
-        emailTargetText.text = "Todays target: " + (6 + StatTracker.instance.numOfDaysCompleted) + " emails";
+        emailTargetText.text = "Todays target: " + (4 + StatTracker.instance.numOfDaysCompleted) + " emails";
 
         //Fade in day text
         while (DayText.color.a < 1)
@@ -286,8 +286,8 @@ public class dayTimer : MonoBehaviour {
         {
             _wo.Reset();
         }
-        TileManager.instance.UpgradeSpawners(0.8f, 0.8f, 1.1f);
-        Boss.instance.ModifyBoss(1.1f);
+        TileManager.instance.UpgradeSpawners(0.9f, 0.9f, 1.075f);
+        Boss.instance.ModifyBoss(1.075f);
         BossFace.instance.Reset();
         currentTime = 0;
         progressUI.SetActive(false);
@@ -420,7 +420,7 @@ public class dayTimer : MonoBehaviour {
             else
                 performanceRank = 7;
 
-            int min = 6 + StatTracker.instance.numOfDaysCompleted - 1;
+            int min = 4 + StatTracker.instance.numOfDaysCompleted - 1;
 
             if (todaysEmails.Count < min)
             {
