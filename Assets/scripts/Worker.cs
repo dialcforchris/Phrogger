@@ -35,7 +35,7 @@ public class Worker : WorldObject, IPoolable<Worker>
     private float standChance = 0.1f;
 
     private float helpCool = 0;
-    private float maxHelpCool = 5.0f;
+    private float maxHelpCool = 2.0f;
     private float helpChance = 0.01f;
 
     public static int numPeopleNeedHelp = 0;

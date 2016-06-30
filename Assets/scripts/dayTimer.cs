@@ -337,6 +337,7 @@ public class dayTimer : MonoBehaviour {
         dayFinishedText.Play("dayfinished");
 
         yield return new WaitForSeconds(2.5f);
+        GameStateManager.instance.ChangeState(GameStates.STATE_DAYOVER); //All these state changes, you made me do this Craig, coroutine problems
         progressUI.GetComponent<Image>().enabled = true;
         
         StatTracker.instance.numOfDaysCompleted++;
@@ -344,9 +345,11 @@ public class dayTimer : MonoBehaviour {
         dayCompletedHeader.text = "Day "+StatTracker.instance.numOfDaysCompleted + " completed";
         dayCompletedHeader.enabled = true;
         yield return new WaitForSeconds(1.5f);
+        GameStateManager.instance.ChangeState(GameStates.STATE_DAYOVER);
 
         filedText.enabled = true;
         yield return new WaitForSeconds(1f);
+        GameStateManager.instance.ChangeState(GameStates.STATE_DAYOVER);
 
         int top = 0, bot = 0;
         float correct = 0;
@@ -384,10 +387,12 @@ public class dayTimer : MonoBehaviour {
                 bot++;
             }
             yield return new WaitForSeconds(.35f);
+            GameStateManager.instance.ChangeState(GameStates.STATE_DAYOVER);
         }
 
         performanceText.enabled = true;
         yield return new WaitForSeconds(2f);
+        GameStateManager.instance.ChangeState(GameStates.STATE_DAYOVER);
 
         int livesToAdd = 0;
         //8 ranks
@@ -464,6 +469,7 @@ public class dayTimer : MonoBehaviour {
         performanceResult.enabled = true;
 
         yield return new WaitForSeconds(1.5f);
+        GameStateManager.instance.ChangeState(GameStates.STATE_DAYOVER);
 
         if (Player.instance.strikes < 4)
         {
@@ -478,6 +484,7 @@ public class dayTimer : MonoBehaviour {
                 SoundManager.instance.playSound(0, 1.2f);
                 StatTracker.instance.changeLifeCount(Player.instance.strikes);
                 yield return new WaitForSeconds(.75f);
+                GameStateManager.instance.ChangeState(GameStates.STATE_DAYOVER);
             }
         }
 

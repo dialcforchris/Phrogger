@@ -19,9 +19,20 @@ public class Spawner : WorldObject
         base.Awake();
         spawnCooldown = Random.Range(minSpawnCooldown, maxSpawnCooldown);
 	}
-	
 
-	private void Update ()
+    public void InitialiseLane()
+    {
+        float _average = (minSpawnCooldown + maxSpawnCooldown) / 2.0f;
+        for (int i = 0; i < Mathf.Floor((33 / laneSpeed) / _average); ++i)
+        {
+            Worker _obj = WorkerManager.instance.GetPooledWorker();
+            _obj.transform.position = transform.position;
+            _obj.transform.position += ((((isLeft ? Vector3.right : Vector3.left) * laneSpeed * Time.deltaTime) * Mathf.Floor(_average / Time.deltaTime)) * i);
+            _obj.Initialise(isLeft ? Vector3.right : Vector3.left, laneSpeed);
+        }
+    }
+
+    private void Update ()
     {
         if (GameStateManager.instance.GetState() == GameStates.STATE_GAMEPLAY)
         {

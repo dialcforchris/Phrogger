@@ -112,5 +112,13 @@ public class TileManager : MonoBehaviour
         }
     }
 
+    public void DefaultSpawnerLanes()
+    {
+        foreach (Spawner _s in spawners)
+        {
+            _s.InitialiseLane();
+        }
+    }
+
 }
 

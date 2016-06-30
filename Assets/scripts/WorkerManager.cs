@@ -92,6 +92,7 @@ public class WorkerManager : MonoBehaviour
         {
             _w.ReturnPool();
         }
+        TileManager.instance.DefaultSpawnerLanes();
     }
 
     public Worker GetPooledWorker(bool _unique = false)
