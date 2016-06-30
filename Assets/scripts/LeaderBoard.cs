@@ -1,12 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.IO;
+using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 
 public class LeaderBoard : MonoBehaviour 
 {
-   //ask for player name
-    //assign on UI
     //great job!
     private static LeaderBoard leader = null;
     public static LeaderBoard instance
@@ -155,7 +154,7 @@ public class LeaderBoard : MonoBehaviour
         //    Debug.Log(scores[i].Key + " " + scores[i].Value);
         //}
     }
-    void AddNewScoreToLB()
+   public void AddNewScoreToLB()
     {
         AddToList(playerScore, playerName);
         SortScores();
@@ -178,14 +177,14 @@ public class LeaderBoard : MonoBehaviour
     }
     public void SetScore(int _score)
     {
-     //   playerScore = _score;
+        playerScore = _score;
         if (CheckIfHighScore(_score))
         {
             enterName.SetActive(true);
         }
-        else
+       else
         {
-            //go to splash
+            SceneManager.LoadScene(0);
         }
     }
     public void SetName(string _name)
@@ -202,6 +201,10 @@ public class LeaderBoard : MonoBehaviour
                 playerScore = _score;
                 return true;
             }
+        }
+        if (scores.Count <10)
+        {
+            return true;
         }
                  
               return false;

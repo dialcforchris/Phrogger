@@ -102,14 +102,19 @@ public class dayTimer : MonoBehaviour {
 
         if (GameFinished)
         {
-            if (Input.GetButtonDown("Fire1"))
+            if (Input.GetButtonDown("Fire2"))
+            {
                 StatsBox.gameObject.SetActive(false);
-            if (Input.GetButtonUp("Fire1"))
+            }
+            if (Input.GetButtonUp("Fire2"))
                 StatsBox.gameObject.SetActive(true);
 
 
-            if (Input.GetButton("Fire1") && Input.GetAxis("Vertical") < 0)
-                Debug.Log("close");
+            if (Input.GetButton("Fire1"))
+            {
+                LeaderBoard.instance.SetScore(StatTracker.instance.GetScore());
+                StatsBox.gameObject.SetActive(false);
+            }
         }
 
         if (GameStateManager.instance.GetState() == GameStates.STATE_DAYOVER && finishedDisplay)
@@ -220,11 +225,7 @@ public class dayTimer : MonoBehaviour {
 
         yield return new WaitForSeconds(1);
         GameFinished = true;
-        LeaderBoard.instance.SetScore(StatTracker.instance.GetScore());
-       foreach (Text t in endingScreen.GetComponentsInChildren<Text>())
-       {
-           t.enabled = false;
-       }
+       
     }
 
     IEnumerator NextDayTransition() //Fades the screen to black, display the day # text and fades back in

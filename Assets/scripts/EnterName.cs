@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class EnterName : MonoBehaviour
 {
@@ -34,7 +35,7 @@ public class EnterName : MonoBehaviour
             Debug.Log("select box " + selectBox);
             ChangeTextColour();
             score.text = "Score: " +StatTracker.instance.GetScore().ToString();
-            if (!selectOnce)
+            if (Input.GetButtonDown("Fire1"))
                 SelectName();
         }
     }
@@ -129,9 +130,6 @@ public class EnterName : MonoBehaviour
     }
     void SelectName()
     {
-        if (Input.GetButton("Fire1"))
-        {
-
             for (int i = 0; i < box.Length; i++)
             {
                 theName = theName + box[i].text;
@@ -140,8 +138,8 @@ public class EnterName : MonoBehaviour
             selectOnce = true;
             Debug.Log(theName);
             gameObject.SetActive(false);
-           
-        }
-
+            LeaderBoard.instance.AddNewScoreToLB();
+            SceneManager.LoadScene(0);
+            
     }
 }
