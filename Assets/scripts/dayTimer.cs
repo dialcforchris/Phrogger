@@ -413,11 +413,11 @@ public class dayTimer : MonoBehaviour {
             else
                 performanceRank = 7;
 
-            int min = 6 + StatTracker.instance.numOfDaysCompleted;
+            int min = 6 + StatTracker.instance.numOfDaysCompleted - 1;
 
-            if (todaysEmails.Count-1 < min)
+            if (todaysEmails.Count < min)
             {
-                performanceRank -= min - (todaysEmails.Count-1);
+                performanceRank -= min - (todaysEmails.Count);
             }
 
             if (performanceRank < 0)
