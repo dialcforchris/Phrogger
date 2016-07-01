@@ -15,7 +15,7 @@ public class Player : WorldObject
     private int score = 0;
     private float hori;
     private float verti;
-    public ParticleSystem bloodSplatter;
+    public ParticleSystem bloodSplatter,splooshParticles;
     [SerializeField] private FrogCorpse corpse;
     [SerializeField]
     private AudioClip splat;
@@ -135,7 +135,7 @@ public class Player : WorldObject
                         coolDown = 0.0f;
                         froggerCompleted = true;
                         respawnParticles.transform.position = playerSpawn.position;
-                        StartCoroutine("OriginalFroggerFinished");
+                        StartCoroutine(OriginalFroggerFinished());
                     }
                 }
                 DeathCooler();
@@ -152,6 +152,7 @@ public class Player : WorldObject
             {
                 if (coolDown >= maxCool)
                 {
+                    SoundManager.instance.playSound(0);
                     coolDown = 0.0f;
                     transform.position = new Vector2(Mathf.Ceil(transform.position.x) - 1.5f, -4.0f);
                     transform.rotation = Quaternion.Euler(new Vector3(0, 0, 90));
@@ -162,6 +163,7 @@ public class Player : WorldObject
             {
                 if (coolDown >= maxCool)
                 {
+                    SoundManager.instance.playSound(0);
                     coolDown = 0.0f;
                     transform.position = new Vector2(Mathf.Floor(transform.position.x) + 1.5f, -4.0f);
                     transform.rotation = Quaternion.Euler(new Vector3(0, 0, 270));
@@ -172,6 +174,7 @@ public class Player : WorldObject
             {
                 if (coolDown >= maxCool)
                 {
+                    SoundManager.instance.playSound(0);
                     coolDown = 0.0f;
                     transform.position = new Vector2(transform.position.x, transform.position.y + 1.0f);
                     transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
@@ -457,6 +460,8 @@ public class Player : WorldObject
                 SoundManager.instance.playSound(splat);
                 break;
             case FroggerDeathType.DROWN:
+                ParticleSystem ps = Instantiate(splooshParticles);
+                ps.transform.position = transform.position;
                 SoundManager.instance.playSound(splash);
                 break;
         }
