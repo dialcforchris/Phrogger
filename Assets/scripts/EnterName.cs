@@ -9,7 +9,7 @@ public class EnterName : MonoBehaviour
     int[] currentCharacter;
     public Text score;
     int selectBox = 0;
-    int selectChar= 0;
+    int selectChar= 65;
     float coolDown = 0;
     float maxCool = 0.2f;
     string theName = string.Empty;
@@ -86,15 +86,15 @@ public class EnterName : MonoBehaviour
                 else
                     selectChar = 65;
             }
-            if (Input.GetAxis("Vertical") < 0 && selectChar < 25)
-            if (selectChar == 25)
-            {
-                selectChar = 0;
-            }
-            else
-            {
-                selectChar++;
-            }
+            //if (Input.GetAxis("Vertical") > 0 && selectChar < 90)
+            //if (selectChar == 90)
+            //{
+            //    selectChar = 65;
+            //}
+            //else
+            //{
+            //    selectChar++;
+            //}
             coolDown = 0;
             currentCharacter[selectBox] = selectChar;
         }
