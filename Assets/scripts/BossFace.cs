@@ -50,10 +50,22 @@ public class BossFace :MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (XPtoAdd > 0 && GameStateManager.instance.GetState() == GameStates.STATE_GAMEPLAY)
+        if (GameStateManager.instance.GetState() == GameStates.STATE_GAMEPLAY)
         {
-            XPtoAdd -= 0.01f;
-            bossAngerExp += 0.01f;
+            if (XPtoAdd > 0)
+            {
+                XPtoAdd -= Time.deltaTime;
+                if (XPtoAdd < 0)
+                {
+                    bossAngerExp += (Time.deltaTime + XPtoAdd);
+                    XPtoAdd = 0;
+                }
+                else
+                {
+                    bossAngerExp += Time.deltaTime;
+                }
+            }
+            XPtoAdd += Time.deltaTime * 0.0325f;
         }
 
         XPbar[0].value = bossAngerLevel+ bossAngerExp;
