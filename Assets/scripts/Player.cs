@@ -19,6 +19,7 @@ public class Player : WorldObject
     [SerializeField] private FrogCorpse corpse;
     [SerializeField]
     private AudioClip splat;
+    [SerializeField] AudioClip splash;
     public bool joyOrDPad = false; //true for joy, false for dpad
 
     [SerializeField]
@@ -447,8 +448,13 @@ public class Player : WorldObject
                 SoundManager.instance.playSound(splat);
                 break;
             case FroggerDeathType.CROCO:
+                ParticleSystem p = Instantiate(bloodSplatter);
+                p.transform.position = transform.position;
+                p.Play();
+                SoundManager.instance.playSound(splat);
                 break;
             case FroggerDeathType.DROWN:
+                SoundManager.instance.playSound(splash);
                 break;
         }
         transform.SetParent(null);
