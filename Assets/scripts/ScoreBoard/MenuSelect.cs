@@ -46,7 +46,6 @@ public class MenuSelect : MonoBehaviour
             }
             coolDown = 0;
         }
-        Debug.Log("selectBox " + selectBox);
     }
    protected virtual void SetFunctionToButton()
     {

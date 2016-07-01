@@ -3,11 +3,11 @@ using UnityEngine.UI;
 using System.Collections;
 using DG.Tweening;
 
-public class MainMenu : MonoBehaviour {
+public class MainMenu : MonoBehaviour 
+{
 
     int menuIndex,gameModeIndex=1;
     public menuState currentState = menuState.mainMenu;
-
     public enum menuState
     {
         mainMenu,
@@ -21,6 +21,8 @@ public class MainMenu : MonoBehaviour {
     public Image[] menuImages;
     public Image creditBackdrop;
     public Text TitleText,Credits;
+    public GameObject leaderBoard;
+
 
     [Header("Game mode options")]
     public Text[] GameModeOptions;
@@ -57,6 +59,9 @@ public class MainMenu : MonoBehaviour {
                         currentState = menuState.modeSelect;
                         break;
                     case 1:
+                        currentState = menuState.leaderboard;
+                        StartCoroutine(LeaderBoard());
+                       
                         break;
                     case 2:
                         currentState = menuState.credits;
@@ -213,5 +218,21 @@ public class MainMenu : MonoBehaviour {
         //Fade Main menu back in
         yield return StartCoroutine(FadeInOutMainMenuUI(true));
         currentState = menuState.mainMenu;
+    }
+    IEnumerator LeaderBoard()
+    {
+        yield return StartCoroutine(FadeInOutMainMenuUI(false));
+        leaderBoard.SetActive(true);
+
+        yield return WaitForKeyDown("Fire1");
+            leaderBoard.SetActive(false);
+            StartCoroutine(FadeInOutMainMenuUI(true));
+            currentState = menuState.mainMenu;
+      
+    }
+    IEnumerator WaitForKeyDown(string fire)
+    {
+        while (!Input.GetButton(fire))
+            yield return null;
     }
 }
