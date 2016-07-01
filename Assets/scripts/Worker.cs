@@ -48,8 +48,11 @@ public class Worker : WorldObject, IPoolable<Worker>
 
     public bool isJanitor { get; set; }
     public bool isSpinning { get; set; }
+    public bool isTrolley { get; set; }
+
     [SerializeField] private SpriteRenderer spinningRenderer = null;
     [SerializeField] private Sprite[] spinningSprites = null;
+    [SerializeField] private Sprite[] trolleySprites = null;
 
     private bool needHelp = false;
     public bool helpNeeded { get { return needHelp; } }
@@ -78,6 +81,7 @@ public class Worker : WorldObject, IPoolable<Worker>
             maxSitCool = Random.Range(maxSitLowerCool, maxSitUpperCool);
             isJanitor = _animName == "Janitor" ? true : false;
             isSpinning = _animName == "Spinning chairman" ? true : false;
+            isTrolley = _animName == "trolley" ? true : false;
         }
     }
 
@@ -102,6 +106,13 @@ public class Worker : WorldObject, IPoolable<Worker>
             animator.SetBool("walk", false);
             spinningRenderer.sprite = spinningSprites[Random.Range(0, spinningSprites.Length)];
             spinningRenderer.gameObject.SetActive(true);
+            hairSpriteRenderer.gameObject.SetActive(false);
+        }
+        else if(isTrolley)
+        {
+            animator.SetBool("sit", true);
+            animator.SetBool("walk", false);
+            spriteRenderer.sprite = trolleySprites[Random.Range(0, trolleySprites.Length)];
             hairSpriteRenderer.gameObject.SetActive(false);
         }
     }

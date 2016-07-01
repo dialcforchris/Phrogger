@@ -25,7 +25,7 @@ public class Spawner : WorldObject
         float _average = (minSpawnCooldown + maxSpawnCooldown) / 2.0f;
         for (int i = 0; i < Mathf.Floor((33 / laneSpeed) / _average); ++i)
         {
-            Worker _obj = WorkerManager.instance.GetPooledWorker();
+            Worker _obj = WorkerManager.instance.GetPooledWorker(true);
             _obj.transform.position = transform.position;
             _obj.transform.position += ((((isLeft ? Vector3.right : Vector3.left) * laneSpeed * Time.deltaTime) * Mathf.Floor(_average / Time.deltaTime)) * i);
             _obj.Initialise(isLeft ? Vector3.right : Vector3.left, laneSpeed);

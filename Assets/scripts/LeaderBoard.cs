@@ -190,4 +190,8 @@ public class LeaderBoard : MonoBehaviour
                  
               return false;
     }
+    public List<KeyValuePair<string,int>> ReturnLeaderBoard()
+    {
+        return scores;
+    }
 }
