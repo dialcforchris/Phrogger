@@ -27,15 +27,12 @@ public class EnterName : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
     {
-       // if (enterNameUI.enabled)
-        {
             MenuInput();
             box[selectBox].text = ((char)currentCharacter[selectBox]).ToString();
             ChangeTextColour();
             score.text = "Score: " +StatTracker.instance.GetScore().ToString();
             if (Input.GetButtonDown("Fire1"))
                 SelectName();
-        }
     }
 
     void MenuInput()
@@ -118,11 +115,11 @@ public class EnterName : MonoBehaviour
        {
            if (selectBox == i)
            {
-               box[i].color = Color.white;
+               box[i].color = Color.green;
            }
            else
            {
-              box[i].color = Color.green;
+               box[i].color = Color.white;
            }
        }
     }
