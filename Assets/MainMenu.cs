@@ -19,8 +19,8 @@ public class MainMenu : MonoBehaviour {
 
     public Text[] menuItems;
     public Image[] menuImages;
-    public Image creditBackdrop;
-    public Text TitleText,Credits;
+    public Image creditBackdrop,logo;
+    public Text Credits;
 
     [Header("Game mode options")]
     public Text[] GameModeOptions;
@@ -141,12 +141,12 @@ public class MainMenu : MonoBehaviour {
                 outlineCol.a -= (inOut) ? -Time.deltaTime * 2 : Time.deltaTime * 2;
                 t.GetComponent<Outline>().effectColor = outlineCol;
             }
-            Color col_ = TitleText.color;
+            Color col_ = logo.color;
             col_.a -= (inOut) ? -Time.deltaTime * 2 : Time.deltaTime * 2;
-            TitleText.color = col_;
-            Color outlineCol_ = TitleText.GetComponent<Outline>().effectColor;
+            logo.color = col_;
+            Color outlineCol_ = logo.GetComponent<Outline>().effectColor;
             outlineCol_.a -= (inOut) ? -Time.deltaTime * 2 : Time.deltaTime * 2;
-            TitleText.GetComponent<Outline>().effectColor = outlineCol_;
+            logo.GetComponent<Outline>().effectColor = outlineCol_;
 
             yield return new WaitForEndOfFrame();
         }
@@ -174,7 +174,7 @@ public class MainMenu : MonoBehaviour {
     IEnumerator runCredits()
     {
         yield return StartCoroutine(FadeInOutMainMenuUI(false));
-
+        
         //Fade into black backdrop
         while (creditBackdrop.color.a < .5f)
         {
@@ -187,7 +187,7 @@ public class MainMenu : MonoBehaviour {
 
         //Scroll credits up
         float lerpy = 0;
-        while (Credits.rectTransform.anchoredPosition.y < 1000)
+        while (Credits.rectTransform.anchoredPosition.y < 900)
         {
             Credits.rectTransform.anchoredPosition = Vector2.Lerp(-Vector2.up * 1000, Vector2.up * 1000, lerpy/25);
             if (Input.GetButton("Fire1"))
@@ -198,7 +198,7 @@ public class MainMenu : MonoBehaviour {
         }
 
         //Reset credit location
-        Credits.rectTransform.anchoredPosition = -Vector2.up * 1000;
+        Credits.rectTransform.anchoredPosition = -Vector2.up * 1100;
 
         //Fade out credit backdrop
         while (creditBackdrop.color.a > 0f)
