@@ -10,6 +10,7 @@ public class StatTracker : MonoBehaviour
     public int junkEmailsCorrect, safeEmailsCorrect, safeEmailsWrong, junkEmailsWrong, numOfDaysCompleted, messyDesks;
     public int totalDeaths, bossDeaths, bossAngered;
     int score;
+    public float totalProfessionalism = 0;
     public int scoreToAdd;
     public Text ScoreText;
     List<int> dayPerformances = new List<int>();
@@ -22,7 +23,7 @@ public class StatTracker : MonoBehaviour
     public GameObject GameOverUI;
     public Text causeOfDeath, daysCompleted, daysCompletedValue, emailsFiled, emailsFiledValue, emailsHandled,
         emailsHandledValue, professionalism, professionalismValue, finalScore, finalScoreValue;
-
+    public Image gameoverScreen;
     [Header("")]
     public float bossAngerLevel;
 
@@ -82,6 +83,8 @@ public class StatTracker : MonoBehaviour
 
     public IEnumerator GameOverUIReveal()
     {
+        gameoverScreen.gameObject.SetActive(true);
+
         float total = junkEmailsCorrect + junkEmailsWrong + safeEmailsCorrect + safeEmailsWrong;
         float correct = junkEmailsCorrect + safeEmailsCorrect;
 
@@ -129,10 +132,9 @@ public class StatTracker : MonoBehaviour
         yield return new WaitForSeconds(.5f);
         professionalism.enabled = true;
         yield return new WaitForSeconds(.75f);
-        if (messyDesks != 0)
-            professionalismValue.text = 100-(int)(messyDesks/47f*100) + "%";//NOT A MAGIC NUMBER HONEST, 47 is the current number of desks you can mess up
-        else
-            professionalismValue.text = "100%";
+
+        CalculateProfessionalism();
+
         professionalismValue.enabled = true;
         if (100 - (messyDesks / 28f * 100) < 50)
             SoundManager.instance.playSound(0, .25f);
@@ -175,10 +177,26 @@ public class StatTracker : MonoBehaviour
 
         GameOverUI.SetActive(false);
         LeaderBoard.instance.SetScore(score);
+        
     }
 
     public int GetScore()
     {
         return score;
+    }
+
+    public void CalculateProfessionalism()
+    {
+        if (messyDesks != 0)
+        {
+            totalProfessionalism += (100 - (int)(messyDesks / 47f * 100));
+            professionalismValue.text = 100 - (int)(messyDesks / 47f * 100) + "%";//NOT A MAGIC NUMBER HONEST, 47 is the current number of desks you can mess up
+        }
+        else
+        {
+            totalProfessionalism += 100;
+            professionalismValue.text = "100%";
+        }
+        messyDesks = 0;
     }
 }
