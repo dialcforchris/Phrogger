@@ -306,8 +306,8 @@ public class dayTimer : MonoBehaviour {
         {
             _wo.Reset();
         }
-        TileManager.instance.UpgradeSpawners(0.9f, 0.9f, 1.075f);
-        Boss.instance.ModifyBoss(1.075f);
+        TileManager.instance.UpgradeSpawners(0.855f, 0.855f, 1.0875f);
+        Boss.instance.ModifyBoss(1.0875f);
         BossFace.instance.Reset();
         currentTime = 0;
         progressUI.SetActive(false);
