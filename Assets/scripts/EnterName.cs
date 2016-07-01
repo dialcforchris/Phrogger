@@ -13,7 +13,6 @@ public class EnterName : MonoBehaviour
     float coolDown = 0;
     float maxCool = 0.2f;
     string theName = string.Empty;
-    bool selectOnce = false;
 	// Use this for initialization
 	void Start () 
     {
@@ -32,7 +31,6 @@ public class EnterName : MonoBehaviour
         {
             MenuInput();
             box[selectBox].text = ((char)currentCharacter[selectBox]).ToString();
-            Debug.Log("select box " + selectBox);
             ChangeTextColour();
             score.text = "Score: " +StatTracker.instance.GetScore().ToString();
             if (Input.GetButtonDown("Fire1"))
@@ -135,8 +133,6 @@ public class EnterName : MonoBehaviour
                 theName = theName + box[i].text;
             }
             LeaderBoard.instance.SetName(theName);
-            selectOnce = true;
-            Debug.Log(theName);
             gameObject.SetActive(false);
             LeaderBoard.instance.AddNewScoreToLB();
             SceneManager.LoadScene(0);

@@ -106,7 +106,6 @@ public class Boss : WorldObject
     {
         if (_obj.tag == "Player")
         {
-            StatTracker.instance.bossDeaths++;
             EndChase();
             ((Player)_obj).Die();
         }
