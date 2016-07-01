@@ -19,15 +19,12 @@ public class MainMenu : MonoBehaviour
 
     public Text[] menuItems;
     public Image[] menuImages;
-<<<<<<< HEAD
-    public Image creditBackdrop;
+    public Image creditBackdrop,logo;
     public Text TitleText,Credits;
     public GameObject leaderBoard;
 
-=======
-    public Image creditBackdrop,logo;
-    public Text Credits;
->>>>>>> origin/master
+   // public Image creditBackdrop,logo;
+   // public Text Credits;
 
     [Header("Game mode options")]
     public Text[] GameModeOptions;
