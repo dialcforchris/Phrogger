@@ -35,7 +35,6 @@ public class introMonitor : MonoBehaviour
     void Awake()
     {
         instance = this;
-        gameObject.SetActive(false);
     }
 
     public void InitialiseMonitor()
@@ -45,6 +44,9 @@ public class introMonitor : MonoBehaviour
         monCamTransition.material.SetTexture("_SliceGuide", gradients[1]);
         mainCamTransition.material.SetFloat("_SliceAmount", 0.0f);
         mainCam.transform.position = new Vector3(0.0f, 9.5f, -10.0f);
+
+        CameraZoom.instance.overlayBot.rectTransform.anchoredPosition =new Vector2(960, -410);
+        CameraZoom.instance.overlayTop.rectTransform.anchoredPosition = new Vector2(960, 540);
 
         mainCam.enabled = false;
         monitorCamera.enabled = true;

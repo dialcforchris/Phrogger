@@ -37,7 +37,7 @@ public class GameStateManager : MonoBehaviour
             states[(int)GameStates.STATE_GAMEOVER] = new GameOverState();
             states[(int)GameStates.STATE_DAYOVER] = new DayOverState();
             states[(int)GameStates.STATE_FROGGER] = new FroggerState();
-            ChangeState(GameStates.STATE_FROGGER);
+            //ChangeState(GameStates.STATE_FROGGER);
         }
         
     }

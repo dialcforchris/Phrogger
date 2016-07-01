@@ -35,11 +35,6 @@ public class FroggerObject : WorldObject, IPoolable<FroggerObject>
         length = pivots.Length;
     }
 
-    protected override void Start()
-    {
-       
-    }
-
     public virtual void Initialise(Vector3 _dir, float _speed)
     {
         gameObject.SetActive(true);
@@ -50,7 +45,7 @@ public class FroggerObject : WorldObject, IPoolable<FroggerObject>
 
     protected virtual void Update()
     {
-        if (GameStateManager.instance.GetState() == GameStates.STATE_FROGGER)
+        if (GameStateManager.instance.GetState() == GameStates.STATE_FROGGER || GameStateManager.instance.GetState() == GameStates.STATE_DAYOVER)
         {
             transform.position += direction * Time.deltaTime * speed;
             transform.rotation = Quaternion.LookRotation(Vector3.forward, Quaternion.AngleAxis(90, Vector3.forward) * direction);
