@@ -430,7 +430,7 @@ public class dayTimer : MonoBehaviour {
                 performanceRank = 0;
 
             if (performanceRank > 0)
-                livesToAdd = Mathf.RoundToInt((performanceRank / 4));
+                livesToAdd = Mathf.RoundToInt((performanceRank / 3.9f));
 
             StatTracker.instance.addDayPerformance(performanceRank);
 
