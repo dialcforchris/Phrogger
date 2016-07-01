@@ -6,11 +6,11 @@ using DG.Tweening;
 
 public class dayTimer : MonoBehaviour {
 
+    public int maxDays;
+
     public static dayTimer instance;
     [SerializeField]
     private int secondsPerDay;
-    [SerializeField]
-    private int maxDays = 5;
     public float secondsDay { get { return secondsPerDay; } }
     [SerializeField]
     private float currentTime;
@@ -43,7 +43,7 @@ public class dayTimer : MonoBehaviour {
     [SerializeField]
     private Image endingScreen,StatsBox;
     [SerializeField]
-    private Sprite PromotionScreen, FiredScreen, BossDeathScreen, DeathScreen, Unproffessional, Average;
+    private Sprite PromotionScreen, FiredScreen,DeathScreen;
 
     [System.Serializable]
     public struct completedEmail
@@ -137,7 +137,6 @@ public class dayTimer : MonoBehaviour {
         {
             if(Input.GetButtonDown("Fire1") && !transitioning)
             {
-                StatTracker.instance.CalculateProfessionalism();
                 if (StatTracker.instance.numOfDaysCompleted < maxDays)
                 {
                     transitioning = true;
@@ -176,26 +175,15 @@ public class dayTimer : MonoBehaviour {
             endingScreen.sprite = PromotionScreen;
             StatsTitle.text = "You were promoted! \n <size=32>Congrulations, sir!</size>";
         }
-        else if (((StatTracker.instance.totalProfessionalism / maxDays) < 70) && performance > 3)
+        else if (StatTracker.instance.bossDeaths > 8)
         {
-            endingScreen.sprite = Unproffessional;
-            StatsTitle.text = "You kept your job \n <size=32>somehow...</size>";
-        }
-        else if (StatTracker.instance.bossDeaths > maxDays - 1 && performance > 3)
-        {
-            endingScreen.sprite = BossDeathScreen;
+            endingScreen.sprite = DeathScreen;
             StatsTitle.text = "You kept your job \n <size=32>but your boss did not...</size>";
-        }
-        else if (performance > 3)
-        {
-            endingScreen.sprite = Average;
-            StatsTitle.text = "You kept your job \n <size=32>your were unremarkably average</size>";
         }
         else
         {
             endingScreen.sprite = FiredScreen;
             StatsTitle.text = "You were fired! \n <size=32>Better luck next time</size>";
-            StatsTitle.color = Color.red;
         }
         
         yield return new WaitForSeconds(1);
@@ -242,7 +230,7 @@ public class dayTimer : MonoBehaviour {
         yield return new WaitForSeconds(1.5f);
         SoundManager.instance.playSound(0, .95f);
 
-        StatsProf.text = "Your overall professionalism is <color=red>"+((StatTracker.instance.totalProfessionalism / maxDays)) + "%</color>"; //REDO THIS M9
+        StatsProf.text = "Your overall professionalism is <color=red>"+(100 - (int)(StatTracker.instance.messyDesks / 47f * 100)) + "%</color>"; //REDO THIS M9
         StatsProf.enabled = true;
 
         yield return new WaitForSeconds(1.5f);
