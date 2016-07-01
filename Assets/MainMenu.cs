@@ -45,6 +45,7 @@ public class MainMenu : MonoBehaviour
                     menuIndex = 0;
                 SoundManager.instance.playSound(0, .75f);
                 menuItems[menuIndex].color = Color.green;
+                SoundManager.instance.playSound(0);
             }
             else if (Input.GetAxis("Vertical") == 0)
             {
@@ -88,6 +89,7 @@ public class MainMenu : MonoBehaviour
                     gameModeIndex = 1;
                 SoundManager.instance.playSound(0, .75f);
                 GameModeOptions[gameModeIndex].color = Color.green;
+                SoundManager.instance.playSound(0);
             }
             else if (Input.GetAxis("Vertical") == 0)
             {

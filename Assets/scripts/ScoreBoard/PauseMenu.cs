@@ -5,10 +5,11 @@ using UnityEngine.UI;
 
 public class PauseMenu : MenuSelect 
 {
-
+    Slider slide;
 	// Use this for initialization
-	void Start () {
-	
+	void Start ()
+    {
+        slide = box[0].GetComponentInChildren<Slider>();
 	}
 	
 	// Update is called once per frame
@@ -42,9 +43,10 @@ public class PauseMenu : MenuSelect
 
     void ChangeVolumeSlide()
     {
-        if (box[0].GetComponentInChildren<Slider>().value > 0 || box[0].GetComponentInChildren<Slider>().value < 1)
+        if (slide.value > 0 || slide.value < 1)
         {
           box[0].GetComponentInChildren<Slider>().value += Input.GetAxis("Horizontal") / 100;
+          SoundManager.instance.changeVolume(slide.value);
         }
     }
 }

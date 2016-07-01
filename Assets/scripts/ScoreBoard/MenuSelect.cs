@@ -45,6 +45,7 @@ public class MenuSelect : MonoBehaviour
                 }
             }
             coolDown = 0;
+            SoundManager.instance.playSound(0);
         }
     }
    protected virtual void SetFunctionToButton()
