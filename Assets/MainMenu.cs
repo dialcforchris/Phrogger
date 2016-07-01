@@ -5,7 +5,7 @@ using DG.Tweening;
 
 public class MainMenu : MonoBehaviour {
 
-    int menuIndex;
+    int menuIndex,gameModeIndex=1;
     public menuState currentState = menuState.mainMenu;
 
     public enum menuState
@@ -13,14 +13,18 @@ public class MainMenu : MonoBehaviour {
         mainMenu,
         credits,
         leaderboard,
-        gameplay
+        gameplay,
+        modeSelect
     }
 
     public Text[] menuItems;
     public Image[] menuImages;
     public Image creditBackdrop;
     public Text TitleText,Credits;
-    
+
+    [Header("Game mode options")]
+    public Text[] GameModeOptions;
+
     bool scrolling;
     void Update ()
     {
@@ -48,11 +52,9 @@ public class MainMenu : MonoBehaviour {
                 switch (menuIndex)
                 {
                     case 0:
-                        //Fade things out
-                        //Peel back black bars
-                        //Hand control over to the player
-                        StartCoroutine(StartGame());
-                        currentState = menuState.gameplay;
+                        menuImages[0].gameObject.SetActive(false);
+                        menuImages[1].gameObject.SetActive(true);
+                        currentState = menuState.modeSelect;
                         break;
                     case 1:
                         break;
@@ -62,6 +64,47 @@ public class MainMenu : MonoBehaviour {
                         break;
                     case 3:
                         Application.Quit();
+                        break;
+                }
+            }
+        }
+        else if (currentState == menuState.modeSelect)
+        {
+            if (Input.GetAxis("Vertical") != 0 && scrolling == false)
+            {
+                scrolling = true;
+                GameModeOptions[gameModeIndex].color = Color.white;
+                gameModeIndex -= (Input.GetAxis("Vertical") > 0 ? 1 : -1);
+                if (gameModeIndex < 1)
+                    gameModeIndex = GameModeOptions.Length - 1;
+                if (gameModeIndex > GameModeOptions.Length - 1)
+                    gameModeIndex = 1;
+                SoundManager.instance.playSound(0, .75f);
+                GameModeOptions[gameModeIndex].color = Color.green;
+            }
+            else if (Input.GetAxis("Vertical") == 0)
+            {
+                scrolling = false;
+            }
+
+            if (Input.GetButtonDown("Fire1"))
+            {
+                switch (gameModeIndex)
+                {
+                    case 1:
+                        dayTimer.instance.maxDays = 1;
+                        StartCoroutine(StartGame());
+                        currentState = menuState.gameplay;
+                        break;
+                    case 2:
+                        dayTimer.instance.maxDays = 5;
+                        StartCoroutine(StartGame());
+                        currentState = menuState.gameplay;
+                        break;
+                    case 3:
+                        menuImages[0].gameObject.SetActive(true);
+                        menuImages[1].gameObject.SetActive(false);
+                        currentState = menuState.mainMenu;
                         break;
                 }
             }
@@ -79,6 +122,16 @@ public class MainMenu : MonoBehaviour {
                 i.color = col;
             }
             foreach (Text t in menuItems)
+            {
+                Color col = t.color;
+                col.a -= (inOut) ? -Time.deltaTime * 2 : Time.deltaTime * 2;
+                t.color = col;
+
+                Color outlineCol = t.GetComponent<Outline>().effectColor;
+                outlineCol.a -= (inOut) ? -Time.deltaTime * 2 : Time.deltaTime * 2;
+                t.GetComponent<Outline>().effectColor = outlineCol;
+            }
+            foreach (Text t in GameModeOptions)
             {
                 Color col = t.color;
                 col.a -= (inOut) ? -Time.deltaTime * 2 : Time.deltaTime * 2;
