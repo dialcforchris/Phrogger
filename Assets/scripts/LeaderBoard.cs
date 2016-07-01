@@ -13,7 +13,6 @@ public class LeaderBoard : MonoBehaviour
         get { return leader; }
     }
     public GameObject enterName;
-    bool once = false;
     string playerName;
     public string gameName;
     int playerScore;
@@ -40,20 +39,7 @@ public class LeaderBoard : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
     {
-        //if (!once)
-        //{
-        //    if (CheckScoreFile())
-        //    {
-        //        ReadScoreFile();
-        //    }
-        //    else
-        //    {
-        //        CreateScoreFile();
-        //    }
-        //    once = true;
-        //}
-       
-	}
+   	}
 
     /// <summary>
     /// adds new score to list
@@ -148,12 +134,6 @@ public class LeaderBoard : MonoBehaviour
            AddToList(_score, entry);
         }
         highScores.Close();
-       
-       // scores.Clear();
-        //for (int i = 0; i < scores.Count; i++)
-        //{
-        //    Debug.Log(scores[i].Key + " " + scores[i].Value);
-        //}
     }
    public void AddNewScoreToLB()
     {
