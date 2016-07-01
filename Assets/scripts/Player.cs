@@ -407,7 +407,8 @@ public class Player : WorldObject
         {
             if (state == PlayerState.ACTIVE)
             {
-                StatTracker.instance.causeOfDeath.text = "A co-wroker stepped on you";
+                StatTracker.instance.totalDeaths++;
+                StatTracker.instance.causeOfDeath.text = "A co-worker stepped on you";
                 Die();
             }
         }
@@ -415,6 +416,8 @@ public class Player : WorldObject
         {
             if (state == PlayerState.ACTIVE)
             {
+                StatTracker.instance.totalDeaths++;
+                StatTracker.instance.bossDeaths++;
                 StatTracker.instance.causeOfDeath.text = "Your boss stepped on you";
                 Die();
             }
@@ -463,7 +466,6 @@ public class Player : WorldObject
             {
                 if (deathCool > maxDeathcool - .8f && !respawnParticles.isPlaying)
                 {
-                //    Debug.Log("playing particles");
                     respawnParticles.Play();
                 }
                 deathCool += Time.deltaTime;

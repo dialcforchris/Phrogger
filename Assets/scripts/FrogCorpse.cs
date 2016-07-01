@@ -43,7 +43,7 @@ public class FrogCorpse : WorldObject
         {
             blood.Play();
             spriteRenderer.color = new Color(1, 1, 1, stomps);
-            SoundManager.instance.playSound(splat);
+            SoundManager.instance.playSound(splat,stomps);
         }
         if (stomps ==0)
         {
