@@ -32,8 +32,7 @@ public class dayTimer : MonoBehaviour {
     private Slider timeSlider;
     [SerializeField]
     private Text emailTargetText;
-
-
+    
     [Header("Ending stats")]
     [SerializeField]
     private Text StatsTitle;
@@ -136,7 +135,7 @@ public class dayTimer : MonoBehaviour {
         {
             if(Input.GetButtonDown("Fire1") && !transitioning)
             {
-                if (StatTracker.instance.numOfDaysCompleted < 5)
+                if (StatTracker.instance.numOfDaysCompleted < 1)
                 {
                     transitioning = true;
                     StartCoroutine(NextDayTransition());
@@ -431,7 +430,7 @@ public class dayTimer : MonoBehaviour {
                 performanceRank = 0;
 
             if (performanceRank > 0)
-                livesToAdd = (int)(performanceRank / 3.33f);
+                livesToAdd = Mathf.RoundToInt((performanceRank / 4));
 
             StatTracker.instance.addDayPerformance(performanceRank);
 

@@ -309,8 +309,11 @@ public class mailOpener : MonoBehaviour
     bool pop;
     void Update()
     {
+        //Shake the bar more as the value gets higher
         float shift = ((angerMeter.value* angerMeter.value* angerMeter.value) / angerMeter.maxValue)*multi;
         angerMeter.GetComponent<RectTransform>().anchoredPosition = angerMeterOrigin + new Vector2(Mathf.Sin(Random.value) * shift, Mathf.Sin(Random.value) * shift);
+
+        //If the value is REALLY high, makw the bar explode with particles
         if (angerMeter.value ==angerMeter.maxValue && !pop)
         {
             StartCoroutine(AngerMeterPop());

@@ -29,8 +29,7 @@ public class BossFace :MonoBehaviour
     Tile playerTile;
     int bossAngerLevel = 0;
     private bool slacker = false;
-
-
+    
     FaceState faceState;
 
     // Use this for initialization
@@ -74,11 +73,11 @@ public class BossFace :MonoBehaviour
             playerCool = 0;
             workCool = 0;
             //Only do when we've been going for a few seconds
-
             if (mailOpener.instance.activeCountdown)
             {
                 emailTimeLeniency += Time.deltaTime;
-                if (emailTimeLeniency > 2.5f)
+                //
+                if (emailTimeLeniency > 4.5f)
                 {
                     if (emailCool < emailMaxCool)
                     {
@@ -187,7 +186,7 @@ public class BossFace :MonoBehaviour
     {
         if (!_correct)
         {
-            XPtoAdd += bossAngerAddition;
+            XPtoAdd += (bossAngerAddition * 2.5f);
         }
     }
 

@@ -41,7 +41,6 @@ public class StatTracker : MonoBehaviour
         for (int i = l; i < LifeCounter.Length; i++)
         {
             LifeCounter[l].sprite = EmptyLifeSprite;
-            totalDeaths++;
         }
     }
 
@@ -170,9 +169,14 @@ public class StatTracker : MonoBehaviour
             }
 
         }
+
+        while (!Input.GetButtonDown("Fire1"))
+            yield return null;
+
         GameOverUI.SetActive(false);
         LeaderBoard.instance.SetScore(score);
     }
+
     public int GetScore()
     {
         return score;

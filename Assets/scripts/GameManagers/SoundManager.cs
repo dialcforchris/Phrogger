@@ -55,14 +55,14 @@ public class SoundManager : MonoBehaviour
     public void playSound(AudioClip sound,float volume = 1)
     {
         int c = 0;
-        changeVolume(volume);
+        //changeVolume(volume);
         while (c < audioSrcs.Count)
         {
             if (!audioSrcs[c].isPlaying)
             {
                 audioSrcs[c].pitch = 1;
                 audioSrcs[c].PlayOneShot(sound);
-                audioSrcs[c].volume = volumeMultiplayer;
+                audioSrcs[c].volume = volume * volumeMultiplayer;
                 break;
             }
             else
