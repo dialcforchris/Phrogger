@@ -9,13 +9,7 @@ public class DisplayLeaderboard : MonoBehaviour
     public Text[] names;
     public Text[] rank;
     bool once = false;
-	// Use this for initialization
-	void Start () 
-    {
-	    
-
-	}
-	
+		
 	// Update is called once per frame
 	void Update () 
     {

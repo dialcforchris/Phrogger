@@ -135,7 +135,7 @@ public class dayTimer : MonoBehaviour {
         {
             if(Input.GetButtonDown("Fire1") && !transitioning)
             {
-                if (StatTracker.instance.numOfDaysCompleted < 1)
+                if (StatTracker.instance.numOfDaysCompleted < 5)
                 {
                     transitioning = true;
                     StartCoroutine(NextDayTransition());
