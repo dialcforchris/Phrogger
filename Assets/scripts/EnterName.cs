@@ -133,10 +133,6 @@ public class EnterName : MonoBehaviour
                 theName = theName + box[i].text;
             }
             LeaderBoard.instance.SetName(theName);
-<<<<<<< HEAD
-=======
-            selectOnce = true;
->>>>>>> origin/master
             gameObject.SetActive(false);
             LeaderBoard.instance.AddNewScoreToLB();
             SceneManager.LoadScene(0);
