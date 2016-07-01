@@ -35,6 +35,11 @@ public class FroggerObject : WorldObject, IPoolable<FroggerObject>
         length = pivots.Length;
     }
 
+    protected override void Start()
+    {
+        //This is needed to prevent automatic behavior
+    }
+
     public virtual void Initialise(Vector3 _dir, float _speed)
     {
         gameObject.SetActive(true);

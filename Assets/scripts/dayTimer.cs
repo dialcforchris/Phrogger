@@ -178,20 +178,25 @@ public class dayTimer : MonoBehaviour {
             endingScreen.sprite = PromotionScreen;
             StatsTitle.text = "You were promoted! \n <size=32>Congrulations, sir!</size>";
         }
+        else if (StatTracker.instance.bossAngered == 0 && performance > 4 && ((StatTracker.instance.totalProfessionalism / maxDays) > 80))
+        {
+            endingScreen.sprite = Friends;
+            StatsTitle.text = "You got a raise! \n <size=32>Your boss is not an easy man to please</size>";
+        }
         else if (((StatTracker.instance.totalProfessionalism / maxDays) < 70) && performance > 3)
         {
             endingScreen.sprite = Unproffessional;
-            StatsTitle.text = "You kept your job \n <size=32>somehow...</size>";
+            StatsTitle.text = "You kept your job \n <size=32>Somehow...</size>";
         }
         else if (StatTracker.instance.bossDeaths > maxDays - 1 && performance > 3)
         {
             endingScreen.sprite = BossDeathScreen;
-            StatsTitle.text = "You kept your job \n <size=32>but your boss did not...</size>";
+            StatsTitle.text = "You kept your job \n <size=32>But your boss did not...</size>";
         }
         else if (performance > 3)
         {
             endingScreen.sprite = Average;
-            StatsTitle.text = "You kept your job \n <size=32>your were unremarkably average</size>";
+            StatsTitle.text = "You kept your job \n <size=32>You were unremarkably average</size>";
         }
         else
         {

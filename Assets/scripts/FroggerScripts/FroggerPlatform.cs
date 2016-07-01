@@ -3,17 +3,20 @@ using System.Collections;
 
 public class FroggerPlatform : FroggerObject
 {
-    [SerializeField] private bool isCrocodile = false;
-    [SerializeField] private bool isTurtle = false;
+    [SerializeField]
+    private bool isCrocodile = false;
+    [SerializeField]
+    private bool isTurtle = false;
     private bool turtleDropped = false;
-    private bool turtleDropping = false;
-    private bool turtleRising = false;
     private bool canDrop = false;
-    [SerializeField] private Animator[] turtles = null;
+    [SerializeField]
+    private Animator[] turtles = null;
 
     private float cooldown = 0.0f;
-    [SerializeField] private float minTurtle = 3.0f;
-    [SerializeField] private float maxTurtle = 15.0f;
+    [SerializeField]
+    private float minTurtle = 3.0f;
+    [SerializeField]
+    private float maxTurtle = 15.0f;
     private float turtleDrop;
 
     public override void Initialise(Vector3 _dir, float _speed)
@@ -46,10 +49,18 @@ public class FroggerPlatform : FroggerObject
                     _obj.transform.SetParent(transform);
                 }
             }
-            else if (!turtleDropped)
+            else if (turtleDropped)
+            {
+                if (spriteRenderer.color.a > 0.1f)
+                {
+                    _obj.transform.SetParent(transform);
+                }
+            }
+            else
             {
                 _obj.transform.SetParent(transform);
             }
+
         }
     }
 
@@ -62,57 +73,44 @@ public class FroggerPlatform : FroggerObject
             {
                 if (canDrop)
                 {
-                    cooldown += Time.deltaTime;
-                    if (cooldown >= turtleDrop)
+                    if (!turtleDropped)
                     {
-                        if (!turtleDropping)
+                        cooldown += Time.deltaTime;
+                        if (cooldown >= turtleDrop)
                         {
-                            cooldown = 0.0f;
-                            turtleDropping = true;
-                            turtleDrop = 2.25f;
+                            turtleDropped = true;
                             foreach (Animator _a in turtles)
                             {
                                 _a.SetTrigger("Dive");
                             }
                         }
-                        else
+                    }
+                    else if (spriteRenderer.color.a < 0.1f)
+                    {
+                        if (cooldown >= turtleDrop)
                         {
-                            if (!turtleRising)
+                            cooldown = 0.0f;
+                            foreach (Tile _t in tiles)
                             {
-                                if (!turtleDropped)
+                                foreach (WorldObject _wo in _t.GetObjects())
                                 {
-                                    turtleDropped = true;
-                                    foreach (Tile _t in tiles)
+                                    if (_wo.tag == "Player")
                                     {
-                                        foreach (WorldObject _wo in _t.GetObjects())
-                                        {
-                                            if (_wo.tag == "Player")
-                                            {
-                                                Player.instance.transform.SetParent(null);
-                                                break;
-                                            }
-                                        }
+                                        Player.instance.transform.SetParent(null);
+                                        break;
                                     }
-                                    cooldown = 0.0f;
-                                    turtleDrop = 0.25f;
-                                }
-                                else if (turtleDropped)
-                                {
-                                    turtleDropped = false;
-                                    turtleRising = true;
                                 }
                             }
                         }
                     }
-                    if (turtleRising)
+                    else if (turtles[0].GetCurrentAnimatorStateInfo(0).IsName("TurtleIdle"))
                     {
-                        if (turtles[0].GetCurrentAnimatorStateInfo(0).IsName("TurtleIdle"))
+                        foreach (Animator _a in turtles)
                         {
-                            turtleDropping = false;
-                            turtleRising = false;
-                            cooldown = 0.0f;
-                            turtleDrop = Random.Range(minTurtle, maxTurtle);
+                            _a.ResetTrigger("Dive");
                         }
+                        turtleDrop = Random.Range(minTurtle, maxTurtle);
+                        turtleDropped = false;
                     }
                 }
             }
@@ -127,8 +125,6 @@ public class FroggerPlatform : FroggerObject
             length = pivots.Length;
 
             turtleDropped = false;
-            turtleDropping = false;
-            turtleRising = false;
             cooldown = 0.0f;
             foreach (Animator _a in turtles)
             {
