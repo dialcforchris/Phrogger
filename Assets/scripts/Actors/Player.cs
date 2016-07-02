@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 
 public class Player : WorldObject
 {
@@ -21,6 +22,9 @@ public class Player : WorldObject
     private AudioClip splat;
     [SerializeField] AudioClip splash;
     public bool joyOrDPad = false; //true for joy, false for dpad
+
+    [SerializeField]
+    private AudioSource[] originalFroggerSounds;
 
     [SerializeField]
     private ParticleSystem respawnParticles;
@@ -66,8 +70,13 @@ public class Player : WorldObject
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.V))
+        if (Input.GetButtonDown("Fire1") && GameStateManager.instance.GetState() == GameStates.STATE_FROGGER)
         {
+            //Fade out all the sounds
+            foreach (AudioSource a in originalFroggerSounds)
+            {
+                a.DOFade(0, 1.5f);
+            }
             coolDown = 0.0f;
             froggerCompleted = true;
             respawnParticles.transform.position = playerSpawn.position;
@@ -78,7 +87,6 @@ public class Player : WorldObject
         {
             if (state == PlayerState.ACTIVE)
             {
-
                 HelpWorker();
                 if (joyOrDPad)
                 {
@@ -145,6 +153,11 @@ public class Player : WorldObject
 
     private IEnumerator OriginalFroggerFinished()
     {
+        //Fade out all the sounds
+        foreach (AudioSource a in originalFroggerSounds)
+        {
+            a.DOFade(0, 1.5f);
+        }
         while (true)
         {
             coolDown += Time.deltaTime;

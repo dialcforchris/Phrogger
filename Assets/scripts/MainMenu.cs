@@ -1,10 +1,11 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
-using DG.Tweening;
+using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour 
 {
+    public static MainMenu instance;
 
     int menuIndex,gameModeIndex=1;
     public menuState currentState = menuState.mainMenu;
@@ -19,8 +20,8 @@ public class MainMenu : MonoBehaviour
 
     public Text[] menuItems;
     public Image[] menuImages;
-    public Image creditBackdrop,logo;
-    public Text TitleText,Credits;
+    public Image creditBackdrop,logo,fadeMe;
+    public Text Credits;
     public GameObject leaderBoard;
 
    // public Image creditBackdrop,logo;
@@ -28,6 +29,39 @@ public class MainMenu : MonoBehaviour
 
     [Header("Game mode options")]
     public Text[] GameModeOptions;
+
+    void Awake()
+    {
+        instance = this;
+        StartCoroutine(wholeScreenFade(false));
+    }
+
+    public IEnumerator wholeScreenFade(bool b)
+    {
+        yield return new WaitForSeconds(.25f);
+        if (!b)
+        {
+            while (fadeMe.color.a > 0)
+            {
+                Color col = fadeMe.color;
+                col.a -= Time.fixedDeltaTime * 2;
+                fadeMe.color = col;
+                yield return new WaitForFixedUpdate();
+            }
+        }
+        else
+        {
+            while (fadeMe.color.a < 1)
+            {
+                Color col = fadeMe.color;
+                col.a += Time.fixedDeltaTime;
+                fadeMe.color = col;
+                yield return new WaitForFixedUpdate();
+            }
+            yield return new WaitForSeconds(.5f);
+            SceneManager.LoadScene(1);
+        }
+    }
 
     bool scrolling;
     void Update ()
@@ -75,6 +109,7 @@ public class MainMenu : MonoBehaviour
                 }
             }
         }
+        #region gamemode selection
         else if (currentState == menuState.modeSelect)
         {
             if (Input.GetAxis("Vertical") != 0 && scrolling == false)
@@ -116,9 +151,10 @@ public class MainMenu : MonoBehaviour
                 }
             }
         }
+        #endregion
     }
 
-    IEnumerator FadeInOutMainMenuUI(bool inOut)//True for in, false for out
+    IEnumerator FadeInOutMainMenuUI(bool inOut,bool fadeLogo = true)//True for in, false for out
     {
         while ((inOut) ? menuItems[0].color.a < 1 : menuItems[0].color.a > 0)
         {
@@ -148,14 +184,39 @@ public class MainMenu : MonoBehaviour
                 outlineCol.a -= (inOut) ? -Time.deltaTime * 2 : Time.deltaTime * 2;
                 t.GetComponent<Outline>().effectColor = outlineCol;
             }
-            Color col_ = logo.color;
-            col_.a -= (inOut) ? -Time.deltaTime * 2 : Time.deltaTime * 2;
-            logo.color = col_;
-            Color outlineCol_ = logo.GetComponent<Outline>().effectColor;
-            outlineCol_.a -= (inOut) ? -Time.deltaTime * 2 : Time.deltaTime * 2;
-            logo.GetComponent<Outline>().effectColor = outlineCol_;
-
+            if (fadeLogo)
+            {
+                Color col_ = logo.color;
+                col_.a -= (inOut) ? -Time.deltaTime * 2 : Time.deltaTime * 2;
+                logo.color = col_;
+                Color outlineCol_ = logo.GetComponent<Outline>().effectColor;
+                outlineCol_.a -= (inOut) ? -Time.deltaTime * 2 : Time.deltaTime * 2;
+                logo.GetComponent<Outline>().effectColor = outlineCol_;
+            }
             yield return new WaitForEndOfFrame();
+        }
+    }
+
+    IEnumerator SwitchViews(bool direction)
+    {
+        float lerpy = 0;
+        if (direction)
+        {
+            while (lerpy < 1)
+            {
+                lerpy += Time.deltaTime;
+                menuImages[0].rectTransform.anchoredPosition = Vector2.Lerp(menuImages[0].rectTransform.anchoredPosition, new Vector2(-1000, -150), lerpy);
+                yield return new WaitForEndOfFrame();
+            }
+        }
+        else
+        {
+            while (lerpy < 1)
+            {
+                lerpy += Time.deltaTime;
+                menuImages[0].rectTransform.anchoredPosition = Vector2.Lerp(menuImages[0].rectTransform.anchoredPosition, new Vector2(0, -150), lerpy);
+                yield return new WaitForEndOfFrame();
+            }
         }
     }
 
@@ -181,7 +242,7 @@ public class MainMenu : MonoBehaviour
     IEnumerator runCredits()
     {
         yield return StartCoroutine(FadeInOutMainMenuUI(false));
-        
+
         //Fade into black backdrop
         while (creditBackdrop.color.a < .5f)
         {
@@ -196,9 +257,9 @@ public class MainMenu : MonoBehaviour
         float lerpy = 0;
         while (Credits.rectTransform.anchoredPosition.y < 900)
         {
-            Credits.rectTransform.anchoredPosition = Vector2.Lerp(-Vector2.up * 1000, Vector2.up * 1000, lerpy/25);
+            Credits.rectTransform.anchoredPosition = Vector2.Lerp(-Vector2.up * 1000, Vector2.up * 1000, lerpy / 25);
             if (Input.GetButton("Fire1"))
-                lerpy += Time.deltaTime*5;
+                lerpy += Time.deltaTime * 5;
 
             lerpy += Time.deltaTime;
             yield return new WaitForEndOfFrame();
@@ -223,14 +284,10 @@ public class MainMenu : MonoBehaviour
     }
     IEnumerator LeaderBoard()
     {
-        yield return StartCoroutine(FadeInOutMainMenuUI(false));
-        leaderBoard.SetActive(true);
-
+        yield return StartCoroutine(SwitchViews(true));
         yield return WaitForKeyDown("Fire1");
-            leaderBoard.SetActive(false);
-            StartCoroutine(FadeInOutMainMenuUI(true));
-            currentState = menuState.mainMenu;
-      
+        yield return StartCoroutine(SwitchViews(false));
+        currentState = menuState.mainMenu;
     }
     IEnumerator WaitForKeyDown(string fire)
     {

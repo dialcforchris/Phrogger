@@ -10,7 +10,6 @@ public enum FroggerDeathType
     COUNT
 }
 
-
 public class FroggerObject : WorldObject, IPoolable<FroggerObject>
 {
     #region IPoolable
@@ -40,6 +39,14 @@ public class FroggerObject : WorldObject, IPoolable<FroggerObject>
         //This is needed to prevent automatic behavior
     }
 
+    void OnTriggerEnter2D(Collider2D col)
+    {
+        if (col.tag == "Player")
+        {
+            SoundManager.instance.playSound(2);
+        }
+    }
+
     public virtual void Initialise(Vector3 _dir, float _speed)
     {
         gameObject.SetActive(true);
@@ -50,7 +57,7 @@ public class FroggerObject : WorldObject, IPoolable<FroggerObject>
 
     protected virtual void Update()
     {
-        if (GameStateManager.instance.GetState() == GameStates.STATE_FROGGER || GameStateManager.instance.GetState() == GameStates.STATE_DAYOVER)
+        if (GameStateManager.instance.GetState() == GameStates.STATE_FROGGER || GameStateManager.instance.GetState() == GameStates.STATE_SPLASH)
         {
             transform.position += direction * Time.deltaTime * speed;
             transform.rotation = Quaternion.LookRotation(Vector3.forward, Quaternion.AngleAxis(90, Vector3.forward) * direction);

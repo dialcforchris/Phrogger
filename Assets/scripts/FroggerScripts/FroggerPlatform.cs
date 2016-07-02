@@ -66,7 +66,7 @@ public class FroggerPlatform : FroggerObject
 
     protected override void Update()
     {
-        if (GameStateManager.instance.GetState() == GameStates.STATE_FROGGER || GameStateManager.instance.GetState() == GameStates.STATE_DAYOVER)
+        if (GameStateManager.instance.GetState() == GameStates.STATE_FROGGER || GameStateManager.instance.GetState() == GameStates.STATE_SPLASH)
         {
             base.Update();
             if (isTurtle)

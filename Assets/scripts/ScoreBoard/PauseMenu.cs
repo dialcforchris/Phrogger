@@ -37,7 +37,6 @@ public class PauseMenu : MenuSelect
 
     void QuitToMain()
     {
-        GameStateManager.instance.ChangeState(GameStates.STATE_DAYOVER);
         SceneManager.LoadScene(0);
     }
 

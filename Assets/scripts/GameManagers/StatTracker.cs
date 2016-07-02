@@ -9,7 +9,7 @@ public class StatTracker : MonoBehaviour
 
     public int junkEmailsCorrect, safeEmailsCorrect, safeEmailsWrong, junkEmailsWrong, numOfDaysCompleted, messyDesks;
     public int totalDeaths, bossDeaths, bossAngered;
-    int score;
+    public int score;
     public float totalProfessionalism = 0;
     public int scoreToAdd;
     public Text ScoreText;

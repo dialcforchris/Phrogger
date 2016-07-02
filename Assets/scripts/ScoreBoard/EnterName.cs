@@ -30,7 +30,7 @@ public class EnterName : MonoBehaviour
             MenuInput();
             box[selectBox].text = ((char)currentCharacter[selectBox]).ToString();
             ChangeTextColour();
-            score.text = "Score: " +StatTracker.instance.GetScore().ToString();
+            score.text = "Your Score: " +StatTracker.instance.GetScore().ToString();
             if (Input.GetButtonDown("Fire1"))
                 SelectName();
     }
@@ -121,18 +121,16 @@ public class EnterName : MonoBehaviour
            {
                box[i].color = Color.white;
            }
-       }
+        }
     }
     void SelectName()
     {
-            for (int i = 0; i < box.Length; i++)
-            {
-                theName = theName + box[i].text;
-            }
-            LeaderBoard.instance.SetName(theName);
-            gameObject.SetActive(false);
-            LeaderBoard.instance.AddNewScoreToLB();
-            SceneManager.LoadScene(0);
-            
+        for (int i = 0; i < box.Length; i++)
+        {
+            theName = theName + box[i].text;
+        }
+        LeaderBoard.instance.SetName(theName);
+        LeaderBoard.instance.AddNewScoreToLB();
+        StartCoroutine(MainMenu.instance.wholeScreenFade(true));
     }
 }

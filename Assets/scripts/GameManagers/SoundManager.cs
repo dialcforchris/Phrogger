@@ -9,7 +9,7 @@ public class SoundManager : MonoBehaviour
     public static SoundManager instance;
     public int numberOfSources;
     public float volumeMultiplayer = 1;
-    public AudioSource music,computerSounds;
+    public AudioSource music,computerSounds,officeAmbience;
 
     public List<managedSource> managedAudioSources = new List<managedSource>();
     List<AudioSource> audioSrcs = new List<AudioSource>();
@@ -21,7 +21,7 @@ public class SoundManager : MonoBehaviour
         public float volumeLimit;
     }
 
-    public List<AudioClip> moveSounds,deskSounds;
+    public List<AudioClip> moveSounds,deskSounds,carHorns;
 
     void Awake()
     {
@@ -41,6 +41,9 @@ public class SoundManager : MonoBehaviour
         {
             computerSounds.DOKill(false);
             computerSounds.volume = newVol;
+
+            officeAmbience.DOKill(false);
+            officeAmbience.volume = newVol;
         }
         foreach (AudioSource a in audioSrcs)
         {
@@ -74,7 +77,7 @@ public class SoundManager : MonoBehaviour
 
     AudioClip lastMoveSound;
 
-    public void playSound(int type,float pitch=1)//0 for move sounds, 1 for desk sounds
+    public void playSound(int type,float pitch=1)//0 for move sounds, 1 for desk sounds, 2 for car horns
     {
         int c = 0;
         while (c < audioSrcs.Count)
@@ -107,6 +110,11 @@ public class SoundManager : MonoBehaviour
                     case 1:
                         audioSrcs[c].pitch = pitch;
                         audioSrcs[c].PlayOneShot(deskSounds[Random.Range(0, deskSounds.Count)]);
+                        audioSrcs[c].volume = volumeMultiplayer * 1f;
+                        break;
+                    case 2:
+                        audioSrcs[c].pitch = pitch;
+                        audioSrcs[c].PlayOneShot(carHorns[Random.Range(0, carHorns.Count)]);
                         audioSrcs[c].volume = volumeMultiplayer * 1f;
                         break;
                 }

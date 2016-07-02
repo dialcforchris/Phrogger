@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 
 public class FroggerSpawner : WorldObject
 {
@@ -17,8 +17,10 @@ public class FroggerSpawner : WorldObject
     [SerializeField] private FroggerObject rareObject = null;
 
     [SerializeField] private bool isLeft = false;
+    public float soundChance;
 
-    
+    [SerializeField]
+    private List<AudioClip> carSounds = new List<AudioClip>();
 
     protected override void Awake()
     {
@@ -44,7 +46,7 @@ public class FroggerSpawner : WorldObject
 
     private void Update()
     {
-        if(GameStateManager.instance.GetState() == GameStates.STATE_FROGGER || GameStateManager.instance.GetState() == GameStates.STATE_DAYOVER)
+        if(GameStateManager.instance.GetState() == GameStates.STATE_FROGGER || GameStateManager.instance.GetState() == GameStates.STATE_SPLASH)
         {
             cooldown += Time.deltaTime;
             if(cooldown >= spawnRate)
@@ -65,6 +67,13 @@ public class FroggerSpawner : WorldObject
                     else
                     {
                         _obj = objectPool.GetPooledObject();
+                    }
+                }
+                if (carSounds.Count > 0)
+                {
+                    if (Random.value < soundChance)
+                    {
+                        SoundManager.instance.playSound(carSounds[Random.Range(0, carSounds.Count)], Random.Range(0.8f, 1.2f));
                     }
                 }
                 _obj.transform.position = transform.position;

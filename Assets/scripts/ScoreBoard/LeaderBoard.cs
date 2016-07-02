@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.IO;
-using UnityEngine.SceneManagement;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 public class LeaderBoard : MonoBehaviour 
 {
@@ -35,11 +35,6 @@ public class LeaderBoard : MonoBehaviour
             CreateScoreFile();
         }
 	}
-	
-	// Update is called once per frame
-	void Update () 
-    {
-   	}
 
     /// <summary>
     /// adds new score to list
@@ -85,7 +80,7 @@ public class LeaderBoard : MonoBehaviour
     /// </summary>
     void TrimList()
     {
-        for (int i = scores.Count - 1; i > 9; i--)
+        for (int i = scores.Count - 1; i > 19; i--)
         {
             scores.RemoveAt(i);
         }
@@ -163,9 +158,9 @@ public class LeaderBoard : MonoBehaviour
         {
             enterName.SetActive(true);
         }
-       else
+        else
         {
-            SceneManager.LoadScene(0);
+            StartCoroutine(MainMenu.instance.wholeScreenFade(true));
         }
     }
     public void SetName(string _name)
@@ -183,7 +178,7 @@ public class LeaderBoard : MonoBehaviour
                 return true;
             }
         }
-        if (scores.Count <10)
+        if (scores.Count <20)
         {
             return true;
         }

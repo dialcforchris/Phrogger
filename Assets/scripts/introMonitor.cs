@@ -39,6 +39,7 @@ public class introMonitor : MonoBehaviour
 
     public void InitialiseMonitor()
     {
+        SoundManager.instance.officeAmbience.DOFade(SoundManager.instance.volumeMultiplayer*0.3f, 2);
         computerSounds.DOFade(SoundManager.instance.volumeMultiplayer, 2);
         mainCamTransition.material.SetTexture("_SliceGuide", gradients[1]);
         monCamTransition.material.SetTexture("_SliceGuide", gradients[1]);
@@ -90,6 +91,7 @@ public class introMonitor : MonoBehaviour
     IEnumerator camTransition(bool InOut) //True for entering email mode, false for exiting it
     {
         computerSounds.DOKill();
+        SoundManager.instance.officeAmbience.DOFade((InOut) ? SoundManager.instance.volumeMultiplayer *0.3f: SoundManager.instance.volumeMultiplayer, 2);
         computerSounds.DOFade((InOut) ? SoundManager.instance.volumeMultiplayer : 0, 2);
         Random.seed = System.DateTime.Now.Millisecond;
 

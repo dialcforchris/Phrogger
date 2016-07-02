@@ -8,6 +8,7 @@ public enum GameStates
     STATE_GAMEOVER,
     STATE_DAYOVER,
     STATE_FROGGER,
+    STATE_SPLASH,
     GAMESTATES_COUNT
 }
 
@@ -37,7 +38,8 @@ public class GameStateManager : MonoBehaviour
             states[(int)GameStates.STATE_GAMEOVER] = new GameOverState();
             states[(int)GameStates.STATE_DAYOVER] = new DayOverState();
             states[(int)GameStates.STATE_FROGGER] = new FroggerState();
-            //ChangeState(GameStates.STATE_FROGGER);
+            states[(int)GameStates.STATE_SPLASH] = new SplashScreenState();
+            ChangeState(GameStates.STATE_SPLASH);
         }
         
     }

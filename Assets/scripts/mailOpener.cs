@@ -72,6 +72,7 @@ public class mailOpener : MonoBehaviour
             pop = false;
             angerMeter.value = 0;
         }
+        SoundManager.instance.officeAmbience.DOFade((InOut) ? SoundManager.instance.volumeMultiplayer * 0.3f : SoundManager.instance.volumeMultiplayer, 2);
         computerSounds.DOFade((InOut) ? SoundManager.instance.volumeMultiplayer : 0, 2);
         Random.seed = System.DateTime.Now.Millisecond;
         mainCamTransition.material.SetTexture("_SliceGuide", gradients[Random.Range(0, gradients.Length)]);

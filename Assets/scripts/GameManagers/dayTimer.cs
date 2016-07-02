@@ -4,17 +4,15 @@ using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 
-public class dayTimer : MonoBehaviour {
-
-  
-
+public class dayTimer : MonoBehaviour
+{
+    [SerializeField]
+    private GameObject continueText;
     public static dayTimer instance;
     [SerializeField]
     private int secondsPerDay;
-    [SerializeField]
     public int maxDays = 5;
     public float secondsDay { get { return secondsPerDay; } }
-    [SerializeField]
     private float currentTime;
     public float time { get { return currentTime; } }
     [SerializeField]
@@ -46,6 +44,8 @@ public class dayTimer : MonoBehaviour {
     private Image endingScreen,StatsBox;
     [SerializeField]
     private Sprite PromotionScreen, FiredScreen, BossDeathScreen, DeathScreen, Unproffessional, Average, Friends;
+    [SerializeField]
+    private GameObject continueTexteEOD;
 
     [System.Serializable]
     public struct completedEmail
@@ -89,7 +89,7 @@ public class dayTimer : MonoBehaviour {
 
     public void NewDayTransition()
     {
-        StartCoroutine("NextDayTransition");
+        StartCoroutine(NextDayTransition());
     }
 
     void Awake()
@@ -120,16 +120,21 @@ public class dayTimer : MonoBehaviour {
 
         if (GameFinished)
         {
-            if (Input.GetButtonDown("Fire2"))
+            if (Input.GetButtonDown("Fire1"))
             {
+                continueText.SetActive(false);
                 StatsBox.gameObject.SetActive(false);
             }
-            if (Input.GetButtonUp("Fire2"))
-                StatsBox.gameObject.SetActive(true);
-
-
-            if (Input.GetButton("Fire1"))
+            if (Input.GetButtonUp("Fire1"))
             {
+                continueText.SetActive(true);
+                StatsBox.gameObject.SetActive(true);
+            }
+
+            if (Input.GetButton("Fire1") && Input.GetAxis("Vertical") < 0)
+            {
+                GameFinished = false;
+                continueText.SetActive(false);
                 LeaderBoard.instance.SetScore(StatTracker.instance.GetScore());
                 StatsBox.gameObject.SetActive(false);
             }
@@ -139,6 +144,7 @@ public class dayTimer : MonoBehaviour {
         {
             if(Input.GetButtonDown("Fire1") && !transitioning)
             {
+                continueTexteEOD.SetActive(false);
                 StatTracker.instance.CalculateProfessionalism();
                 if (StatTracker.instance.numOfDaysCompleted < maxDays)
                 {
@@ -222,19 +228,19 @@ public class dayTimer : MonoBehaviour {
         StatsBox.enabled = true;
         StatsTitle.enabled = true;
 
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(.8f);
         SoundManager.instance.playSound(0, .95f);
 
         StatsDeath.text = "You died a total of <color=red>"+ StatTracker.instance.totalDeaths+"</color> times";
         StatsDeath.enabled = true;
 
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(.8f);
         SoundManager.instance.playSound(0, .95f);
 
         StatsBossDeath.text = "Your boss killed you <color=red>" + StatTracker.instance.bossDeaths + "</color> times";
         StatsBossDeath.enabled = true;
 
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(.8f);
         SoundManager.instance.playSound(0, .95f);
 
         float correct = StatTracker.instance.safeEmailsCorrect + StatTracker.instance.junkEmailsCorrect;
@@ -246,13 +252,13 @@ public class dayTimer : MonoBehaviour {
             StatsEmail.text = "You processed <color=red>" + total + "</color> emails and sorted <color=red>0%</color> of them correctly";
         StatsEmail.enabled = true;
 
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(.8f);
         SoundManager.instance.playSound(0, .95f);
 
         StatsProf.text = "Your overall professionalism is <color=red>" + ((StatTracker.instance.totalProfessionalism / maxDays)) + "%</color>"; //REDO THIS M9
         StatsProf.enabled = true;
 
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(.8f);
         SoundManager.instance.playSound(0, .95f);
 
         StatsBossAnger.text = "You angered your boss <color=red>"+StatTracker.instance.bossAngered+"</color> times";
@@ -260,11 +266,12 @@ public class dayTimer : MonoBehaviour {
 
         yield return new WaitForSeconds(1);
         GameFinished = true;
-       
+        continueText.SetActive(true);
     }
 
     IEnumerator NextDayTransition() //Fades the screen to black, display the day # text and fades back in
     {
+        GameStateManager.instance.ChangeState(GameStates.STATE_DAYOVER);
         //Fade to black
         while (background.color.a < 1)
         {
@@ -278,6 +285,7 @@ public class dayTimer : MonoBehaviour {
 
         emailTargetText.text = "Todays target: " + (4 + StatTracker.instance.numOfDaysCompleted) + " emails";
 
+        SoundManager.instance.officeAmbience.DOFade(SoundManager.instance.volumeMultiplayer * 0.3f, 2);
         //Fade in day text
         while (DayText.color.a < 1)
         {
@@ -330,9 +338,8 @@ public class dayTimer : MonoBehaviour {
         //Also reset the clock
         smallHand.rectTransform.rotation = Quaternion.Euler(0, 0, 90);
         bigHand.rectTransform.rotation = Quaternion.Euler(0, 0, 0);
-
+        
         WorkerManager.instance.SetupDefaultPositions();
-
         //Fade out both
         while (DayText.color.a > 0)
         {
@@ -351,6 +358,7 @@ public class dayTimer : MonoBehaviour {
 
     IEnumerator endOfDay()
     {
+        SoundManager.instance.officeAmbience.DOFade(0, 5);
         //play some sort of sound
         GameStateManager.instance.ChangeState(GameStates.STATE_DAYOVER);
         progressUI.SetActive(true);
@@ -374,6 +382,7 @@ public class dayTimer : MonoBehaviour {
         int top = 0, bot = 0;
         float correct = 0;
 
+        #region make email icons
         emailObjects = new List<GameObject>();
         for (int i = 0; i < todaysEmails.Count; i++)
         {
@@ -409,11 +418,13 @@ public class dayTimer : MonoBehaviour {
             yield return new WaitForSeconds(.35f);
             GameStateManager.instance.ChangeState(GameStates.STATE_DAYOVER);
         }
+        #endregion
 
         performanceText.enabled = true;
         yield return new WaitForSeconds(2f);
         GameStateManager.instance.ChangeState(GameStates.STATE_DAYOVER);
 
+        #region performance handling
         int livesToAdd = 0;
         //8 ranks
         int performanceRank;
@@ -487,10 +498,12 @@ public class dayTimer : MonoBehaviour {
         }
         SoundManager.instance.playSound(stampSound);
         performanceResult.enabled = true;
+        #endregion
 
         yield return new WaitForSeconds(1.5f);
         GameStateManager.instance.ChangeState(GameStates.STATE_DAYOVER);
 
+        #region regen lives
         if (Player.instance.strikes < 4)
         {
             for (int i = 0; i < livesToAdd; i++)
@@ -507,9 +520,11 @@ public class dayTimer : MonoBehaviour {
                 GameStateManager.instance.ChangeState(GameStates.STATE_DAYOVER);
             }
         }
-
-        //Add new lives on and do a sound
+        #endregion
 
         finishedDisplay = true;
+
+        yield return new WaitForSeconds(0.5f);
+        continueTexteEOD.SetActive(true);
     }
 }

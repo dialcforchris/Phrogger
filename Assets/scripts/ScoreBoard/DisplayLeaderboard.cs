@@ -21,9 +21,9 @@ public class DisplayLeaderboard : MonoBehaviour
                 rank[i].text = (i + 1).ToString();
                 scores[i].text = k[i].Value.ToString();
                 names[i].text = k[i].Key;
-                rank[i].color = Color.Lerp(Color.green, Color.red, (float)(i * 0.1f));
-                scores[i].color = Color.Lerp(Color.green, Color.red, (float)(i * 0.10f));
-                names[i].color = Color.Lerp(Color.green, Color.red, (float)(i * 0.10f));
+                rank[i].color = Color.Lerp(Color.green, Color.red, (float)(i * 0.05f));
+                scores[i].color = Color.Lerp(Color.green, Color.red, (float)(i * 0.05f));
+                names[i].color = Color.Lerp(Color.green, Color.red, (float)(i * 0.05f));
             }
         }
 	}
