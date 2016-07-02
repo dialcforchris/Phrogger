@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using UnityEditor;
+//using UnityEditor;
 using System.Collections;
 
 public class CameraZoom : MonoBehaviour {
@@ -103,18 +103,18 @@ public class CameraZoom : MonoBehaviour {
 }
 
 
-[CustomEditor(typeof(CameraZoom))]
-public class CameraZoomer : Editor
-{
-    public override void OnInspectorGUI()
-    {
-        DrawDefaultInspector();
-        if (EditorApplication.isPlaying)
-        {
-            if (GUILayout.Button("Do a zoom"))
-            {
-                CameraZoom.instance.doAZoom(false);
-            }
-        }
-    }
-}
+//[CustomEditor(typeof(CameraZoom))]
+//public class CameraZoomer : Editor
+//{
+//    public override void OnInspectorGUI()
+//    {
+//        DrawDefaultInspector();
+//        if (EditorApplication.isPlaying)
+//        {
+//            if (GUILayout.Button("Do a zoom"))
+//            {
+//                CameraZoom.instance.doAZoom(false);
+//            }
+//        }
+//    }
+//}

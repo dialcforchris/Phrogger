@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using UnityEditor;
+//using UnityEditor;
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
@@ -304,19 +304,19 @@ public class introMonitor : MonoBehaviour
     }
 }
 
-[CustomEditor(typeof(introMonitor))]
-public class ObjectBuilderEditor : Editor
-{
-    public override void OnInspectorGUI()
-    {
-        DrawDefaultInspector();
-        if (EditorApplication.isPlaying)
-        {
-            //mailOpener myScript = (mailOpener)target;
-            if (GUILayout.Button("Enter Monitor View"))
-            {
-                introMonitor.instance.enterView();
-            }
-        }
-    }
-}
+//[CustomEditor(typeof(introMonitor))]
+//public class ObjectBuilderEditor : Editor
+//{
+//    public override void OnInspectorGUI()
+//    {
+//        DrawDefaultInspector();
+//        if (EditorApplication.isPlaying)
+//        {
+//            //mailOpener myScript = (mailOpener)target;
+//            if (GUILayout.Button("Enter Monitor View"))
+//            {
+//                introMonitor.instance.enterView();
+//            }
+//        }
+//    }
+//}
