@@ -36,7 +36,7 @@ public class MainMenu : MonoBehaviour
         StartCoroutine(wholeScreenFade(false));
     }
 
-    public IEnumerator wholeScreenFade(bool b)
+    public IEnumerator wholeScreenFade(bool b) //False for fade in from black, true to fade to black and reload scene
     {
         yield return new WaitForSeconds(.25f);
         if (!b)
@@ -77,6 +77,7 @@ public class MainMenu : MonoBehaviour
                     menuIndex = menuItems.Length - 1;
                 if (menuIndex > menuItems.Length - 1)
                     menuIndex = 0;
+
                 SoundManager.instance.playSound(0, .75f);
                 menuItems[menuIndex].color = Color.green;
             }

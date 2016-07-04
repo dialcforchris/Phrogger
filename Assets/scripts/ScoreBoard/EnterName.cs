@@ -13,7 +13,8 @@ public class EnterName : MonoBehaviour
     float coolDown = 0;
     float maxCool = 0.2f;
     string theName = string.Empty;
-	// Use this for initialization
+    bool finished;
+
 	void Start () 
     {
         coolDown = maxCool;
@@ -31,7 +32,7 @@ public class EnterName : MonoBehaviour
             box[selectBox].text = ((char)currentCharacter[selectBox]).ToString();
             ChangeTextColour();
             score.text = "Your Score: " +StatTracker.instance.GetScore().ToString();
-            if (Input.GetButtonDown("Fire1"))
+            if (Input.GetButtonDown("Fire1") && !finished)
                 SelectName();
     }
 
@@ -131,6 +132,13 @@ public class EnterName : MonoBehaviour
         }
         LeaderBoard.instance.SetName(theName);
         LeaderBoard.instance.AddNewScoreToLB();
-        StartCoroutine(MainMenu.instance.wholeScreenFade(true));
+        finished = true;
+        if (Player.instance.strikes == 0)
+        {
+            gameOverScreen.instance.StartCoroutine(gameOverScreen.instance.TriggerGameOver());
+            gameObject.SetActive(false);
+        }
+        else
+            StartCoroutine(MainMenu.instance.wholeScreenFade(true));
     }
 }

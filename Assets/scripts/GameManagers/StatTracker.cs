@@ -2,6 +2,7 @@
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 
 public class StatTracker : MonoBehaviour
 {
@@ -77,7 +78,7 @@ public class StatTracker : MonoBehaviour
 
     public IEnumerator GameOverUIReveal()
     {
-        gameoverScreen.gameObject.SetActive(true);
+        SoundManager.instance.officeAmbience.DOFade(0, 3);
 
         float total = junkEmailsCorrect + junkEmailsWrong + safeEmailsCorrect + safeEmailsWrong;
         float correct = junkEmailsCorrect + safeEmailsCorrect;
@@ -171,7 +172,6 @@ public class StatTracker : MonoBehaviour
 
         GameOverUI.SetActive(false);
         LeaderBoard.instance.SetScore(score);
-        
     }
 
     public int GetScore()

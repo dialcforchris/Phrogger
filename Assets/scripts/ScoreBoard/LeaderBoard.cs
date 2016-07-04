@@ -160,7 +160,10 @@ public class LeaderBoard : MonoBehaviour
         }
         else
         {
-            StartCoroutine(MainMenu.instance.wholeScreenFade(true));
+            if (Player.instance.strikes == 0)
+                StartCoroutine(gameOverScreen.instance.TriggerGameOver());
+            else
+                StartCoroutine(MainMenu.instance.wholeScreenFade(true));
         }
     }
     public void SetName(string _name)
