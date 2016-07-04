@@ -29,7 +29,6 @@ public class mailOpener : MonoBehaviour
 
     private mailColection selectedList;
     private mail currentMail;
-    
     [System.Serializable]
     public class mailColection
     {

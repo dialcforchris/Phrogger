@@ -31,7 +31,8 @@ public class BossFace :MonoBehaviour
     private bool slacker = false;
     [SerializeField]
     AudioClip kettle;
-    
+    [SerializeField]
+    AudioClip grunt;
     FaceState faceState;
 
     // Use this for initialization
@@ -97,7 +98,7 @@ public class BossFace :MonoBehaviour
                     {
                         emailCool += Time.deltaTime;
                         mailOpener.instance.angerMeter.value = emailCool;
-
+                        SoundManager.instance.playSound(grunt);
                         //Anger bar colour lerp from green to red
                         //ColorBlock cols = mailOpener.instance.angerMeter.colors;
                         //cols.disabledColor = Color.Lerp(Color.green, Color.red, (emailCool / (emailMaxCool * .75f)));
