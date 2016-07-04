@@ -16,8 +16,7 @@ public class StatTracker : MonoBehaviour
     List<int> dayPerformances = new List<int>();
 
     [Header("Lives UI")]
-    public Image[] LifeCounter;
-    public Sprite EmptyLifeSprite, LifeSprite;
+    public Animator[] lifeAnimators;
 
     [Header("Game Over UI")]
     public GameObject GameOverUI;
@@ -32,17 +31,12 @@ public class StatTracker : MonoBehaviour
         instance = this;
         numOfDaysCompleted = 0;
     }
-    public void changeLifeCount(int l)
+    public void changeLifeCount(int l, bool gainLoss)
     {
-        //Anything above i should change sprite
-        for (int i = 0; i < l; i++)
-        {
-            LifeCounter[i].sprite = LifeSprite;
-        }
-        for (int i = l; i < LifeCounter.Length; i++)
-        {
-            LifeCounter[l].sprite = EmptyLifeSprite;
-        }
+        if (gainLoss)
+            lifeAnimators[l].Play("life_gain");
+        else
+            lifeAnimators[l].Play("life_loss");
     }
 
     public float getAveragePerformance()

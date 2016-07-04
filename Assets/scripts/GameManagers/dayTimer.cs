@@ -528,9 +528,10 @@ public class dayTimer : MonoBehaviour
                     Player.instance.strikes = 3;
                     break;
                 }
+                StatTracker.instance.changeLifeCount(Player.instance.strikes-1,true);
+                yield return new WaitForSeconds(.5f);
                 SoundManager.instance.playSound(0, 1.2f);
-                StatTracker.instance.changeLifeCount(Player.instance.strikes);
-                yield return new WaitForSeconds(.75f);
+                yield return new WaitForSeconds(.25f);
                 GameStateManager.instance.ChangeState(GameStates.STATE_DAYOVER);
             }
         }

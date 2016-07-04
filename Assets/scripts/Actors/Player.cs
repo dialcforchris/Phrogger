@@ -399,6 +399,7 @@ public class Player : WorldObject
             OriginalFroggerDeath(FroggerDeathType.OFFSCREEN);
             return;
         }
+        tieSpriteRenderer.enabled = false;
         Boss.instance.EndChase();
         //   bloodSplatter.Play();
         state = PlayerState.DEAD;
@@ -410,7 +411,7 @@ public class Player : WorldObject
         RemoveFromWorld();
         //Rather than this leave behind a corpse call remove from world, move position then add to world immediately
         strikes -= 1;
-        StatTracker.instance.changeLifeCount(strikes);
+        StatTracker.instance.changeLifeCount(strikes,false);
 
         if (strikes ==0) //If the player has run out of lives
         {
@@ -459,9 +460,10 @@ public class Player : WorldObject
         spriteRenderer.enabled = false;
         RemoveFromWorld();
 
+        tieSpriteRenderer.enabled = false;
         //Reset posiiton and play appropriate sound
         //Play appropriate sound
-        switch(_deathType)
+        switch (_deathType)
         {
             case FroggerDeathType.RUNOVER:
                 FrogCorpse frogCorpse = (FrogCorpse)Instantiate(corpse, transform.position, transform.rotation);
@@ -501,6 +503,7 @@ public class Player : WorldObject
                 anim.SetBool("Dead", false);
                 spriteRenderer.enabled = true;
                 tieSpriteRenderer.sprite = ties[Random.Range(0, ties.Length)];
+                tieSpriteRenderer.enabled = true;
                 state = PlayerState.ACTIVE;
                 deathCool = 0;
                 //transform.position = new Vector2(-0.5f, -1.0f);
