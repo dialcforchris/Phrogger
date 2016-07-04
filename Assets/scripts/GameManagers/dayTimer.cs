@@ -297,7 +297,7 @@ public class dayTimer : MonoBehaviour
         
         DayText.text = (weekDays)StatTracker.instance.numOfDaysCompleted+ "\n <size=64>" + (StatTracker.instance.numOfDaysCompleted + 4)+ "th May 1981</size> \n";
 
-        emailTargetText.text = "Todays target: " + (4 + StatTracker.instance.numOfDaysCompleted) + " emails";
+        emailTargetText.text = "Target: " + (4 + StatTracker.instance.numOfDaysCompleted)+"x";
 
         SoundManager.instance.officeAmbience.DOFade(SoundManager.instance.volumeMultiplayer * 0.3f, 2);
         //Fade in day text
