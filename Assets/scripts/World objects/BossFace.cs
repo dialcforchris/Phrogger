@@ -29,6 +29,8 @@ public class BossFace :MonoBehaviour
     Tile playerTile;
     int bossAngerLevel = 0;
     private bool slacker = false;
+    [SerializeField]
+    AudioClip kettle;
     
     FaceState faceState;
 
@@ -183,13 +185,17 @@ public class BossFace :MonoBehaviour
         if (bossAngerLevel == 3 && faceState == FaceState.UI)
         {
             if (!steam.isPlaying)
+            {
                 steam.Play();
+                SoundManager.instance.playSound(kettle);
+            }
         }
         else
         {
             if (steam.isPlaying)
             {
                 steam.Stop();
+                SoundManager.instance.StopSound(kettle);
             }
         }
     }

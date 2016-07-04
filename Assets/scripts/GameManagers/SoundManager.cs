@@ -38,6 +38,19 @@ public class SoundManager : MonoBehaviour
             managedAudioSources[0].AudioSrc.Stop();
             managedAudioSources[1].AudioSrc.Stop();
         }
+        if (officeAmbience.isPlaying)
+        officeAmbience.volume = 0.5f;
+
+    }
+    public void StopSound(AudioClip sound)
+    {
+        foreach (AudioSource a in audioSrcs)
+        {
+            if (a.clip == sound)
+            {
+                a.Stop();
+            }
+        }
     }
     public void changeVolume(float newVol)
     {
@@ -73,6 +86,7 @@ public class SoundManager : MonoBehaviour
         {
             if (!audioSrcs[c].isPlaying)
             {
+                audioSrcs[c].clip = sound;
                 audioSrcs[c].pitch = 1;
                 audioSrcs[c].PlayOneShot(sound);
                 audioSrcs[c].volume = volume * volumeMultiplayer;

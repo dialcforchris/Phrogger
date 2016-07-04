@@ -1,9 +1,10 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Ident : MonoBehaviour
 {
 	public void loadLevel(int level)
     {
-        Application.LoadLevel(level);
+        SceneManager.LoadScene(level);
     }
 }

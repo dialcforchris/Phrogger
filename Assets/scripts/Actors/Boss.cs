@@ -20,6 +20,8 @@ public class Boss : WorldObject
     [SerializeField] private Player player = null;
 
     [SerializeField] private ParticleSystem steam;
+    [SerializeField]
+    AudioClip anger;
 
     private bool chasePlayer = false;
     protected override void Awake()
@@ -126,6 +128,7 @@ public class Boss : WorldObject
     {
         StatTracker.instance.bossAngered++;
         CameraZoom.instance.doAZoom(false, transform);
+        SoundManager.instance.playSound(anger);
         Invoke("animateMe", .5f);
         tileSearch = player.GetRouteToPlayer();
         transform.position = tileSearch[0].transform.position;
