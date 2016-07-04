@@ -29,6 +29,9 @@ public class mailOpener : MonoBehaviour
 
     private mailColection selectedList;
     private mail currentMail;
+    [SerializeField]
+    AudioClip good, bad;
+
     [System.Serializable]
     public class mailColection
     {
@@ -177,6 +180,7 @@ public class mailOpener : MonoBehaviour
                 Camera.main.transform.position = new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y, -10);
                 Camera.main.orthographicSize = Mathf.Lerp(9, 2, lerpy);
                 mainCamTransition.transform.localScale = Vector3.Lerp(new Vector3(32, 18, 1), new Vector3(7.15f, 4, 1), lerpy);
+
                 yield return new WaitForEndOfFrame();
             }
             
@@ -390,8 +394,8 @@ public class mailOpener : MonoBehaviour
 
                         StopCoroutine("zoomInOut");
                         StartCoroutine(zoomInOut(11));
-
                         Invoke("exitView",2.5f);
+                        SoundManager.instance.playSound(good);
                     }
                     else
                     {
@@ -409,6 +413,8 @@ public class mailOpener : MonoBehaviour
                         StartCoroutine(zoomInOut(11));
 
                         Invoke("exitView", 2.5f);
+                        SoundManager.instance.playSound(bad);
+
                     }
                 }
                 else if (emailPos < 0) //If email is in the SAFE zone
@@ -435,6 +441,7 @@ public class mailOpener : MonoBehaviour
                         StartCoroutine(zoomInOut(11));
 
                         Invoke("exitView", 2.5f);
+                        SoundManager.instance.playSound(bad);
                     }
                     else
                     {
@@ -452,6 +459,7 @@ public class mailOpener : MonoBehaviour
                         StartCoroutine(zoomInOut(11));
 
                         Invoke("exitView", 2.5f);
+                        SoundManager.instance.playSound(good);
                     }
                 }
             }

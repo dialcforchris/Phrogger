@@ -23,6 +23,8 @@ public class Player : WorldObject
     [SerializeField]
     private AudioClip splat;
     [SerializeField] AudioClip splash;
+    [SerializeField]
+    AudioClip spawn;
     public bool joyOrDPad = false; //true for joy, false for dpad
 
     [SerializeField]
@@ -101,6 +103,7 @@ public class Player : WorldObject
                     ConvertToPos("Horizontal", "Vertical");
                     Movement();
                     MoveCooldown();
+                                      
                 }
             }
             DeathCooler();
@@ -495,6 +498,7 @@ public class Player : WorldObject
                 if (deathCool > maxDeathcool - .8f && !respawnParticles.isPlaying)
                 {
                     respawnParticles.Play();
+                    SoundManager.instance.playSound(spawn);
                 }
                 deathCool += Time.deltaTime;
             }

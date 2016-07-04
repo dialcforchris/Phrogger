@@ -34,6 +34,7 @@ public class BossFace :MonoBehaviour
     [SerializeField]
     AudioClip grunt;
     FaceState faceState;
+    bool emailgrowl = false;
 
     // Use this for initialization
     private void Awake()
@@ -69,7 +70,14 @@ public class BossFace :MonoBehaviour
                 }
             }
             XPtoAdd += Time.deltaTime * 0.0325f;
+            SoundManager.instance.PauseSound(kettle, false);
         }
+        else if (GameStateManager.instance.GetState() != GameStates.STATE_GAMEPLAY)
+        {
+            if (SoundManager.instance.IsSoundPlaying(kettle))
+            SoundManager.instance.PauseSound(kettle, true);
+        }
+
 
         XPbar[0].value = bossAngerLevel+ bossAngerExp;
         XPbar[1].value = bossAngerLevel + bossAngerExp;
@@ -96,9 +104,9 @@ public class BossFace :MonoBehaviour
                 {
                     if (emailCool < emailMaxCool)
                     {
+                       
                         emailCool += Time.deltaTime;
                         mailOpener.instance.angerMeter.value = emailCool;
-                        SoundManager.instance.playSound(grunt);
                         //Anger bar colour lerp from green to red
                         //ColorBlock cols = mailOpener.instance.angerMeter.colors;
                         //cols.disabledColor = Color.Lerp(Color.green, Color.red, (emailCool / (emailMaxCool * .75f)));

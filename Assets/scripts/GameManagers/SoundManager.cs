@@ -98,6 +98,35 @@ public class SoundManager : MonoBehaviour
             }
         }
     }
+    public bool IsSoundPlaying(AudioClip clip)
+    {
+        foreach (AudioSource a in audioSrcs)
+        {
+            if (a.clip == clip)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void PauseSound(AudioClip clip,bool pause)
+    {
+        foreach (AudioSource a in audioSrcs)
+        {
+            if (a.clip == clip)
+            {
+               if (pause)
+               {
+                   a.Pause();
+               }
+               else
+               {
+                   a.UnPause();
+               }
+            }
+        }
+    }
 
     AudioClip lastMoveSound;
 

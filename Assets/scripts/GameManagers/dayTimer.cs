@@ -38,7 +38,8 @@ public class dayTimer : MonoBehaviour
     private Slider timeSlider;
     [SerializeField]
     private Text emailTargetText;
-    
+    [SerializeField]
+    AudioClip tick;
     [Header("Ending stats")]
     [SerializeField]
     private Text StatsTitle;
@@ -50,6 +51,7 @@ public class dayTimer : MonoBehaviour
     private Sprite PromotionScreen, FiredScreen, BossDeathScreen, DeathScreen, Unproffessional, Average, Friends;
     [SerializeField]
     private GameObject continueTexteEOD;
+    bool once = true;
 
     [System.Serializable]
     public struct completedEmail
@@ -107,6 +109,14 @@ public class dayTimer : MonoBehaviour
         if (GameStateManager.instance.GetState() == GameStates.STATE_GAMEPLAY && currentTime < secondsPerDay)
         {
             currentTime += Time.deltaTime;
+            if (once)
+            {
+                if (secondsPerDay-currentTime<8)
+                {
+                    SoundManager.instance.playSound(tick);
+                    once = false;
+                }
+            }
             if (currentTime > secondsPerDay)
             {
                 finishedDisplay = false;
@@ -130,6 +140,14 @@ public class dayTimer : MonoBehaviour
             mins *= 60;
             mins = Mathf.FloorToInt(mins);
             monitorClock.text =  (mins < 10) ? hours + ":0" + mins : hours + ":" + mins;
+            SoundManager.instance.PauseSound(tick, false);
+        }
+        if (GameStateManager.instance.GetState() != GameStates.STATE_GAMEPLAY)
+        {
+            if (SoundManager.instance.IsSoundPlaying(tick))
+            {
+                SoundManager.instance.PauseSound(tick, true);
+            }
         }
 
         if (GameFinished)
