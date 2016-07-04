@@ -25,7 +25,6 @@ public class PauseMenu : MenuSelect
             {
                 DoAction(ChangeVolumeSlide);
             }
-        //base.SetFunctionToButton();
         if (Input.GetButtonDown("Fire1"))
         {
             if (selectBox==1)
@@ -37,7 +36,7 @@ public class PauseMenu : MenuSelect
 
     void QuitToMain()
     {
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene(1);
     }
 
     void ChangeVolumeSlide()

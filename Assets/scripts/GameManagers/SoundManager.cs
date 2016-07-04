@@ -31,7 +31,14 @@ public class SoundManager : MonoBehaviour
         }
         instance = this;
     }
-
+    void Update()
+    {
+        if (GameStateManager.instance.GetState() == GameStates.STATE_GAMEPLAY||GameStateManager.instance.GetState()==GameStates.STATE_PAUSE)
+        {
+            managedAudioSources[0].AudioSrc.Stop();
+            managedAudioSources[1].AudioSrc.Stop();
+        }
+    }
     public void changeVolume(float newVol)
     {
         volumeMultiplayer = newVol;
@@ -44,6 +51,7 @@ public class SoundManager : MonoBehaviour
 
             officeAmbience.DOKill(false);
             officeAmbience.volume = newVol;
+          
         }
         foreach (AudioSource a in audioSrcs)
         {
@@ -53,6 +61,8 @@ public class SoundManager : MonoBehaviour
         {
             managedAudioSources[i].AudioSrc.volume = volumeMultiplayer * managedAudioSources[i].volumeLimit;
         }
+  
+      
     }
 
     public void playSound(AudioClip sound,float volume = 1)
