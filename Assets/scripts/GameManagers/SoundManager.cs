@@ -9,13 +9,13 @@ public class SoundManager : MonoBehaviour
     public static SoundManager instance;
     public int numberOfSources;
     public float volumeMultiplayer = 1;
-    public AudioSource music,computerSounds,officeAmbience;
+    public AudioSource music,officeAmbience;
 
     public List<managedSource> managedAudioSources = new List<managedSource>();
     List<AudioSource> audioSrcs = new List<AudioSource>();
 
     [System.Serializable]
-    public struct managedSource
+    public class managedSource
     {
         public AudioSource AudioSrc;
         public float volumeLimit;
@@ -38,8 +38,9 @@ public class SoundManager : MonoBehaviour
             managedAudioSources[0].AudioSrc.Stop();
             managedAudioSources[1].AudioSrc.Stop();
         }
-        if (officeAmbience.isPlaying)
-        officeAmbience.volume = 0.5f;
+
+        /*if (officeAmbience.isPlaying)
+            officeAmbience.volume = 0.5f;*/
 
     }
     public void StopSound(AudioClip sound)
@@ -55,27 +56,29 @@ public class SoundManager : MonoBehaviour
     public void changeVolume(float newVol)
     {
         volumeMultiplayer = newVol;
-        
+
         //Special handling for the computer hummming since the volume fades in/out and also needs to be managed
         if (GameStateManager.instance.previousState == GameStates.STATE_EMAIL)
         {
-            computerSounds.DOKill(false);
-            computerSounds.volume = newVol;
-
+            managedAudioSources[0].AudioSrc.DOKill(false);
             officeAmbience.DOKill(false);
-            officeAmbience.volume = newVol;
-          
         }
+        else if (GameStateManager.instance.previousState == GameStates.STATE_DAYOVER)
+            officeAmbience.volume = 0;
+
+        if (GameStateManager.instance.previousState == GameStates.STATE_GAMEPLAY)
+            officeAmbience.volume = newVol;
+        else if (GameStateManager.instance.previousState == GameStates.STATE_EMAIL)
+            officeAmbience.volume = newVol * 0.3f;
+
         foreach (AudioSource a in audioSrcs)
         {
             a.volume = newVol;
         }
-        for (int i=0; i < managedAudioSources.Count;i++)
+        for (int i = 0; i < managedAudioSources.Count;i++)
         {
             managedAudioSources[i].AudioSrc.volume = volumeMultiplayer * managedAudioSources[i].volumeLimit;
-        }
-  
-      
+        }      
     }
 
     public void playSound(AudioClip sound,float volume = 1)

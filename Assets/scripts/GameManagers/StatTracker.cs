@@ -64,13 +64,13 @@ public class StatTracker : MonoBehaviour
             {
                 scoreToAdd--;
                 score++;
-                ScoreText.text = "" + score;
+                ScoreText.text = "SCORE:" + score;
             }
             else if (scoreToAdd < 0)
             {
                 scoreToAdd++;
                 score--;
-                ScoreText.text = "" + score;
+                ScoreText.text = "SCORE:" + score;
             }
         }
     }

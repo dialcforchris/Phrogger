@@ -76,6 +76,8 @@ public class mailOpener : MonoBehaviour
         }
         SoundManager.instance.officeAmbience.DOFade((InOut) ? SoundManager.instance.volumeMultiplayer * 0.3f : SoundManager.instance.volumeMultiplayer, 2);
         computerSounds.DOFade((InOut) ? SoundManager.instance.volumeMultiplayer : 0, 2);
+        SoundManager.instance.managedAudioSources[0].volumeLimit = (InOut) ? 1 : 0;
+        
         Random.seed = System.DateTime.Now.Millisecond;
         mainCamTransition.material.SetTexture("_SliceGuide", gradients[Random.Range(0, gradients.Length)]);
         monCamTransition.material.SetTexture("_SliceGuide", gradients[Random.Range(0, gradients.Length)]);

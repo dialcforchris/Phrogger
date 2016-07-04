@@ -313,11 +313,12 @@ public class dayTimer : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
         
-        DayText.text = (weekDays)StatTracker.instance.numOfDaysCompleted+ "\n <size=64>" + (StatTracker.instance.numOfDaysCompleted + 4)+ "th May 1981</size> \n";
+        DayText.text = (weekDays)StatTracker.instance.numOfDaysCompleted+ "\n <size=64>" + (StatTracker.instance.numOfDaysCompleted + 4)+ "th May 1991</size> \n";
 
         emailTargetText.text = "Target: " + (4 + StatTracker.instance.numOfDaysCompleted)+"x";
 
         SoundManager.instance.officeAmbience.DOFade(SoundManager.instance.volumeMultiplayer * 0.3f, 2);
+
         //Fade in day text
         while (DayText.color.a < 1)
         {
@@ -391,6 +392,7 @@ public class dayTimer : MonoBehaviour
     IEnumerator endOfDay()
     {
         SoundManager.instance.officeAmbience.DOFade(0, 5);
+
         //play some sort of sound
         GameStateManager.instance.ChangeState(GameStates.STATE_DAYOVER);
         progressUI.SetActive(true);

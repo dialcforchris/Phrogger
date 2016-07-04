@@ -162,6 +162,7 @@ public class Player : WorldObject
         foreach (AudioSource a in originalFroggerSounds)
         {
             a.DOFade(0, 1.5f);
+
         }
         while (true)
         {

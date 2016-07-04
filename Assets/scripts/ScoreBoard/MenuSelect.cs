@@ -28,7 +28,7 @@ public class MenuSelect : MonoBehaviour
     {
         if (Input.GetAxis("Vertical") != 0 && SelectCoolDown())
         {
-            if (Input.GetAxis("Vertical") > 0)
+            if (Input.GetAxis("Vertical") < 0)
             {
                 selectBox++;
                 if (selectBox == box.Length)
@@ -36,7 +36,7 @@ public class MenuSelect : MonoBehaviour
                     selectBox = 0;
                 }
             }
-            else if (Input.GetAxis("Vertical") < 0)
+            else if (Input.GetAxis("Vertical") > 0)
             {
                 selectBox--;
                 if (selectBox < 0)

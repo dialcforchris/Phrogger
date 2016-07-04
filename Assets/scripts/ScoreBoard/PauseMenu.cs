@@ -9,7 +9,7 @@ public class PauseMenu : MenuSelect
 	// Use this for initialization
 	void Start ()
     {
-        slide = box[0].GetComponentInChildren<Slider>();
+        slide = box[1].GetComponentInChildren<Slider>();
 	}
 	
 	// Update is called once per frame
@@ -23,11 +23,16 @@ public class PauseMenu : MenuSelect
     {
         if (selectBox == 0)
         {
+            if (Input.GetButtonDown("Fire1"))
+                GameStateManager.instance.ChangeState(GameStateManager.instance.previousState);
+        }
+        else if (selectBox == 1)
+        {
             DoAction(ChangeVolumeSlide);
         }
         if (Input.GetButtonDown("Fire1"))
         {
-            if (selectBox == 1)
+            if (selectBox == 2)
             {
                 DoAction(QuitToMain);
             }
@@ -44,8 +49,12 @@ public class PauseMenu : MenuSelect
     {
         if (slide.value > 0 || slide.value < 1)
         {
-            box[0].GetComponentInChildren<Slider>().value += Input.GetAxis("Horizontal")*10;
-          SoundManager.instance.changeVolume(slide.value);
+            if (Input.GetJoystickNames()[0] == "")
+                box[1].GetComponentInChildren<Slider>().value += Input.GetAxis("Horizontal") * 10;
+            else
+                box[1].GetComponentInChildren<Slider>().value += Input.GetAxis("Horizontal") / 100;
+
+            SoundManager.instance.changeVolume(slide.value);
         }
     }
 }
