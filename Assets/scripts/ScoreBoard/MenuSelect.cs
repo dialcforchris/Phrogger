@@ -22,13 +22,12 @@ public class MenuSelect : MonoBehaviour
         MenuInput();
         SelectCoolDown();
         ChangeTextColour();
-	}
+    }
 
     void MenuInput()
     {
         if (Input.GetAxis("Vertical") != 0 && SelectCoolDown())
         {
-            Debug.Log("VERT;");
             if (Input.GetAxis("Vertical") > 0)
             {
                 selectBox++;

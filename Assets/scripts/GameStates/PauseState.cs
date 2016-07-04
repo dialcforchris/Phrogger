@@ -3,7 +3,7 @@ public class PauseState : GameState
 {
     public override void OnStateActivate()
     {
-        Time.timeScale = 0;
+        Time.timeScale= 0.001f;
         GameStateManager.instance.PauseMenu.SetActive(true);
     }
 

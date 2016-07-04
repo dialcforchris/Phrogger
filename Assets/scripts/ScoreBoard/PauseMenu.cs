@@ -13,21 +13,21 @@ public class PauseMenu : MenuSelect
 	}
 	
 	// Update is called once per frame
-	protected override void Update () 
+	protected override void Update()
     {
         base.Update();
         SetFunctionToButton();
-	}
+    }
 
     protected override void SetFunctionToButton()
     {
-          if (selectBox==0)
-            {
-                DoAction(ChangeVolumeSlide);
-            }
+        if (selectBox == 0)
+        {
+            DoAction(ChangeVolumeSlide);
+        }
         if (Input.GetButtonDown("Fire1"))
         {
-            if (selectBox==1)
+            if (selectBox == 1)
             {
                 DoAction(QuitToMain);
             }
@@ -36,6 +36,7 @@ public class PauseMenu : MenuSelect
 
     void QuitToMain()
     {
+        Time.timeScale = 1;
         SceneManager.LoadScene(1);
     }
 
@@ -43,7 +44,7 @@ public class PauseMenu : MenuSelect
     {
         if (slide.value > 0 || slide.value < 1)
         {
-          box[0].GetComponentInChildren<Slider>().value += Input.GetAxis("Horizontal") / 100;
+            box[0].GetComponentInChildren<Slider>().value += Input.GetAxis("Horizontal")*10;
           SoundManager.instance.changeVolume(slide.value);
         }
     }
