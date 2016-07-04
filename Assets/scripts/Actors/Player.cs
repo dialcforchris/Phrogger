@@ -16,7 +16,9 @@ public class Player : WorldObject
     private int score = 0;
     private float hori;
     private float verti;
-    public ParticleSystem bloodSplatter,splooshParticles;
+    public ParticleSystem bloodSplatter, splooshParticles;
+    [SerializeField] private SpriteRenderer tieSpriteRenderer = null;
+    [SerializeField] private Sprite[] ties;
     [SerializeField] private FrogCorpse corpse;
     [SerializeField]
     private AudioClip splat;
@@ -498,6 +500,7 @@ public class Player : WorldObject
             {
                 anim.SetBool("Dead", false);
                 spriteRenderer.enabled = true;
+                tieSpriteRenderer.sprite = ties[Random.Range(0, ties.Length)];
                 state = PlayerState.ACTIVE;
                 deathCool = 0;
                 //transform.position = new Vector2(-0.5f, -1.0f);
