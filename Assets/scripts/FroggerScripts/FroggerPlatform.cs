@@ -58,7 +58,10 @@ public class FroggerPlatform : FroggerObject
             }
             else
             {
-                _obj.transform.SetParent(transform);
+                if (_obj.transform.position.y == transform.position.y)
+                {
+                    _obj.transform.SetParent(transform);
+                }
             }
 
         }

@@ -83,7 +83,7 @@ public class StatTracker : MonoBehaviour
 
     public IEnumerator GameOverUIReveal()
     {
-        //gameoverScreen.gameObject.SetActive(true);
+        gameoverScreen.gameObject.SetActive(true);
 
         float total = junkEmailsCorrect + junkEmailsWrong + safeEmailsCorrect + safeEmailsWrong;
         float correct = junkEmailsCorrect + safeEmailsCorrect;
