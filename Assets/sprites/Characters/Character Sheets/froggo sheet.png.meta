@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 57507d006bcb6ed4c98f9e38c92921a4
-timeCreated: 1466152122
+timeCreated: 1467628858
 licenseType: Pro
 TextureImporter:
   fileIDToRecycleName:
@@ -57,7 +57,7 @@ TextureImporter:
     - name: froggo sheet_0
       rect:
         serializedVersion: 2
-        x: 7
+        x: 3
         y: 2
         width: 50
         height: 60
@@ -72,7 +72,7 @@ TextureImporter:
     - name: froggo sheet_1
       rect:
         serializedVersion: 2
-        x: 71
+        x: 68
         y: 2
         width: 50
         height: 60
@@ -102,7 +102,7 @@ TextureImporter:
     - name: froggo sheet_3
       rect:
         serializedVersion: 2
-        x: 198
+        x: 194
         y: 2
         width: 55
         height: 60

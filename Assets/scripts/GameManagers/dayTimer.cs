@@ -11,6 +11,10 @@ public class dayTimer : MonoBehaviour
     public static dayTimer instance;
     [SerializeField]
     private int secondsPerDay;
+
+    [SerializeField]
+    private TextMesh monitorClock;
+
     public int maxDays = 5;
     public float secondsDay { get { return secondsPerDay; } }
     private float currentTime;
@@ -116,6 +120,16 @@ public class dayTimer : MonoBehaviour
             bigHand.rectTransform.rotation = Quaternion.Euler(0, 0, (currentTime / secondsPerDay * -2880));
 
             timeSlider.value = currentTime / secondsPerDay;
+
+
+            //9 to 5 means 8 hours, 8*60 = 480
+
+            float hours = 9 + ((currentTime / secondsPerDay) * 8);
+            hours = Mathf.FloorToInt(hours);
+            float mins = (9 + ((currentTime / secondsPerDay) * 8))-hours;
+            mins *= 60;
+            mins = Mathf.FloorToInt(mins);
+            monitorClock.text =  (mins < 10) ? hours + ":0" + mins : hours + ":" + mins;
         }
 
         if (GameFinished)
@@ -283,7 +297,7 @@ public class dayTimer : MonoBehaviour
         
         DayText.text = (weekDays)StatTracker.instance.numOfDaysCompleted+ "\n <size=64>" + (StatTracker.instance.numOfDaysCompleted + 4)+ "th May 1981</size> \n";
 
-        emailTargetText.text = "Todays target: " + (4 + StatTracker.instance.numOfDaysCompleted) + " emails";
+        emailTargetText.text = "Target: " + (4 + StatTracker.instance.numOfDaysCompleted)+"x";
 
         SoundManager.instance.officeAmbience.DOFade(SoundManager.instance.volumeMultiplayer * 0.3f, 2);
         //Fade in day text
