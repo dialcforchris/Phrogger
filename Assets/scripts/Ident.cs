@@ -3,7 +3,9 @@ using UnityEngine.SceneManagement;
 
 public class Ident : MonoBehaviour
 {
-	public void loadLevel(int level)
+    public string level;
+
+	public void loadLevel()
     {
         SceneManager.LoadScene(level);
     }
