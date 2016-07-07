@@ -49,10 +49,15 @@ public class PauseMenu : MenuSelect
     {
         if (slide.value > 0 || slide.value < 1)
         {
-            if (Input.GetJoystickNames()[0] == "")
-                box[1].GetComponentInChildren<Slider>().value += Input.GetAxis("Horizontal") * 10;
+            if (Input.GetJoystickNames().Length > 0)
+            {
+                if (Input.GetJoystickNames()[0] == "")
+                    box[1].GetComponentInChildren<Slider>().value += Input.GetAxis("Horizontal") * 10;
+                else
+                    box[1].GetComponentInChildren<Slider>().value += Input.GetAxis("Horizontal") / 100;
+            }
             else
-                box[1].GetComponentInChildren<Slider>().value += Input.GetAxis("Horizontal") / 100;
+                box[1].GetComponentInChildren<Slider>().value += Input.GetAxis("Horizontal") * 10;
 
             SoundManager.instance.changeVolume(slide.value);
         }
