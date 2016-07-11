@@ -8,8 +8,8 @@ public class SoundManager : MonoBehaviour
 
     public static SoundManager instance;
     public int numberOfSources;
-    public float volumeMultiplayer = 1;
-    public AudioSource music,officeAmbience;
+    public float volumeMultiplayer = 1,musicVolume=1;
+    public AudioSource music,bossMusic,officeAmbience;
 
     public List<managedSource> managedAudioSources = new List<managedSource>();
     List<AudioSource> audioSrcs = new List<AudioSource>();

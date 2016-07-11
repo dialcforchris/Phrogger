@@ -12,10 +12,14 @@ public class introMonitor : MonoBehaviour
     public SpriteRenderer emailContent;
     public Animator monitorAnimator, miniEmailAnimator;
     public Camera monitorCamera, mainCam;
-    public SpriteRenderer mainCamTransition, monCamTransition;
+    public SpriteRenderer mainCamTransition, monCamTransition, tickCross;
+    public Sprite Tick, Cross;
     public Texture[] gradients;
     public AudioClip[] keypressSounds;
     public AudioSource computerSounds;
+
+    [SerializeField]
+    AudioClip good, bad;
 
     public mail currentMail;
 
@@ -262,6 +266,8 @@ public class introMonitor : MonoBehaviour
                 }
                 if (emailPos > 0) //If email is in the JUNK zone
                 {
+                    SoundManager.instance.playSound(bad);
+                    tickCross.sprite = Cross;
                     //Do animation for email being destroyed
                     monitorAnimator.Play("mail_junk");
 
@@ -282,6 +288,8 @@ public class introMonitor : MonoBehaviour
                 }
                 else if (emailPos < 0) //If email is in the SAFE zone
                 {
+                    SoundManager.instance.playSound(good);
+                    tickCross.sprite = Tick;
                     //Do animation for email being marked as safe
                     monitorAnimator.Play("mail_safe");
                     miniEmailAnimator.Play("email_leave 0");

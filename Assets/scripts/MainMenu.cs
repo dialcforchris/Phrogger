@@ -7,7 +7,7 @@ public class MainMenu : MonoBehaviour
 {
     public static MainMenu instance;
 
-    int menuIndex,gameModeIndex=1;
+    int menuIndex,gameModeIndex=1,playerSelectionIndex=1;
     public menuState currentState = menuState.mainMenu;
     public enum menuState
     {
@@ -15,7 +15,8 @@ public class MainMenu : MonoBehaviour
         credits,
         leaderboard,
         gameplay,
-        modeSelect
+        modeSelect,
+        playerSelect
     }
 
     public Text[] menuItems;
@@ -24,11 +25,14 @@ public class MainMenu : MonoBehaviour
     public Text Credits;
     public GameObject leaderBoard;
 
-   // public Image creditBackdrop,logo;
-   // public Text Credits;
+    // public Image creditBackdrop,logo;
+    // public Text Credits;
 
     [Header("Game mode options")]
     public Text[] GameModeOptions;
+
+    [Header("Player options")]
+    public Text[] PlayerOptions;
 
     void Awake()
     {
@@ -59,7 +63,7 @@ public class MainMenu : MonoBehaviour
                 yield return new WaitForFixedUpdate();
             }
             yield return new WaitForSeconds(.5f);
-            SceneManager.LoadScene(1);
+            SceneManager.LoadScene(2);
         }
     }
 
@@ -88,12 +92,14 @@ public class MainMenu : MonoBehaviour
 
             if (Input.GetButtonDown("Fire1"))
             {
+                SoundManager.instance.playSound(0, .75f);
                 switch (menuIndex)
                 {
                     case 0:
                         menuImages[0].gameObject.SetActive(false);
-                        menuImages[1].gameObject.SetActive(true);
-                        currentState = menuState.modeSelect;
+                        menuImages[1].gameObject.SetActive(false);
+                        menuImages[2].gameObject.SetActive(true);
+                        currentState = menuState.playerSelect;
                         break;
                     case 1:
                         currentState = menuState.leaderboard;
@@ -132,6 +138,7 @@ public class MainMenu : MonoBehaviour
 
             if (Input.GetButtonDown("Fire1"))
             {
+                SoundManager.instance.playSound(0, .75f);
                 switch (gameModeIndex)
                 {
                     case 1:
@@ -145,8 +152,57 @@ public class MainMenu : MonoBehaviour
                         currentState = menuState.gameplay;
                         break;
                     case 3:
+                        menuImages[1].gameObject.SetActive(false);
+                        menuImages[2].gameObject.SetActive(true);
+                        currentState = menuState.playerSelect;
+                        break;
+                }
+            }
+        }
+        #endregion
+        #region player selection
+        else if (currentState == menuState.playerSelect)
+        {
+            if (Input.GetAxis("Vertical") != 0 && scrolling == false)
+            {
+                scrolling = true;
+                PlayerOptions[playerSelectionIndex].color = Color.white;
+                playerSelectionIndex -= (Input.GetAxis("Vertical") > 0 ? 1 : -1);
+                if (playerSelectionIndex < 1)
+                    playerSelectionIndex = PlayerOptions.Length - 1;
+                if (playerSelectionIndex > PlayerOptions.Length - 1)
+                    playerSelectionIndex = 1;
+                SoundManager.instance.playSound(0, .75f);
+                PlayerOptions[playerSelectionIndex].color = Color.green;
+            }
+            else if (Input.GetAxis("Vertical") == 0)
+            {
+                scrolling = false;
+            }
+
+            if (Input.GetButtonDown("Fire1"))
+            {
+                SoundManager.instance.playSound(0, .75f);
+                switch (playerSelectionIndex)
+                {
+                    case 1:
+                        multiplayerManager.instance.numberOfPlayers = 1;
+                        //Something for 1 player
+                        menuImages[1].gameObject.SetActive(true);
+                        menuImages[2].gameObject.SetActive(false);
+                        currentState = menuState.modeSelect;
+                        break;
+                    case 2:
+                        multiplayerManager.instance.numberOfPlayers = 2;
+                        //Something for 2 player
+                        menuImages[1].gameObject.SetActive(true);
+                        menuImages[2].gameObject.SetActive(false);
+                        currentState = menuState.modeSelect;
+                        break;
+                    case 3:
                         menuImages[0].gameObject.SetActive(true);
                         menuImages[1].gameObject.SetActive(false);
+                        menuImages[2].gameObject.SetActive(false);
                         currentState = menuState.mainMenu;
                         break;
                 }

@@ -2,6 +2,7 @@
 using UnityEngine.UI;
 //using UnityEditor;
 using System.Collections;
+using DG.Tweening;
 
 public class CameraZoom : MonoBehaviour {
 
@@ -59,8 +60,11 @@ public class CameraZoom : MonoBehaviour {
             }
         }
         else
+        {
+            SoundManager.instance.music.Play();
+            SoundManager.instance.music.DOFade(1, 5);
             yield return new WaitForSeconds(0.5f);
-
+        }
 
         while (Camera.main.orthographicSize < 8.9f)
         {

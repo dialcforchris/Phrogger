@@ -79,6 +79,7 @@ public class StatTracker : MonoBehaviour
     public IEnumerator GameOverUIReveal()
     {
         SoundManager.instance.officeAmbience.DOFade(0, 3);
+        SoundManager.instance.music.Stop();
 
         float total = junkEmailsCorrect + junkEmailsWrong + safeEmailsCorrect + safeEmailsWrong;
         float correct = junkEmailsCorrect + safeEmailsCorrect;

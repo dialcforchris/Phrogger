@@ -15,7 +15,8 @@ public class mailOpener : MonoBehaviour
     public SpriteRenderer emailContent;
     public Animator monitorAnimator,miniEmailAnimator;
     public Camera monitorCamera,mainCam;
-    public SpriteRenderer mainCamTransition, monCamTransition;
+    public SpriteRenderer mainCamTransition, monCamTransition,tickCross;
+    public Sprite Tick, Cross;
     public Texture[] gradients;
     public AudioClip[] keypressSounds;
     public AudioSource computerSounds;
@@ -77,7 +78,8 @@ public class mailOpener : MonoBehaviour
         SoundManager.instance.officeAmbience.DOFade((InOut) ? SoundManager.instance.volumeMultiplayer * 0.3f : SoundManager.instance.volumeMultiplayer, 2);
         computerSounds.DOFade((InOut) ? SoundManager.instance.volumeMultiplayer : 0, 2);
         SoundManager.instance.managedAudioSources[0].volumeLimit = (InOut) ? 1 : 0;
-        
+        SoundManager.instance.music.DOFade((InOut) ? SoundManager.instance.musicVolume*0.15f : SoundManager.instance.musicVolume, 2);
+
         Random.seed = System.DateTime.Now.Millisecond;
         mainCamTransition.material.SetTexture("_SliceGuide", gradients[Random.Range(0, gradients.Length)]);
         monCamTransition.material.SetTexture("_SliceGuide", gradients[Random.Range(0, gradients.Length)]);
@@ -384,6 +386,7 @@ public class mailOpener : MonoBehaviour
 
                     if (currentMail.isJunk)
                     {
+                        tickCross.sprite = Tick;
                         //Junk email put in junk pile, good job
                         //+ points
                         StatTracker.instance.scoreToAdd += selectedList.score;
@@ -401,6 +404,7 @@ public class mailOpener : MonoBehaviour
                     }
                     else
                     {
+                        tickCross.sprite = Cross;
                         //You put a safe email in the junk pile
                         //oooooo
                         StatTracker.instance.scoreToAdd -= (int)(.8f*selectedList.score);
@@ -429,6 +433,7 @@ public class mailOpener : MonoBehaviour
 
                     if (currentMail.isJunk)
                     {
+                        tickCross.sprite = Cross;
                         //You put junk in the safe pile
                         //- points
                         StatTracker.instance.scoreToAdd -= (int)(.8f * selectedList.score);
@@ -447,6 +452,7 @@ public class mailOpener : MonoBehaviour
                     }
                     else
                     {
+                        tickCross.sprite = Tick;
                         //Safe mail was marked as safe, woopee
                         //+ points
                         StatTracker.instance.scoreToAdd += selectedList.score;

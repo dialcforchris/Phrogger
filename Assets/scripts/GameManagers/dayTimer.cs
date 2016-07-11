@@ -75,7 +75,7 @@ public class dayTimer : MonoBehaviour
 
     [Header("Day transition UI")]
     public Text DayText;
-    public Text TimeText;
+    public Text TimeText,Player1Text,Player2Text;
     public Image background;
     private bool finishedDisplay = false;
 
@@ -89,6 +89,7 @@ public class dayTimer : MonoBehaviour
         else
         {
             transitioning = false;
+            SoundManager.instance.music.Play();
             GameStateManager.instance.ChangeState(GameStates.STATE_GAMEPLAY);
         }
     }
@@ -392,6 +393,7 @@ public class dayTimer : MonoBehaviour
     IEnumerator endOfDay()
     {
         SoundManager.instance.officeAmbience.DOFade(0, 5);
+        SoundManager.instance.music.DOFade(0, 5);
 
         //play some sort of sound
         GameStateManager.instance.ChangeState(GameStates.STATE_DAYOVER);
