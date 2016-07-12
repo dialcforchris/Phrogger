@@ -81,7 +81,7 @@ public class dayTimer : MonoBehaviour
 
     public void NewDay()
     {
-        if (StatTracker.instance.numOfDaysCompleted == 0)
+        if (StatTracker.instance.numOfDaysCompleted[0] == 0)//Making sure this only happens for 1 player, no need to play the intro email again for P2
         {
             GameStateManager.instance.ChangeState(GameStates.STATE_DAYOVER);
             introMonitor.instance.BeginGame();
@@ -179,7 +179,7 @@ public class dayTimer : MonoBehaviour
             {
                 continueTexteEOD.SetActive(false);
                 StatTracker.instance.CalculateProfessionalism();
-                if (StatTracker.instance.numOfDaysCompleted < maxDays)
+                if (StatTracker.instance.numOfDaysCompleted[multiplayerManager.instance.currentActivePlayer] < maxDays)
                 {
                     transitioning = true;
                     StartCoroutine(NextDayTransition());
@@ -217,17 +217,17 @@ public class dayTimer : MonoBehaviour
             endingScreen.sprite = PromotionScreen;
             StatsTitle.text = "You were promoted! \n <size=32>Congrulations, sir!</size>";
         }
-        else if (StatTracker.instance.bossAngered == 0 && performance > 4 && ((StatTracker.instance.totalProfessionalism / maxDays) > 80))
+        else if (StatTracker.instance.bossAngered[multiplayerManager.instance.currentActivePlayer] == 0 && performance > 4 && ((StatTracker.instance.totalProfessionalism[multiplayerManager.instance.currentActivePlayer] / maxDays) > 80))
         {
             endingScreen.sprite = Friends;
             StatsTitle.text = "You got a raise! \n <size=32>Your boss is not an easy man to please</size>";
         }
-        else if (((StatTracker.instance.totalProfessionalism / maxDays) < 70) && performance > 3)
+        else if (((StatTracker.instance.totalProfessionalism[multiplayerManager.instance.currentActivePlayer] / maxDays) < 70) && performance > 3)
         {
             endingScreen.sprite = Unproffessional;
             StatsTitle.text = "You kept your job \n <size=32>Somehow...</size>";
         }
-        else if (StatTracker.instance.bossDeaths > maxDays - 1 && performance > 3)
+        else if (StatTracker.instance.bossDeaths[multiplayerManager.instance.currentActivePlayer] > maxDays - 1 && performance > 3)
         {
             endingScreen.sprite = BossDeathScreen;
             StatsTitle.text = "You kept your job \n <size=32>But your boss did not...</size>";
@@ -264,20 +264,20 @@ public class dayTimer : MonoBehaviour
         yield return new WaitForSeconds(.8f);
         SoundManager.instance.playSound(0, .95f);
 
-        StatsDeath.text = "You died a total of <color=red>"+ StatTracker.instance.totalDeaths+"</color> times";
+        StatsDeath.text = "You died a total of <color=red>"+ StatTracker.instance.totalDeaths[multiplayerManager.instance.currentActivePlayer] + "</color> times";
         StatsDeath.enabled = true;
 
         yield return new WaitForSeconds(.8f);
         SoundManager.instance.playSound(0, .95f);
 
-        StatsBossDeath.text = "Your boss killed you <color=red>" + StatTracker.instance.bossDeaths + "</color> times";
+        StatsBossDeath.text = "Your boss killed you <color=red>" + StatTracker.instance.bossDeaths[multiplayerManager.instance.currentActivePlayer] + "</color> times";
         StatsBossDeath.enabled = true;
 
         yield return new WaitForSeconds(.8f);
         SoundManager.instance.playSound(0, .95f);
 
-        float correct = StatTracker.instance.safeEmailsCorrect + StatTracker.instance.junkEmailsCorrect;
-        float total = StatTracker.instance.junkEmailsWrong + StatTracker.instance.safeEmailsWrong + StatTracker.instance.safeEmailsCorrect + StatTracker.instance.junkEmailsCorrect;
+        float correct = StatTracker.instance.safeEmailsCorrect[multiplayerManager.instance.currentActivePlayer] + StatTracker.instance.junkEmailsCorrect[multiplayerManager.instance.currentActivePlayer];
+        float total = StatTracker.instance.junkEmailsWrong[multiplayerManager.instance.currentActivePlayer] + StatTracker.instance.safeEmailsWrong[multiplayerManager.instance.currentActivePlayer] + StatTracker.instance.safeEmailsCorrect[multiplayerManager.instance.currentActivePlayer] + StatTracker.instance.junkEmailsCorrect[multiplayerManager.instance.currentActivePlayer];
 
         if (correct > 0)
             StatsEmail.text = "You processed <color=red>" + total + "</color> emails and sorted <color=red>" + (int)(correct / total * 100) + "%</color> of them correctly";
@@ -288,13 +288,13 @@ public class dayTimer : MonoBehaviour
         yield return new WaitForSeconds(.8f);
         SoundManager.instance.playSound(0, .95f);
 
-        StatsProf.text = "Your overall professionalism is <color=red>" + ((StatTracker.instance.totalProfessionalism / maxDays)) + "%</color>"; //REDO THIS M9
+        StatsProf.text = "Your overall professionalism is <color=red>" + ((StatTracker.instance.totalProfessionalism[multiplayerManager.instance.currentActivePlayer] / maxDays)) + "%</color>"; //REDO THIS M9
         StatsProf.enabled = true;
 
         yield return new WaitForSeconds(.8f);
         SoundManager.instance.playSound(0, .95f);
 
-        StatsBossAnger.text = "You angered your boss <color=red>"+StatTracker.instance.bossAngered+"</color> times";
+        StatsBossAnger.text = "You angered your boss <color=red>"+StatTracker.instance.bossAngered[multiplayerManager.instance.currentActivePlayer] + "</color> times";
         StatsBossAnger.enabled = true;
 
         yield return new WaitForSeconds(1);
@@ -314,13 +314,14 @@ public class dayTimer : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
         
-        DayText.text = (weekDays)StatTracker.instance.numOfDaysCompleted+ "\n <size=64>" + (StatTracker.instance.numOfDaysCompleted + 4)+ "th May 1991</size> \n";
+        DayText.text = (weekDays)StatTracker.instance.numOfDaysCompleted[multiplayerManager.instance.currentActivePlayer] + "\n <size=64>" + (StatTracker.instance.numOfDaysCompleted[multiplayerManager.instance.currentActivePlayer] + 4)+ "th May 1991</size> \n";
 
-        emailTargetText.text = "Target: " + (4 + StatTracker.instance.numOfDaysCompleted)+"x";
+        emailTargetText.text = "Target: " + (4 + StatTracker.instance.numOfDaysCompleted[multiplayerManager.instance.currentActivePlayer]) +"x";
 
         SoundManager.instance.officeAmbience.DOFade(SoundManager.instance.volumeMultiplayer * 0.3f, 2);
 
         //Fade in day text
+        #region fade text
         while (DayText.color.a < 1)
         {
             Color col = DayText.color;
@@ -329,6 +330,32 @@ public class dayTimer : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
 
+        //I really need to stop copy and pasting code and make this a formalized function
+        //Then again, fuck it.
+        if (multiplayerManager.instance.numberOfPlayers > 1)
+        {
+            //Do an if based on who's turn it is
+            if (multiplayerManager.instance.currentActivePlayer == 0)
+            {
+                while (Player1Text.color.a < 1)
+                {
+                    Color col = Player1Text.color;
+                    col.a += Time.deltaTime;
+                    Player1Text.color = col;
+                    yield return new WaitForEndOfFrame();
+                }
+            }
+            else
+            {
+                while (Player2Text.color.a < 1)
+                {
+                    Color col = Player2Text.color;
+                    col.a += Time.deltaTime;
+                    Player2Text.color = col;
+                    yield return new WaitForEndOfFrame();
+                }
+            }
+        }
         while (TimeText.color.a < 1)
         {
             Color col = TimeText.color;
@@ -336,9 +363,11 @@ public class dayTimer : MonoBehaviour
             TimeText.color = col;
             yield return new WaitForEndOfFrame();
         }
+        #endregion
 
         yield return new WaitForSeconds(1);
 
+        Debug.Log("the bit that kills computers");
         if(!introMonitor.instance.gameIntro)
         {
             introMonitor.instance.gameObject.SetActive(true);
@@ -348,9 +377,11 @@ public class dayTimer : MonoBehaviour
         {
             _wo.Reset();
         }
-        TileManager.instance.UpgradeSpawners(0.855f, 0.855f, 1.0875f);
-        Boss.instance.ModifyBoss(1.0875f);
+        Debug.Log("stuff");
+        TileManager.instance.UpgradeSpawners(0.855f, 0.855f, 1.0875f); //Do I spy magic numbers? Shaun, you naughty boy.
+        Boss.instance.ModifyBoss(1.0875f); //holy shit thats a specific number
         BossFace.instance.Reset();
+        Debug.Log("end stuff");
         currentTime = 0;
         progressUI.SetActive(false);
         dayFinishedText.Stop();
@@ -384,6 +415,23 @@ public class dayTimer : MonoBehaviour
             Color colB = background.color;
             colB.a -= Time.deltaTime;
             background.color = colB;
+
+            //If this is a 2 player thing, fade out player text too
+            if (multiplayerManager.instance.numberOfPlayers > 1)
+            {
+                while (Player1Text.color.a < 1)
+                {
+                    Color col = Player1Text.color;
+                    col.a -= Time.deltaTime;
+                    Player1Text.color = col;
+                }
+                while (Player2Text.color.a < 1)
+                {
+                    Color col = Player2Text.color;
+                    col.a -= Time.deltaTime;
+                    Player2Text.color = col;
+                }
+            }
             yield return new WaitForEndOfFrame();
         }
 
@@ -404,7 +452,7 @@ public class dayTimer : MonoBehaviour
         GameStateManager.instance.ChangeState(GameStates.STATE_DAYOVER); //All these state changes, you made me do this Craig, coroutine problems
         progressUI.GetComponent<Image>().enabled = true;
         
-        StatTracker.instance.numOfDaysCompleted++;
+        StatTracker.instance.numOfDaysCompleted[multiplayerManager.instance.currentActivePlayer]++;
 
         dayCompletedHeader.text = "Day "+StatTracker.instance.numOfDaysCompleted + " completed";
         dayCompletedHeader.enabled = true;
@@ -487,7 +535,7 @@ public class dayTimer : MonoBehaviour
             else
                 performanceRank = 7;
 
-            int min = 4 + StatTracker.instance.numOfDaysCompleted - 1;
+            int min = 4 + StatTracker.instance.numOfDaysCompleted[multiplayerManager.instance.currentActivePlayer] - 1;
 
             if (todaysEmails.Count < min)
             {
@@ -540,17 +588,17 @@ public class dayTimer : MonoBehaviour
         GameStateManager.instance.ChangeState(GameStates.STATE_DAYOVER);
 
         #region regen lives
-        if (Player.instance.strikes < 4)
+        if (Player.instance.strikes[multiplayerManager.instance.currentActivePlayer] < 4)
         {
             for (int i = 0; i < livesToAdd; i++)
             {
-                Player.instance.strikes++;
-                if (Player.instance.strikes > 3)
+                Player.instance.strikes[multiplayerManager.instance.currentActivePlayer]++;
+                if (Player.instance.strikes[multiplayerManager.instance.currentActivePlayer] > 3)
                 {
-                    Player.instance.strikes = 3;
+                    Player.instance.strikes[multiplayerManager.instance.currentActivePlayer] = 3;
                     break;
                 }
-                StatTracker.instance.changeLifeCount(Player.instance.strikes-1,true);
+                StatTracker.instance.changeLifeCount(Player.instance.strikes[multiplayerManager.instance.currentActivePlayer] - 1,true);
                 yield return new WaitForSeconds(.5f);
                 SoundManager.instance.playSound(0, 1.2f);
                 yield return new WaitForSeconds(.25f);

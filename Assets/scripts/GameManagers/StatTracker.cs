@@ -8,11 +8,9 @@ public class StatTracker : MonoBehaviour
 {
     public static StatTracker instance;
 
-    public int junkEmailsCorrect, safeEmailsCorrect, safeEmailsWrong, junkEmailsWrong, numOfDaysCompleted, messyDesks;
-    public int totalDeaths, bossDeaths, bossAngered;
-    public int score;
-    public float totalProfessionalism = 0;
-    public int scoreToAdd;
+    public int[] junkEmailsCorrect, safeEmailsCorrect, safeEmailsWrong, junkEmailsWrong, numOfDaysCompleted, messyDesks;
+    public int[] totalDeaths, bossDeaths, bossAngered, score,scoreToAdd;
+    public float[] totalProfessionalism;
     public Text ScoreText;
     List<int> dayPerformances = new List<int>();
 
@@ -29,8 +27,21 @@ public class StatTracker : MonoBehaviour
 
     void Awake()
     {
+        junkEmailsCorrect = new int[2] { 0, 0 };
+        junkEmailsCorrect = new int[2] { 0, 0 };
+        safeEmailsCorrect = new int[2] { 0, 0 };
+        safeEmailsWrong = new int[2] { 0, 0 };
+        junkEmailsWrong = new int[2] { 0, 0 };
+        numOfDaysCompleted = new int[2] { 0, 0 };
+        messyDesks = new int[2] { 0, 0 };
+        totalDeaths = new int[2] { 0, 0 };
+        bossDeaths = new int[2] { 0, 0 };
+        bossAngered = new int[2] { 0, 0 };
+        scoreToAdd = new int[2] { 0, 0 };
+        totalProfessionalism = new float[2] { 0, 0 };
+        score = new int[2] { 0, 0 };
+
         instance = this;
-        numOfDaysCompleted = 0;
     }
     public void changeLifeCount(int l, bool gainLoss)
     {
@@ -38,6 +49,18 @@ public class StatTracker : MonoBehaviour
             lifeAnimators[l].Play("life_gain");
         else
             lifeAnimators[l].Play("life_loss");
+    }
+
+    public void setLifeCount(int l) //Remember to call this when switching players, make sure the HuD is accurate
+    {
+        foreach (Animator a in lifeAnimators)
+        {
+            a.Play("life_idle_dead");
+        }
+        for (int i=0; i < l;i++)
+        {
+            lifeAnimators[i].Play("life_idle");
+        }
     }
 
     public float getAveragePerformance()
@@ -61,17 +84,17 @@ public class StatTracker : MonoBehaviour
     {
         if (GameStateManager.instance.GetState() == GameStates.STATE_GAMEPLAY)
         {
-            if (scoreToAdd > 0)
+            if (scoreToAdd[multiplayerManager.instance.currentActivePlayer] > 0)
             {
-                scoreToAdd--;
-                score++;
-                ScoreText.text = "SCORE:" + score;
+                scoreToAdd[multiplayerManager.instance.currentActivePlayer]--;
+                score[multiplayerManager.instance.currentActivePlayer]++;
+                ScoreText.text = "SCORE:" + score[multiplayerManager.instance.currentActivePlayer];
             }
-            else if (scoreToAdd < 0)
+            else if (scoreToAdd[multiplayerManager.instance.currentActivePlayer] < 0)
             {
-                scoreToAdd++;
-                score--;
-                ScoreText.text = "SCORE:" + score;
+                scoreToAdd[multiplayerManager.instance.currentActivePlayer]++;
+                score[multiplayerManager.instance.currentActivePlayer]--;
+                ScoreText.text = "SCORE:" + score[multiplayerManager.instance.currentActivePlayer];
             }
         }
     }
@@ -81,8 +104,8 @@ public class StatTracker : MonoBehaviour
         SoundManager.instance.officeAmbience.DOFade(0, 3);
         SoundManager.instance.music.Stop();
 
-        float total = junkEmailsCorrect + junkEmailsWrong + safeEmailsCorrect + safeEmailsWrong;
-        float correct = junkEmailsCorrect + safeEmailsCorrect;
+        float total = junkEmailsCorrect[multiplayerManager.instance.currentActivePlayer] + junkEmailsWrong[multiplayerManager.instance.currentActivePlayer] + safeEmailsCorrect[multiplayerManager.instance.currentActivePlayer] + safeEmailsWrong[multiplayerManager.instance.currentActivePlayer];
+        float correct = junkEmailsCorrect[multiplayerManager.instance.currentActivePlayer] + safeEmailsCorrect[multiplayerManager.instance.currentActivePlayer];
 
         //.25f pitch for bad
         //normal for good
@@ -95,9 +118,9 @@ public class StatTracker : MonoBehaviour
         yield return new WaitForSeconds(.5f);
         daysCompleted.enabled = true;
         yield return new WaitForSeconds(.75f);
-        daysCompletedValue.text = "" + numOfDaysCompleted;
+        daysCompletedValue.text = "" + numOfDaysCompleted[multiplayerManager.instance.currentActivePlayer];
         daysCompletedValue.enabled = true;
-        if (numOfDaysCompleted < 3)
+        if (numOfDaysCompleted[multiplayerManager.instance.currentActivePlayer] < 3)
             SoundManager.instance.playSound(0, .25f);
         else
             SoundManager.instance.playSound(0, 0.95f);
@@ -132,7 +155,7 @@ public class StatTracker : MonoBehaviour
         CalculateProfessionalism();
 
         professionalismValue.enabled = true;
-        if (100 - (messyDesks / 28f * 100) < 50)
+        if (100 - (messyDesks[multiplayerManager.instance.currentActivePlayer] / 28f * 100) < 50)
             SoundManager.instance.playSound(0, .25f);
         else
             SoundManager.instance.playSound(0, .95f);
@@ -143,14 +166,14 @@ public class StatTracker : MonoBehaviour
         yield return new WaitForSeconds(1f);
         finalScoreValue.enabled = true;
 
-        score += scoreToAdd;
-        scoreToAdd = 0;
+        score[multiplayerManager.instance.currentActivePlayer] += scoreToAdd[multiplayerManager.instance.currentActivePlayer];
+        scoreToAdd[multiplayerManager.instance.currentActivePlayer] = 0;
 
         //Count up to score
         int temp=0;
-        if (score > 0)
+        if (score[multiplayerManager.instance.currentActivePlayer] > 0)
         {
-            while (temp < score)
+            while (temp < score[multiplayerManager.instance.currentActivePlayer])
             {
                 temp += 10;
                 finalScoreValue.text = "" + temp;
@@ -159,7 +182,7 @@ public class StatTracker : MonoBehaviour
         }
         else
         {
-            while (temp > score)
+            while (temp > score[multiplayerManager.instance.currentActivePlayer])
             {
                 temp -= 10;
                 finalScoreValue.text = "" + temp;
@@ -172,26 +195,26 @@ public class StatTracker : MonoBehaviour
             yield return null;
 
         GameOverUI.SetActive(false);
-        LeaderBoard.instance.SetScore(score);
+        LeaderBoard.instance.SetScore(score[multiplayerManager.instance.currentActivePlayer]);
     }
 
     public int GetScore()
     {
-        return score;
+        return score[multiplayerManager.instance.currentActivePlayer];
     }
 
     public void CalculateProfessionalism()
     {
-        if (messyDesks != 0)
+        if (messyDesks[multiplayerManager.instance.currentActivePlayer] != 0)
         {
-            totalProfessionalism += (100 - (int)(messyDesks / 47f * 100));
-            professionalismValue.text = 100 - (int)(messyDesks / 47f * 100) + "%";//NOT A MAGIC NUMBER HONEST, 47 is the current number of desks you can mess up
+            totalProfessionalism[multiplayerManager.instance.currentActivePlayer] += (100 - (int)(messyDesks[multiplayerManager.instance.currentActivePlayer] / 47f * 100));
+            professionalismValue.text = 100 - (int)(messyDesks[multiplayerManager.instance.currentActivePlayer] / 47f * 100) + "%";//NOT A MAGIC NUMBER HONEST, 47 is the current number of desks you can mess up
         }
         else
         {
-            totalProfessionalism += 100;
+            totalProfessionalism[multiplayerManager.instance.currentActivePlayer] += 100;
             professionalismValue.text = "100%";
         }
-        messyDesks = 0;
+        messyDesks[multiplayerManager.instance.currentActivePlayer] = 0;
     }
 }

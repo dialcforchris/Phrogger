@@ -28,7 +28,7 @@ public class KnockableObjects : Wall
             if (spriteRenderer.sprite != altImage)
             {
                 spriteRenderer.sprite = altImage;
-                StatTracker.instance.messyDesks++;
+                StatTracker.instance.messyDesks[multiplayerManager.instance.currentActivePlayer]++;
                 SoundManager.instance.playSound(knockedSound);
             }
         }

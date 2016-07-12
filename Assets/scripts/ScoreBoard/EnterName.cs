@@ -139,7 +139,7 @@ public class EnterName : MonoBehaviour
         LeaderBoard.instance.SetName(theName);
         LeaderBoard.instance.AddNewScoreToLB();
         finished = true;
-        if (Player.instance.strikes == 0)
+        if (Player.instance.strikes[multiplayerManager.instance.currentActivePlayer] == 0)
         {
             gameOverScreen.instance.StartCoroutine(gameOverScreen.instance.TriggerGameOver());
             gameObject.SetActive(false);

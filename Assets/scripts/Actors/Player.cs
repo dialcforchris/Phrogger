@@ -12,8 +12,7 @@ public class Player : WorldObject
     float maxCool = 0.4f;
     private Vector2 lastPos = Vector2.zero;
     //private members
-    public int strikes = 3;
-    private int score = 0;
+    public int[] strikes;
     private float hori;
     private float verti;
     public ParticleSystem bloodSplatter, splooshParticles;
@@ -47,21 +46,10 @@ public class Player : WorldObject
     float maxDeathcool = 3;
 
     [SerializeField] private Vector2 waterZone = Vector2.zero; //This is dirty, I know a way around it, I do not care, this is the only water zone
-
-    //public members
-    public int Score
-    {
-        get { return score; }
-        set { score = value; }
-    }
-    public int Strikes
-    {
-        get { return strikes; }
-        set { strikes = value; }
-    }
-
+    
     protected override void Awake()
     {
+        strikes = new int[2] { 3, 3 };
         instance = this;
         base.Awake();
         transform.position = froggerSpawn.position;
@@ -156,14 +144,22 @@ public class Player : WorldObject
         }
     }
 
-    private IEnumerator OriginalFroggerFinished()
+    public void silenceOriginalFroggerSounds(float time)
     {
         //Fade out all the sounds
         foreach (AudioSource a in originalFroggerSounds)
         {
-            a.DOFade(0, 1.5f);
-
+            a.DOFade(0, time);
         }
+    }
+
+    private IEnumerator OriginalFroggerFinished()
+    {
+        //Fade out all the sounds
+        silenceOriginalFroggerSounds(1.5f);
+
+        //Move to the exit
+        #region move
         while (true)
         {
             coolDown += Time.deltaTime;
@@ -207,6 +203,7 @@ public class Player : WorldObject
                 yield break;
             }
         }
+        #endregion
     }
 
     void JoyStickMovement()
@@ -414,10 +411,10 @@ public class Player : WorldObject
         transform.position = playerSpawn.position;
         RemoveFromWorld();
         //Rather than this leave behind a corpse call remove from world, move position then add to world immediately
-        strikes -= 1;
-        StatTracker.instance.changeLifeCount(strikes,false);
+        strikes[multiplayerManager.instance.currentActivePlayer] -= 1;
+        StatTracker.instance.changeLifeCount(strikes[multiplayerManager.instance.currentActivePlayer], false);
 
-        if (strikes ==0) //If the player has run out of lives
+        if (strikes[multiplayerManager.instance.currentActivePlayer] == 0) //If the player has run out of lives
         {
             //Game over
             GameStateManager.instance.ChangeState(GameStates.STATE_GAMEOVER);
@@ -431,7 +428,7 @@ public class Player : WorldObject
         {
             if (state == PlayerState.ACTIVE)
             {
-                StatTracker.instance.totalDeaths++;
+                StatTracker.instance.totalDeaths[multiplayerManager.instance.currentActivePlayer]++;
                 StatTracker.instance.causeOfDeath.text = "A co-worker stepped on you";
                 Die();
             }
@@ -440,8 +437,8 @@ public class Player : WorldObject
         {
             if (state == PlayerState.ACTIVE)
             {
-                StatTracker.instance.totalDeaths++;
-                StatTracker.instance.bossDeaths++;
+                StatTracker.instance.totalDeaths[multiplayerManager.instance.currentActivePlayer]++;
+                StatTracker.instance.bossDeaths[multiplayerManager.instance.currentActivePlayer]++;
                 StatTracker.instance.causeOfDeath.text = "Your boss stepped on you";
                 Die();
             }

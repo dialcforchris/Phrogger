@@ -160,7 +160,7 @@ public class LeaderBoard : MonoBehaviour
         }
         else
         {
-            if (Player.instance.strikes == 0)
+            if (Player.instance.strikes[multiplayerManager.instance.currentActivePlayer] == 0)
                 StartCoroutine(gameOverScreen.instance.TriggerGameOver());
             else
                 StartCoroutine(MainMenu.instance.wholeScreenFade(true));

@@ -61,13 +61,17 @@ public class introMonitor : MonoBehaviour
         mainCamTransition.transform.localScale = new Vector3(32, 18, 1);//Look, it works. I'm not proud of it but it works.
     }
 
-    public void BeginGame()
+    public void disableHudBars()
     {
         top.gameObject.SetActive(true);
         bottom.gameObject.SetActive(true);
         left.gameObject.SetActive(false);
         right.gameObject.SetActive(false);
+    }
 
+    public void BeginGame()
+    {
+        disableHudBars();
         Player.instance.Reset();
 
         GameStateManager.instance.ChangeState(GameStates.STATE_DAYOVER);

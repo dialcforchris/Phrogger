@@ -8,10 +8,7 @@ using DG.Tweening;
 public class mailOpener : MonoBehaviour 
 {
     public static mailOpener instance;
-
-    //Need to be able to open and close emails at will
-    //i.e. have them be seperate events
-
+    
     public SpriteRenderer emailContent;
     public Animator monitorAnimator,miniEmailAnimator;
     public Camera monitorCamera,mainCam;
@@ -127,22 +124,8 @@ public class mailOpener : MonoBehaviour
                 
                 Camera.main.orthographicSize = Mathf.Lerp(9, 2, lerpy);
                 mainCamTransition.transform.localScale = Vector3.Lerp(new Vector3(32, 18, 1), new Vector3(7.15f, 4, 1), lerpy);
-                //yield return new WaitForEndOfFrame();
             }
         }
-        /*lerpy = 1;
-        while (lerpy > 0)
-        {
-            lerpy -= Time.deltaTime*2;
-
-            if (!InOut)
-                monCamTransition.material.SetFloat("_SliceAmount", lerpy);
-            else
-            {
-                mainCamTransition.material.SetFloat("_SliceAmount", lerpy);
-            }
-            yield return new WaitForEndOfFrame();
-        }*/
 
         yield return new WaitForSeconds(0.1f);
         mainCam.enabled = !InOut;
@@ -389,8 +372,8 @@ public class mailOpener : MonoBehaviour
                         tickCross.sprite = Tick;
                         //Junk email put in junk pile, good job
                         //+ points
-                        StatTracker.instance.scoreToAdd += selectedList.score;
-                        StatTracker.instance.junkEmailsCorrect++;
+                        StatTracker.instance.scoreToAdd[multiplayerManager.instance.currentActivePlayer] += selectedList.score;
+                        StatTracker.instance.junkEmailsCorrect[multiplayerManager.instance.currentActivePlayer]++;
                         BossFace.instance.CheckEmails(true);
                         dayTimer.completedEmail newMail;
                         newMail.junk = true;
@@ -407,8 +390,8 @@ public class mailOpener : MonoBehaviour
                         tickCross.sprite = Cross;
                         //You put a safe email in the junk pile
                         //oooooo
-                        StatTracker.instance.scoreToAdd -= (int)(.8f*selectedList.score);
-                        StatTracker.instance.safeEmailsWrong++;
+                        StatTracker.instance.scoreToAdd[multiplayerManager.instance.currentActivePlayer] -= (int)(.8f*selectedList.score);
+                        StatTracker.instance.safeEmailsWrong[multiplayerManager.instance.currentActivePlayer]++;
                         BossFace.instance.CheckEmails(false);
                         dayTimer.completedEmail newMail;
                         newMail.junk = false;
@@ -436,8 +419,8 @@ public class mailOpener : MonoBehaviour
                         tickCross.sprite = Cross;
                         //You put junk in the safe pile
                         //- points
-                        StatTracker.instance.scoreToAdd -= (int)(.8f * selectedList.score);
-                        StatTracker.instance.junkEmailsWrong++;
+                        StatTracker.instance.scoreToAdd[multiplayerManager.instance.currentActivePlayer] -= (int)(.8f * selectedList.score);
+                        StatTracker.instance.junkEmailsWrong[multiplayerManager.instance.currentActivePlayer]++;
                         BossFace.instance.CheckEmails(false);
                         dayTimer.completedEmail newMail;
                         newMail.junk = true;
@@ -455,8 +438,8 @@ public class mailOpener : MonoBehaviour
                         tickCross.sprite = Tick;
                         //Safe mail was marked as safe, woopee
                         //+ points
-                        StatTracker.instance.scoreToAdd += selectedList.score;
-                        StatTracker.instance.safeEmailsCorrect++;
+                        StatTracker.instance.scoreToAdd[multiplayerManager.instance.currentActivePlayer] += selectedList.score;
+                        StatTracker.instance.safeEmailsCorrect[multiplayerManager.instance.currentActivePlayer]++;
                         BossFace.instance.CheckEmails(true);
                         dayTimer.completedEmail newMail;
                         newMail.junk = false;

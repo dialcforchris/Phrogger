@@ -134,7 +134,7 @@ public class Cubicle : WorldObject
                 if (!isMessy) //If we haven't already, knock things off the desk
                 {
                     SoundManager.instance.playSound(1);
-                    StatTracker.instance.messyDesks++;
+                    StatTracker.instance.messyDesks[multiplayerManager.instance.currentActivePlayer]++;
                     isMessy = true;
                     deskFodder.sprite = messyDesk[currentDesk];
                 }

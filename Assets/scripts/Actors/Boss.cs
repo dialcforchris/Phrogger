@@ -126,7 +126,7 @@ public class Boss : WorldObject
 
     public void BeginChase()
     {
-        StatTracker.instance.bossAngered++;
+        StatTracker.instance.bossAngered[multiplayerManager.instance.currentActivePlayer]++;
         CameraZoom.instance.doAZoom(false, transform);
         SoundManager.instance.playSound(anger);
         Invoke("animateMe", .5f);

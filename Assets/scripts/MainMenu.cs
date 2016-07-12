@@ -70,6 +70,7 @@ public class MainMenu : MonoBehaviour
     bool scrolling;
     void Update ()
     {
+        #region main menu
         if (currentState == menuState.mainMenu)
         {
             if (Input.GetAxis("Vertical") != 0 && scrolling == false)
@@ -116,6 +117,7 @@ public class MainMenu : MonoBehaviour
                 }
             }
         }
+        #endregion
         #region gamemode selection
         else if (currentState == menuState.modeSelect)
         {
@@ -143,13 +145,36 @@ public class MainMenu : MonoBehaviour
                 {
                     case 1:
                         dayTimer.instance.maxDays = 1;
-                        StartCoroutine(StartGame());
+
+                        if (multiplayerManager.instance.numberOfPlayers == 1)
+                            StartCoroutine(StartGame());
+                        else
+                        {
+                            //something else
+
+                            //Turn off all the frogger sounds
+                            Player.instance.silenceOriginalFroggerSounds(0.75f);
+
+                            //Remember to disable hud things
+                            dayTimer.instance.NewDayTransition();
+                        }
                         currentState = menuState.gameplay;
                         break;
                     case 2:
                         dayTimer.instance.maxDays = 5;
-                        StartCoroutine(StartGame());
-                        currentState = menuState.gameplay;
+
+                        if (multiplayerManager.instance.numberOfPlayers > 1)
+                            StartCoroutine(StartGame());
+                        else
+                        {
+                            //Turn off all the frogger sounds
+                            Player.instance.silenceOriginalFroggerSounds(0.75f);
+
+                            //Remember to disable hud things
+                            dayTimer.instance.NewDayTransition();
+                        }
+
+                            currentState = menuState.gameplay;
                         break;
                     case 3:
                         menuImages[1].gameObject.SetActive(false);
@@ -187,14 +212,12 @@ public class MainMenu : MonoBehaviour
                 {
                     case 1:
                         multiplayerManager.instance.numberOfPlayers = 1;
-                        //Something for 1 player
                         menuImages[1].gameObject.SetActive(true);
                         menuImages[2].gameObject.SetActive(false);
                         currentState = menuState.modeSelect;
                         break;
                     case 2:
                         multiplayerManager.instance.numberOfPlayers = 2;
-                        //Something for 2 player
                         menuImages[1].gameObject.SetActive(true);
                         menuImages[2].gameObject.SetActive(false);
                         currentState = menuState.modeSelect;
