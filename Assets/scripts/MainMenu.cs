@@ -163,7 +163,7 @@ public class MainMenu : MonoBehaviour
                     case 2:
                         dayTimer.instance.maxDays = 5;
 
-                        if (multiplayerManager.instance.numberOfPlayers > 1)
+                        if (multiplayerManager.instance.numberOfPlayers == 1)
                             StartCoroutine(StartGame());
                         else
                         {

@@ -18,7 +18,12 @@ public class CameraZoom : MonoBehaviour {
     }
 
     public IEnumerator Zoom(Transform target,bool IntroZoom)
-    {float lerpy = 0;
+    {
+       /* while (GameStateManager.instance.GetState() != GameStates.STATE_GAMEPLAY)
+        {
+            yield return null;
+        }*/
+        float lerpy = 0;
         if (!IntroZoom)
         {
             //yield return new WaitForSeconds(0.25f); //Wait for the boss to appear

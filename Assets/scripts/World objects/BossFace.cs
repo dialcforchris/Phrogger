@@ -231,6 +231,7 @@ public class BossFace :MonoBehaviour
                     }
                 case FaceState.CHASE:
                     {
+                        //FIX ME
                         spriteRenderer.sprite = bossGone;
                         bossFaceAnimator.Play("boss_leave");
                         Invoke("bossChase", .5f);
