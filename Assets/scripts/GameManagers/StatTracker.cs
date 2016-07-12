@@ -9,7 +9,7 @@ public class StatTracker : MonoBehaviour
     public static StatTracker instance;
 
     public int[] junkEmailsCorrect, safeEmailsCorrect, safeEmailsWrong, junkEmailsWrong, numOfDaysCompleted, messyDesks;
-    public int[] totalDeaths, bossDeaths, bossAngered, score,scoreToAdd;
+    public int[] totalDeaths, bossDeaths, bossAngered, score,scoreToAdd, bossAngeredDay;
     public float[] totalProfessionalism;
     public Text ScoreText;
     List<int> dayPerformances = new List<int>();
@@ -36,6 +36,7 @@ public class StatTracker : MonoBehaviour
         messyDesks = new int[2] { 0, 0 };
         totalDeaths = new int[2] { 0, 0 };
         bossDeaths = new int[2] { 0, 0 };
+        bossAngeredDay = new int[2] { 0, 0 };
         bossAngered = new int[2] { 0, 0 };
         scoreToAdd = new int[2] { 0, 0 };
         totalProfessionalism = new float[2] { 0, 0 };
@@ -155,7 +156,7 @@ public class StatTracker : MonoBehaviour
         CalculateProfessionalism();
 
         professionalismValue.enabled = true;
-        if (100 - (messyDesks[multiplayerManager.instance.currentActivePlayer] / 28f * 100) < 50)
+        if (Mathf.Max(0, ((100 - (int)(messyDesks[multiplayerManager.instance.currentActivePlayer] / 47f * 100)) - (bossAngeredDay[multiplayerManager.instance.currentActivePlayer] * 10))) < 50)
             SoundManager.instance.playSound(0, .25f);
         else
             SoundManager.instance.playSound(0, .95f);
@@ -195,6 +196,7 @@ public class StatTracker : MonoBehaviour
             yield return null;
 
         GameOverUI.SetActive(false);
+        bossAngeredDay[multiplayerManager.instance.currentActivePlayer] = 0;
         LeaderBoard.instance.SetScore(score[multiplayerManager.instance.currentActivePlayer]);
     }
 
@@ -205,10 +207,10 @@ public class StatTracker : MonoBehaviour
 
     public void CalculateProfessionalism()
     {
-        if (messyDesks[multiplayerManager.instance.currentActivePlayer] != 0)
+        if (messyDesks[multiplayerManager.instance.currentActivePlayer] != 0 || bossAngeredDay[multiplayerManager.instance.currentActivePlayer] != 0)
         {
-            totalProfessionalism[multiplayerManager.instance.currentActivePlayer] += (100 - (int)(messyDesks[multiplayerManager.instance.currentActivePlayer] / 47f * 100));
-            professionalismValue.text = 100 - (int)(messyDesks[multiplayerManager.instance.currentActivePlayer] / 47f * 100) + "%";//NOT A MAGIC NUMBER HONEST, 47 is the current number of desks you can mess up
+            totalProfessionalism[multiplayerManager.instance.currentActivePlayer] += Mathf.Max(0,((100 - (int)(messyDesks[multiplayerManager.instance.currentActivePlayer] / 47f * 100)) - (bossAngeredDay[multiplayerManager.instance.currentActivePlayer] * 10)));
+            professionalismValue.text = Mathf.Max(0, ((100 - (int)(messyDesks[multiplayerManager.instance.currentActivePlayer] / 47f * 100)) - (bossAngeredDay[multiplayerManager.instance.currentActivePlayer] * 10))) + "%";//NOT A MAGIC NUMBER HONEST, 47 is the current number of desks you can mess up
         }
         else
         {
