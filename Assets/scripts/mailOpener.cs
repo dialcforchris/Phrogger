@@ -193,6 +193,7 @@ public class mailOpener : MonoBehaviour
     bool[] frogStory;
     void pickEmail()
     {
+        
         if (nonFrogMail[multiplayerManager.instance.currentActivePlayer] > 5 && frogStory[multiplayerManager.instance.currentActivePlayer])
         {
             nonFrogMail[multiplayerManager.instance.currentActivePlayer] = 0;
