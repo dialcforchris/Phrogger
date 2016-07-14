@@ -5,12 +5,8 @@ using UnityEngine.UI;
 
 public class PauseMenu : MenuSelect 
 {
-    Slider slide;
-	// Use this for initialization
-	void Start ()
-    {
-        slide = box[1].GetComponentInChildren<Slider>();
-	}
+    [SerializeField]
+    Slider soundfxSlider,musicSlider;
 	
 	// Update is called once per frame
 	protected override void Update()
@@ -30,9 +26,13 @@ public class PauseMenu : MenuSelect
         {
             DoAction(ChangeVolumeSlide);
         }
+        else if (selectBox == 2)
+        {
+            DoAction(ChangeMusicSlide);
+        }
         if (Input.GetButtonDown("Fire1"))
         {
-            if (selectBox == 2)
+            if (selectBox == 3)
             {
                 DoAction(QuitToMain);
             }
@@ -42,24 +42,43 @@ public class PauseMenu : MenuSelect
     void QuitToMain()
     {
         Time.timeScale = 1;
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene(2);
     }
 
     void ChangeVolumeSlide()
     {
-        if (slide.value > 0 || slide.value < 1)
+        if (soundfxSlider.value > 0 || soundfxSlider.value < 1)
         {
             if (Input.GetJoystickNames().Length > 0)
             {
                 if (Input.GetJoystickNames()[0] == "")
-                    box[1].GetComponentInChildren<Slider>().value += Input.GetAxis("Horizontal") * 10;
+                    soundfxSlider.value += Input.GetAxis("Horizontal") * 10;
                 else
-                    box[1].GetComponentInChildren<Slider>().value += Input.GetAxis("Horizontal") / 100;
+                    soundfxSlider.value += Input.GetAxis("Horizontal") / 100;
             }
             else
-                box[1].GetComponentInChildren<Slider>().value += Input.GetAxis("Horizontal") * 10;
+                soundfxSlider.value += Input.GetAxis("Horizontal") * 10;
 
-            SoundManager.instance.changeVolume(slide.value);
+            SoundManager.instance.changeVolume(soundfxSlider.value);
+        }
+    }
+    void ChangeMusicSlide()
+    {
+        if (musicSlider.value > 0 || musicSlider.value < 1)
+        {
+            if (Input.GetJoystickNames().Length > 0)
+            {
+                if (Input.GetJoystickNames()[0] == "")
+                    musicSlider.value += Input.GetAxis("Horizontal") * 10;
+                else
+                    musicSlider.value += Input.GetAxis("Horizontal") / 100;
+            }
+            else
+                musicSlider.value += Input.GetAxis("Horizontal") * 10;
+
+            SoundManager.instance.music.volume = musicSlider.value;
+            SoundManager.instance.musicVolume = musicSlider.value;
+
         }
     }
 }

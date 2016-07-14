@@ -153,21 +153,43 @@ public class LeaderBoard : MonoBehaviour
     }
     public void SetScore(int _score)
     {
+        //This is where we come after a player has finished their play session (win or lose)
+        multiplayerManager.instance.finishedPlaying[multiplayerManager.instance.currentActivePlayer] = true;
+
         playerScore = _score;
-        if (CheckIfHighScore(_score))
+        if (CheckIfHighScore(_score)) //If the player has achieved a high score
         {
+            //Get them to enter it.
             enterName.SetActive(true);
         }
-        else
+        else //Otherwise...
         {
             //Increment player count
             multiplayerManager.instance.NextPlayer();
 
-            //If the other player also has no lives, trigger game over
-            if (Player.instance.strikes[multiplayerManager.instance.currentActivePlayer] == 0)
-                StartCoroutine(gameOverScreen.instance.TriggerGameOver());
+            //Check if the other player has finished playing
+            if (multiplayerManager.instance.finishedPlaying[multiplayerManager.instance.currentActivePlayer])
+            {
+                //If both players have failed, trigger game over.
+                if (!multiplayerManager.instance.win[0] && !multiplayerManager.instance.win[1])
+                    StartCoroutine(gameOverScreen.instance.TriggerGameOver());
+                else //Otherwise just fade to black
+                    StartCoroutine(MainMenu.instance.wholeScreenFade(true));
+            }
             else
-                dayTimer.instance.NewDayTransition(); //Otherwise, continue play, do the next day.
+            {
+                //The other player hasn't finished playing yet.
+                if (StatTracker.instance.numOfDaysCompleted[multiplayerManager.instance.currentActivePlayer] < dayTimer.instance.maxDays)
+                {
+                    //Go to the players next day if they haven't done all the days yet
+                    dayTimer.instance.NewDayTransition();
+                }
+                else
+                {
+                    //Or if they have, just go to the end of the game.
+                    dayTimer.instance.StartCoroutine(dayTimer.instance.FinishGame());
+                }
+            }
         }
     }
     public void SetName(string _name)

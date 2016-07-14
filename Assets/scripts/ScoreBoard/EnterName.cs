@@ -12,28 +12,34 @@ public class EnterName : MonoBehaviour
     int selectChar= 65;
     float coolDown = 0;
     float maxCool = 0.2f;
-    string theName = string.Empty;
+    string theName;
     bool finished;
   
-	void Start () 
+	void Start ()
     {
         coolDown = maxCool;
         currentCharacter = new int[box.Length];
+        finished = false;
+        theName = string.Empty;
+        foreach(Text t in box)
+        {
+            t.text = "A";
+        }
         for (int i = 0; i < currentCharacter.Length;i++ )
         {
             currentCharacter[i] = 65;
         }
 	}
-	
-	// Update is called once per frame
-	void Update () 
+
+    // Update is called once per frame
+    void Update()
     {
-            MenuInput();
-            box[selectBox].text = ((char)currentCharacter[selectBox]).ToString();
-            ChangeTextColour();
-            score.text = "Your Score: " +StatTracker.instance.GetScore().ToString();
-            if (Input.GetButtonDown("Fire1") && !finished)
-                SelectName();
+        MenuInput();
+        box[selectBox].text = ((char)currentCharacter[selectBox]).ToString();
+        ChangeTextColour();
+        score.text = "Your Score: " + StatTracker.instance.GetScore().ToString();
+        if (Input.GetButtonDown("Fire1") && !finished)
+            SelectName();
     }
 
     void MenuInput()
@@ -130,6 +136,7 @@ public class EnterName : MonoBehaviour
            }
         }
     }
+    
     void SelectName()
     {
         for (int i = 0; i < box.Length; i++)
@@ -139,24 +146,35 @@ public class EnterName : MonoBehaviour
         LeaderBoard.instance.SetName(theName);
         LeaderBoard.instance.AddNewScoreToLB();
         finished = true;
-        if (Player.instance.strikes[multiplayerManager.instance.currentActivePlayer] == 0)
-        {
-            //Check if the other play still has any lives
-            multiplayerManager.instance.NextPlayer();
 
-            if (Player.instance.strikes[multiplayerManager.instance.currentActivePlayer] == 0)
-            {
+        //Reset this whole thing
+        Start();
+        gameObject.SetActive(false);
+        
+        multiplayerManager.instance.NextPlayer();
+        //Check if the other player has finished playing
+        if (multiplayerManager.instance.finishedPlaying[multiplayerManager.instance.currentActivePlayer])
+        {
+            //If both players have failed, trigger game over.
+            if (!multiplayerManager.instance.win[0] && !multiplayerManager.instance.win[1])
                 gameOverScreen.instance.StartCoroutine(gameOverScreen.instance.TriggerGameOver());
+            else //Otherwise just fade to black
+                MainMenu.instance.StartCoroutine(MainMenu.instance.wholeScreenFade(true));
+        }
+        else
+        {
+            //The other player hasn't finished playing yet.
+            if (StatTracker.instance.numOfDaysCompleted[multiplayerManager.instance.currentActivePlayer] < dayTimer.instance.maxDays)
+            {
+                //Go to the players next day if they haven't done all the days yet
+                dayTimer.instance.NewDayTransition();
             }
             else
             {
-                //trigger next day
-                dayTimer.instance.NewDayTransition();
+                //Or if they have, just go to the end of the game.
+                dayTimer.instance.StartCoroutine(dayTimer.instance.FinishGame());
             }
-            gameObject.SetActive(false);
         }
-        else
-            StartCoroutine(MainMenu.instance.wholeScreenFade(true));
     }
     bool ConvertToPos(string ho, string ve)
     {
@@ -170,7 +188,7 @@ public class EnterName : MonoBehaviour
         {
             verti -= verti * 2;
         }
-        if (hori>verti)
+        if (hori > verti)
         {
             return true;
         }

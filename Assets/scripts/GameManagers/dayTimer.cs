@@ -37,14 +37,14 @@ public class dayTimer : MonoBehaviour
     [SerializeField]
     private Slider timeSlider;
     [SerializeField]
-    private Text emailTargetText;
+    private Text emailTargetText,CurrentPlayer;
     [SerializeField]
     AudioClip tick;
     [Header("Ending stats")]
     [SerializeField]
     private Text StatsTitle;
     [SerializeField]
-    private Text StatsDeath,StatsEmail,StatsProf,StatsBossAnger,StatsBossDeath,ContinuePrompt;
+    private Text StatsDeath,StatsEmail,StatsProf,StatsBossAnger,StatsBossDeath,ContinuePrompt,PlayerText;
     [SerializeField]
     private Image endingScreen,StatsBox;
     [SerializeField]
@@ -82,7 +82,7 @@ public class dayTimer : MonoBehaviour
 
     public void NewDay()
     {
-        if (StatTracker.instance.numOfDaysCompleted[0] == 0)//Making sure this only happens for 1 player, no need to play the intro email again for P2
+        if (StatTracker.instance.numOfDaysCompleted[0] == 0 && Player.instance.strikes[0] > 0)//Making sure this only happens for 1 player, no need to play the intro email again for P2
         {
             GameStateManager.instance.ChangeState(GameStates.STATE_DAYOVER);
             introMonitor.instance.BeginGame();
@@ -91,12 +91,14 @@ public class dayTimer : MonoBehaviour
         {
             transitioning = false;
             SoundManager.instance.music.Play();
+            SoundManager.instance.music.DOFade(1, 5);
             GameStateManager.instance.ChangeState(GameStates.STATE_GAMEPLAY);
         }
     }
 
     public void NewDayTransition()
     {
+        transitioning = true;
         StartCoroutine(NextDayTransition());
     }
 
@@ -169,8 +171,11 @@ public class dayTimer : MonoBehaviour
             {
                 GameFinished = false;
                 continueText.SetActive(false);
+                multiplayerManager.instance.win[multiplayerManager.instance.currentActivePlayer] = true;
                 LeaderBoard.instance.SetScore(StatTracker.instance.GetScore());
                 StatsBox.gameObject.SetActive(false);
+                //Reset all the text
+                ResetEndingText();
             }
         }
 
@@ -199,7 +204,7 @@ public class dayTimer : MonoBehaviour
 
     bool transitioning,GameFinished;
 
-    IEnumerator FinishGame()
+    public IEnumerator FinishGame()
     {
         //Fade to black
         while (background.color.a < 1)
@@ -209,7 +214,6 @@ public class dayTimer : MonoBehaviour
             background.color = col;
             yield return new WaitForEndOfFrame();
         }
-
 
         //Display stats window
         endingScreen.gameObject.SetActive(true);
@@ -262,8 +266,19 @@ public class dayTimer : MonoBehaviour
         yield return new WaitForSeconds(2);
         SoundManager.instance.playSound(0, .95f);
 
+        StatsBox.gameObject.SetActive(true);
         StatsBox.enabled = true;
         StatsTitle.enabled = true;
+
+        if (multiplayerManager.instance.numberOfPlayers>1)
+        {
+            if (multiplayerManager.instance.currentActivePlayer == 0)
+                PlayerText.text = "<color=#0080FFFF>Player 1</color>";
+            else
+                PlayerText.text = "<color=red>Player 2</color>";
+
+            PlayerText.enabled = true;
+        }
 
         yield return new WaitForSeconds(.8f);
         SoundManager.instance.playSound(0, .95f);
@@ -306,6 +321,23 @@ public class dayTimer : MonoBehaviour
         continueText.SetActive(true);
     }
 
+    void ResetEndingText()
+    {
+        //This needs to go somewhere else
+        //endingScreen.gameObject.SetActive(true);
+
+        PlayerText.enabled = false;
+        StatsBox.enabled = false;
+        StatsTitle.enabled = false;
+        StatsDeath.enabled = false;
+        StatsBossDeath.enabled = false;
+        StatsEmail.enabled = false;
+        StatsProf.enabled = false;
+        StatsBossAnger.enabled = false;
+        GameFinished = false;
+        continueText.SetActive(false);
+    }
+
     IEnumerator NextDayTransition() //Fades the screen to black, display the day # text and fades back in
     {
         GameStateManager.instance.ChangeState(GameStates.STATE_DAYOVER);
@@ -325,8 +357,17 @@ public class dayTimer : MonoBehaviour
         DayText.text = (weekDays)StatTracker.instance.numOfDaysCompleted[multiplayerManager.instance.currentActivePlayer] + "\n <size=64>" + (StatTracker.instance.numOfDaysCompleted[multiplayerManager.instance.currentActivePlayer] + 4)+ "th May 1991</size> \n";
 
         //Set the number of target emails for the day
-        emailTargetText.text = "Target: " + (4 + StatTracker.instance.numOfDaysCompleted[multiplayerManager.instance.currentActivePlayer]) +"x";
-        
+        emailTargetText.text = "Target: " + (3 + StatTracker.instance.numOfDaysCompleted[multiplayerManager.instance.currentActivePlayer]) + "x";
+        if (multiplayerManager.instance.numberOfPlayers > 1)
+        {
+            if (multiplayerManager.instance.currentActivePlayer == 0)
+                CurrentPlayer.text = "Current player: <color=#0080FFFF>Player 1</color>";
+            else
+                CurrentPlayer.text = "Current player: <color=red>Player 2</color>";
+        }
+        else
+            CurrentPlayer.text = "";
+
         //Fade in office noises as the day begins
         SoundManager.instance.officeAmbience.DOFade(SoundManager.instance.volumeMultiplayer * 0.3f, 2);
 
@@ -376,8 +417,7 @@ public class dayTimer : MonoBehaviour
         #endregion
 
         yield return new WaitForSeconds(1);
-
-        Debug.Log("the bit that kills computers");
+        
         if(!introMonitor.instance.gameIntro)
         {
             introMonitor.instance.gameObject.SetActive(true);
@@ -387,7 +427,6 @@ public class dayTimer : MonoBehaviour
         {
             _wo.Reset();
         }
-        Debug.Log("stuff");
         TileManager.instance.UpgradeSpawners(0.855f, 0.855f, 1.0875f); //Do I spy magic numbers? Shaun, you naughty boy.
         Boss.instance.ModifyBoss(1.0875f); //holy shit thats a specific number
         BossFace.instance.Reset();
@@ -430,23 +469,15 @@ public class dayTimer : MonoBehaviour
             {
                 if (multiplayerManager.instance.currentActivePlayer == 0)
                 {
-                    while (Player1Text.color.a > 0)
-                    {
-                        Color col = Player1Text.color;
-                        col.a -= Time.deltaTime;
-                        Player1Text.color = col;
-                        yield return new WaitForEndOfFrame();
-                    }
+                    Color col = Player1Text.color;
+                    col.a -= Time.deltaTime;
+                    Player1Text.color = col;
                 }
                 else
                 {
-                    while (Player2Text.color.a > 0) 
-                    {
-                        Color col = Player2Text.color;
-                        col.a -= Time.deltaTime;
-                        Player2Text.color = col;
-                        yield return new WaitForEndOfFrame();
-                    }
+                    Color col = Player2Text.color;
+                    col.a -= Time.deltaTime;
+                    Player2Text.color = col;
                 }
             }
             yield return new WaitForEndOfFrame();
@@ -552,7 +583,7 @@ public class dayTimer : MonoBehaviour
             else
                 performanceRank = 7;
 
-            int min = 4 + StatTracker.instance.numOfDaysCompleted[multiplayerManager.instance.currentActivePlayer] - 1;
+            int min = 3 + StatTracker.instance.numOfDaysCompleted[multiplayerManager.instance.currentActivePlayer];
 
             if (todaysEmails.Count < min)
             {
@@ -627,6 +658,7 @@ public class dayTimer : MonoBehaviour
         finishedDisplay = true;
 
         yield return new WaitForSeconds(0.5f);
+        transitioning = false;
         continueTexteEOD.SetActive(true);
     }
 }

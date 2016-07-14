@@ -34,7 +34,7 @@ public class Player : WorldObject
 
     [SerializeField] private Transform playerSpawn = null;
     [SerializeField] private Transform froggerSpawn = null;
-    private bool froggerCompleted = false;
+    public bool froggerCompleted = false;
     
     [SerializeField] private Animator anim = null;
     private PlayerState state = PlayerState.ACTIVE;
@@ -76,7 +76,6 @@ public class Player : WorldObject
             }
             coolDown = 0.0f;
             froggerCompleted = true;
-            respawnParticles.transform.position = playerSpawn.position;
             dayTimer.instance.NewDayTransition();
         }
 
@@ -502,6 +501,7 @@ public class Player : WorldObject
             {
                 if (deathCool > maxDeathcool - .8f && !respawnParticles.isPlaying)
                 {
+                    respawnParticles.transform.position = playerSpawn.position;
                     respawnParticles.Play();
                     SoundManager.instance.playSound(spawn);
                 }
@@ -520,7 +520,6 @@ public class Player : WorldObject
                 tieSpriteRenderer.enabled = true;
                 state = PlayerState.ACTIVE;
                 deathCool = 0;
-                //transform.position = new Vector2(-0.5f, -1.0f);
                 angle = 0;
                 AddToWorld();
             }

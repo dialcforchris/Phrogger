@@ -55,25 +55,38 @@ public class StatTracker : MonoBehaviour
 
     public void setLifeCount(int l) //Remember to call this when switching players, make sure the HuD is accurate
     {
-        foreach (Animator a in lifeAnimators)
-        {
-            a.Play("life_idle_dead");
-        }
-        for (int i=0; i < l;i++)
+        for (int i = 0; i < l; i++)
         {
             lifeAnimators[i].Play("life_idle");
+        }
+
+        for (int i = l; i < lifeAnimators.Length; i++)
+        {
+            lifeAnimators[i].Play("life_idle_dead");
         }
     }
 
     public float getAveragePerformance()
     {
-        float total=0;
-        for (int i=0; i < dayPerformances.Count;i++)
+        float total = 0;
+        if (multiplayerManager.instance.currentActivePlayer == 0)
         {
-            total += dayPerformances[i];
-        }
+            for (int i = 0; i < dayPerformances.Count; i++)
+            {
+                total += dayPerformances[i];
+            }
 
-        return total / dayPerformances.Count;
+            return total / dayPerformances.Count;
+        }
+        else
+        {
+            for (int i = 0; i < dayPerformancesP2.Count; i++)
+            {
+                total += dayPerformancesP2[i];
+            }
+
+            return total / dayPerformancesP2.Count;
+        }
     }
 
     public void addDayPerformance(int performance)
@@ -106,6 +119,9 @@ public class StatTracker : MonoBehaviour
 
     public IEnumerator GameOverUIReveal()
     {
+        multiplayerManager.instance.win[multiplayerManager.instance.currentActivePlayer] = false;
+
+        //We come here when a player dies and has no lives left
         SoundManager.instance.officeAmbience.DOFade(0, 3);
         SoundManager.instance.music.Stop();
 
@@ -200,6 +216,20 @@ public class StatTracker : MonoBehaviour
             yield return null;
 
         GameOverUI.SetActive(false);
+        
+        //Reset everything
+        causeOfDeath.enabled = false;
+        daysCompleted.enabled = false;
+        daysCompletedValue.enabled = false;
+        emailsFiled.enabled = false;
+        emailsFiledValue.enabled = false;
+        emailsHandled.enabled = false;
+        emailsHandledValue.enabled = false;
+        professionalism.enabled = false;
+        professionalismValue.enabled = false;
+        finalScore.enabled = false;
+        finalScoreValue.enabled = false;
+
         bossAngeredDay[multiplayerManager.instance.currentActivePlayer] = 0;
         LeaderBoard.instance.SetScore(score[multiplayerManager.instance.currentActivePlayer]);
     }
