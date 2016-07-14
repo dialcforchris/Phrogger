@@ -36,7 +36,7 @@ public class mailOpener : MonoBehaviour
         public string name;
         public List<mail> messages;
         public bool randomSelection;
-        public int index;
+        public int[] index;
         public int score;
     }
 
@@ -53,6 +53,8 @@ public class mailOpener : MonoBehaviour
         instance = this;
         //Always remember to seed your random :)
         Random.seed = System.DateTime.Now.Millisecond;
+        nonFrogMail = new int[2] { 0, 0 };
+        frogStory = new bool[2] { true, true };
     }
 
     public void enterView()
@@ -187,20 +189,20 @@ public class mailOpener : MonoBehaviour
         angryParticles.Stop();
     }
 
-    int nonFrogMail=0;
-    bool frogStory = true;
+    int[] nonFrogMail;
+    bool[] frogStory;
     void pickEmail()
     {
-        if (nonFrogMail > 5 && frogStory)
+        if (nonFrogMail[multiplayerManager.instance.currentActivePlayer] > 5 && frogStory[multiplayerManager.instance.currentActivePlayer])
         {
-            nonFrogMail = 0;
+            nonFrogMail[multiplayerManager.instance.currentActivePlayer] = 0;
             selectedList = messages[0];
         }
         else
         {
             //Pick a random list of emails to display messages from
             selectedList = messages[Random.Range(1, messages.Count)];
-            nonFrogMail++;
+            nonFrogMail[multiplayerManager.instance.currentActivePlayer]++;
         }
 
         if (selectedList.randomSelection)
@@ -216,12 +218,14 @@ public class mailOpener : MonoBehaviour
                 messages.Remove(selectedList);
             }
         }
-        else
+        else //Only list of random messages is frog mail
         {
-            currentMail = selectedList.messages[selectedList.index];
-            selectedList.index++;
-            if (selectedList.index > selectedList.messages.Count)
-                messages.Remove(selectedList);
+            currentMail = selectedList.messages[selectedList.index[multiplayerManager.instance.currentActivePlayer]];
+            selectedList.index[multiplayerManager.instance.currentActivePlayer]++;
+
+            //When we're done with the frog mail, for a player, don't remove the messages from the list, just make them inaccessable for that player.
+            if (selectedList.index[multiplayerManager.instance.currentActivePlayer] > selectedList.messages.Count)
+                frogStory[multiplayerManager.instance.currentActivePlayer] = false;
         }
 
         emailContent.sprite = currentMail.image;
@@ -362,7 +366,7 @@ public class mailOpener : MonoBehaviour
                     activeCountdown = false;
                     BossFace.instance.addEmailAngerXP();
                     if (selectedList == messages[0])
-                        frogStory = false;
+                        frogStory[multiplayerManager.instance.currentActivePlayer] = false;
 
                     //Do animation for email being destroyed
                     monitorAnimator.Play("mail_junk");

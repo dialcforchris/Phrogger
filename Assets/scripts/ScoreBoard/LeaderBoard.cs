@@ -160,10 +160,14 @@ public class LeaderBoard : MonoBehaviour
         }
         else
         {
+            //Increment player count
+            multiplayerManager.instance.NextPlayer();
+
+            //If the other player also has no lives, trigger game over
             if (Player.instance.strikes[multiplayerManager.instance.currentActivePlayer] == 0)
                 StartCoroutine(gameOverScreen.instance.TriggerGameOver());
             else
-                StartCoroutine(MainMenu.instance.wholeScreenFade(true));
+                dayTimer.instance.NewDayTransition(); //Otherwise, continue play, do the next day.
         }
     }
     public void SetName(string _name)

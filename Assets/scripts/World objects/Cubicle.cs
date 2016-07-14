@@ -159,7 +159,7 @@ public class Cubicle : WorldObject
             {
                 if (wo.tag == "Worker")
                 {
-                    if (((Worker)wo).helpNeeded)
+                    if (((Worker)wo).helpNeeded && !GameStateManager.instance.bossTransitioning)
                     {
                         mailOpener.instance.enterView();
                         ((Worker)wo).FinishedHelping();

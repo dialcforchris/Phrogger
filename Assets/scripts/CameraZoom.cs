@@ -19,10 +19,6 @@ public class CameraZoom : MonoBehaviour {
 
     public IEnumerator Zoom(Transform target,bool IntroZoom)
     {
-       /* while (GameStateManager.instance.GetState() != GameStates.STATE_GAMEPLAY)
-        {
-            yield return null;
-        }*/
         float lerpy = 0;
         if (!IntroZoom)
         {
@@ -99,6 +95,8 @@ public class CameraZoom : MonoBehaviour {
         {
             GameStateManager.instance.ChangeState(GameStates.STATE_GAMEPLAY);
         }
+        if (!IntroZoom)
+            GameStateManager.instance.bossTransitioning = false;
     }
 
     public void doAZoom(bool b, Transform t = null)

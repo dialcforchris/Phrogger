@@ -23,6 +23,8 @@ public class GameStateManager : MonoBehaviour
     private GameStates currentState = GameStates.STATE_DAYOVER;
     public GameStates previousState;
 
+    public bool bossTransitioning;
+
     private void Awake()
     {
         if (singleton)

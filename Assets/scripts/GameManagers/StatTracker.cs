@@ -13,6 +13,7 @@ public class StatTracker : MonoBehaviour
     public float[] totalProfessionalism;
     public Text ScoreText;
     List<int> dayPerformances = new List<int>();
+    List<int> dayPerformancesP2 = new List<int>();
 
     [Header("Lives UI")]
     public Animator[] lifeAnimators;
@@ -77,7 +78,10 @@ public class StatTracker : MonoBehaviour
 
     public void addDayPerformance(int performance)
     {
-        dayPerformances.Add(performance);
+        if (multiplayerManager.instance.currentActivePlayer == 0)
+            dayPerformances.Add(performance);
+        else
+            dayPerformancesP2.Add(performance);
     }
 
     // Update is called once per frame

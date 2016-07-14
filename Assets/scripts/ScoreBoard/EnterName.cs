@@ -141,7 +141,18 @@ public class EnterName : MonoBehaviour
         finished = true;
         if (Player.instance.strikes[multiplayerManager.instance.currentActivePlayer] == 0)
         {
-            gameOverScreen.instance.StartCoroutine(gameOverScreen.instance.TriggerGameOver());
+            //Check if the other play still has any lives
+            multiplayerManager.instance.NextPlayer();
+
+            if (Player.instance.strikes[multiplayerManager.instance.currentActivePlayer] == 0)
+            {
+                gameOverScreen.instance.StartCoroutine(gameOverScreen.instance.TriggerGameOver());
+            }
+            else
+            {
+                //trigger next day
+                dayTimer.instance.NewDayTransition();
+            }
             gameObject.SetActive(false);
         }
         else

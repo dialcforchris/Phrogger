@@ -97,6 +97,7 @@ public class MainMenu : MonoBehaviour
                 switch (menuIndex)
                 {
                     case 0:
+                        playerSelectionIndex = 1;
                         menuImages[0].gameObject.SetActive(false);
                         menuImages[1].gameObject.SetActive(false);
                         menuImages[2].gameObject.SetActive(true);
@@ -150,7 +151,7 @@ public class MainMenu : MonoBehaviour
                             StartCoroutine(StartGame());
                         else
                         {
-                            //something else
+                            StartCoroutine(FadeInOutMainMenuUI(false));
 
                             //Turn off all the frogger sounds
                             Player.instance.silenceOriginalFroggerSounds(0.75f);
@@ -167,6 +168,8 @@ public class MainMenu : MonoBehaviour
                             StartCoroutine(StartGame());
                         else
                         {
+                            StartCoroutine(FadeInOutMainMenuUI(false));
+
                             //Turn off all the frogger sounds
                             Player.instance.silenceOriginalFroggerSounds(0.75f);
 
@@ -211,12 +214,14 @@ public class MainMenu : MonoBehaviour
                 switch (playerSelectionIndex)
                 {
                     case 1:
+                        gameModeIndex = 1;
                         multiplayerManager.instance.numberOfPlayers = 1;
                         menuImages[1].gameObject.SetActive(true);
                         menuImages[2].gameObject.SetActive(false);
                         currentState = menuState.modeSelect;
                         break;
                     case 2:
+                        gameModeIndex = 1;
                         multiplayerManager.instance.numberOfPlayers = 2;
                         menuImages[1].gameObject.SetActive(true);
                         menuImages[2].gameObject.SetActive(false);

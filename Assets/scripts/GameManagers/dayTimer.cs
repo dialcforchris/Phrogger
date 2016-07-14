@@ -60,6 +60,7 @@ public class dayTimer : MonoBehaviour
         public bool correctAnswer;
     }
 
+
     enum weekDays
     {
         Monday,
@@ -177,6 +178,9 @@ public class dayTimer : MonoBehaviour
         {
             if(Input.GetButtonDown("Fire1") && !transitioning)
             {
+                if (Player.instance.strikes[0] > 0 && Player.instance.strikes[1] > 0)
+                    multiplayerManager.instance.NextPlayer();
+
                 continueTexteEOD.SetActive(false);
                 StatTracker.instance.CalculateProfessionalism();
                 if (StatTracker.instance.numOfDaysCompleted[multiplayerManager.instance.currentActivePlayer] < maxDays)
@@ -313,11 +317,17 @@ public class dayTimer : MonoBehaviour
             background.color = col;
             yield return new WaitForEndOfFrame();
         }
-        
+
+        //Make sure the lives on the HuD are accurate to the the next player's life count.
+        StatTracker.instance.setLifeCount(Player.instance.strikes[multiplayerManager.instance.currentActivePlayer]);
+
+        //Change date text to appropriate day
         DayText.text = (weekDays)StatTracker.instance.numOfDaysCompleted[multiplayerManager.instance.currentActivePlayer] + "\n <size=64>" + (StatTracker.instance.numOfDaysCompleted[multiplayerManager.instance.currentActivePlayer] + 4)+ "th May 1991</size> \n";
 
+        //Set the number of target emails for the day
         emailTargetText.text = "Target: " + (4 + StatTracker.instance.numOfDaysCompleted[multiplayerManager.instance.currentActivePlayer]) +"x";
-
+        
+        //Fade in office noises as the day begins
         SoundManager.instance.officeAmbience.DOFade(SoundManager.instance.volumeMultiplayer * 0.3f, 2);
 
         //Fade in day text
@@ -381,7 +391,6 @@ public class dayTimer : MonoBehaviour
         TileManager.instance.UpgradeSpawners(0.855f, 0.855f, 1.0875f); //Do I spy magic numbers? Shaun, you naughty boy.
         Boss.instance.ModifyBoss(1.0875f); //holy shit thats a specific number
         BossFace.instance.Reset();
-        Debug.Log("end stuff");
         currentTime = 0;
         progressUI.SetActive(false);
         dayFinishedText.Stop();
@@ -419,17 +428,25 @@ public class dayTimer : MonoBehaviour
             //If this is a 2 player thing, fade out player text too
             if (multiplayerManager.instance.numberOfPlayers > 1)
             {
-                while (Player1Text.color.a < 1)
+                if (multiplayerManager.instance.currentActivePlayer == 0)
                 {
-                    Color col = Player1Text.color;
-                    col.a -= Time.deltaTime;
-                    Player1Text.color = col;
+                    while (Player1Text.color.a > 0)
+                    {
+                        Color col = Player1Text.color;
+                        col.a -= Time.deltaTime;
+                        Player1Text.color = col;
+                        yield return new WaitForEndOfFrame();
+                    }
                 }
-                while (Player2Text.color.a < 1)
+                else
                 {
-                    Color col = Player2Text.color;
-                    col.a -= Time.deltaTime;
-                    Player2Text.color = col;
+                    while (Player2Text.color.a > 0) 
+                    {
+                        Color col = Player2Text.color;
+                        col.a -= Time.deltaTime;
+                        Player2Text.color = col;
+                        yield return new WaitForEndOfFrame();
+                    }
                 }
             }
             yield return new WaitForEndOfFrame();
@@ -454,7 +471,7 @@ public class dayTimer : MonoBehaviour
         
         StatTracker.instance.numOfDaysCompleted[multiplayerManager.instance.currentActivePlayer]++;
 
-        dayCompletedHeader.text = "Day "+StatTracker.instance.numOfDaysCompleted + " completed";
+        dayCompletedHeader.text = "Day "+StatTracker.instance.numOfDaysCompleted[multiplayerManager.instance.currentActivePlayer] + " completed";
         dayCompletedHeader.enabled = true;
         yield return new WaitForSeconds(1.5f);
         GameStateManager.instance.ChangeState(GameStates.STATE_DAYOVER);

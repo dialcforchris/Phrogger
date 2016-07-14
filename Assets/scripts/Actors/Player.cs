@@ -49,6 +49,11 @@ public class Player : WorldObject
     
     protected override void Awake()
     {
+        if (System.DateTime.Now.Month == 6) //It must be pride month!
+            tieSpriteRenderer.sprite = ties[18];//Use pride tie
+        else
+            tieSpriteRenderer.sprite = ties[Random.Range(0, ties.Length)];
+
         strikes = new int[2] { 3, 3 };
         instance = this;
         base.Awake();
@@ -407,10 +412,12 @@ public class Player : WorldObject
         FrogCorpse frogCorpse = (FrogCorpse)Instantiate(corpse, transform.position, transform.rotation);
         frogCorpse.blood.transform.position = frogCorpse.transform.position;
 
+        //Rather than this leave behind a corpse call remove from world, move position then add to world immediately
         spriteRenderer.enabled = false;
         transform.position = playerSpawn.position;
         RemoveFromWorld();
-        //Rather than this leave behind a corpse call remove from world, move position then add to world immediately
+
+        //Decrease life count
         strikes[multiplayerManager.instance.currentActivePlayer] -= 1;
         StatTracker.instance.changeLifeCount(strikes[multiplayerManager.instance.currentActivePlayer], false);
 
@@ -504,7 +511,12 @@ public class Player : WorldObject
             {
                 anim.SetBool("Dead", false);
                 spriteRenderer.enabled = true;
-                tieSpriteRenderer.sprite = ties[Random.Range(0, ties.Length)];
+
+                if (System.DateTime.Now.Month == 6) //It must be pride month!
+                    tieSpriteRenderer.sprite = ties[18];//Use pride tie
+                else
+                    tieSpriteRenderer.sprite = ties[Random.Range(0, ties.Length)];
+
                 tieSpriteRenderer.enabled = true;
                 state = PlayerState.ACTIVE;
                 deathCool = 0;

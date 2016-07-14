@@ -225,18 +225,17 @@ public class BossFace :MonoBehaviour
             switch (faceState)
             {
                 case FaceState.UI:
-                    {
-                        spriteRenderer.sprite = faceList[bossAngerLevel];
-                        break;
-                    }
+                    spriteRenderer.sprite = faceList[bossAngerLevel];
+                    break;
                 case FaceState.CHASE:
+                    if (dayTimer.instance.time + 6 < dayTimer.instance.secondsDay)
                     {
-                        //FIX ME
+                        GameStateManager.instance.bossTransitioning = true;
                         spriteRenderer.sprite = bossGone;
                         bossFaceAnimator.Play("boss_leave");
                         Invoke("bossChase", .5f);
-                        break;
                     }
+                    break;
             }
         }
     }
