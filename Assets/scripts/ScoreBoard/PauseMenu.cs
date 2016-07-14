@@ -19,7 +19,7 @@ public class PauseMenu : MenuSelect
     {
         if (selectBox == 0)
         {
-            if (Input.GetButtonDown("Fire1"))
+            if (Input.GetButtonDown("Fire" + multiplayerManager.instance.currentActivePlayer.ToString()))
                 GameStateManager.instance.ChangeState(GameStateManager.instance.previousState);
         }
         else if (selectBox == 1)
@@ -30,7 +30,7 @@ public class PauseMenu : MenuSelect
         {
             DoAction(ChangeMusicSlide);
         }
-        if (Input.GetButtonDown("Fire1"))
+        if (Input.GetButtonDown("Fire" + multiplayerManager.instance.currentActivePlayer.ToString()))
         {
             if (selectBox == 3)
             {
@@ -52,12 +52,12 @@ public class PauseMenu : MenuSelect
             if (Input.GetJoystickNames().Length > 0)
             {
                 if (Input.GetJoystickNames()[0] == "")
-                    soundfxSlider.value += Input.GetAxis("Horizontal") * 10;
+                    soundfxSlider.value += Input.GetAxis("HorizontalStick" + multiplayerManager.instance.currentActivePlayer.ToString()) * 10;
                 else
-                    soundfxSlider.value += Input.GetAxis("Horizontal") / 100;
+                    soundfxSlider.value += Input.GetAxis("HorizontalStick" + multiplayerManager.instance.currentActivePlayer.ToString()) / 100;
             }
             else
-                soundfxSlider.value += Input.GetAxis("Horizontal") * 10;
+                soundfxSlider.value += Input.GetAxis("HorizontalStick" + multiplayerManager.instance.currentActivePlayer.ToString()) * 10;
 
             SoundManager.instance.changeVolume(soundfxSlider.value);
         }
@@ -69,12 +69,12 @@ public class PauseMenu : MenuSelect
             if (Input.GetJoystickNames().Length > 0)
             {
                 if (Input.GetJoystickNames()[0] == "")
-                    musicSlider.value += Input.GetAxis("Horizontal") * 10;
+                    musicSlider.value += Input.GetAxis("HorizontalStick" + multiplayerManager.instance.currentActivePlayer.ToString()) * 10;
                 else
-                    musicSlider.value += Input.GetAxis("Horizontal") / 100;
+                    musicSlider.value += Input.GetAxis("HorizontalStick" + multiplayerManager.instance.currentActivePlayer.ToString()) / 100;
             }
             else
-                musicSlider.value += Input.GetAxis("Horizontal") * 10;
+                musicSlider.value += Input.GetAxis("HorizontalStick" + multiplayerManager.instance.currentActivePlayer.ToString()) * 10;
 
             SoundManager.instance.music.volume = musicSlider.value;
             SoundManager.instance.musicVolume = musicSlider.value;

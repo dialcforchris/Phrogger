@@ -73,11 +73,11 @@ public class MainMenu : MonoBehaviour
         #region main menu
         if (currentState == menuState.mainMenu)
         {
-            if (Input.GetAxis("Vertical") != 0 && scrolling == false)
+            if (Input.GetAxis("VerticalStick" + multiplayerManager.instance.currentActivePlayer.ToString()) != 0 && scrolling == false)
             {
                 scrolling = true;
                 menuItems[menuIndex].color = Color.white;
-                menuIndex -= (Input.GetAxis("Vertical") > 0 ? 1 : -1);
+                menuIndex -= (Input.GetAxis("VerticalStick" + multiplayerManager.instance.currentActivePlayer.ToString()) > 0 ? 1 : -1);
                 if (menuIndex < 0)
                     menuIndex = menuItems.Length - 1;
                 if (menuIndex > menuItems.Length - 1)
@@ -86,12 +86,12 @@ public class MainMenu : MonoBehaviour
                 SoundManager.instance.playSound(0, .75f);
                 menuItems[menuIndex].color = Color.green;
             }
-            else if (Input.GetAxis("Vertical") == 0)
+            else if (Input.GetAxis("VerticalStick" + multiplayerManager.instance.currentActivePlayer.ToString()) == 0)
             {
                 scrolling = false;
             }
 
-            if (Input.GetButtonDown("Fire1"))
+            if (Input.GetButtonDown("Fire"+multiplayerManager.instance.currentActivePlayer.ToString()))
             {
                 SoundManager.instance.playSound(0, .75f);
                 switch (menuIndex)
@@ -124,11 +124,11 @@ public class MainMenu : MonoBehaviour
         #region gamemode selection
         else if (currentState == menuState.modeSelect)
         {
-            if (Input.GetAxis("Vertical") != 0 && scrolling == false)
+            if (Input.GetAxis("VerticalStick" + multiplayerManager.instance.currentActivePlayer.ToString()) != 0 && scrolling == false)
             {
                 scrolling = true;
                 GameModeOptions[gameModeIndex].color = Color.white;
-                gameModeIndex -= (Input.GetAxis("Vertical") > 0 ? 1 : -1);
+                gameModeIndex -= (Input.GetAxis("VerticalStick" + multiplayerManager.instance.currentActivePlayer.ToString()) > 0 ? 1 : -1);
                 if (gameModeIndex < 1)
                     gameModeIndex = GameModeOptions.Length - 1;
                 if (gameModeIndex > GameModeOptions.Length - 1)
@@ -136,12 +136,12 @@ public class MainMenu : MonoBehaviour
                 SoundManager.instance.playSound(0, .75f);
                 GameModeOptions[gameModeIndex].color = Color.green;
             }
-            else if (Input.GetAxis("Vertical") == 0)
+            else if (Input.GetAxis("VerticalStick" + multiplayerManager.instance.currentActivePlayer.ToString()) == 0)
             {
                 scrolling = false;
             }
 
-            if (Input.GetButtonDown("Fire1"))
+            if (Input.GetButtonDown("Fire" + multiplayerManager.instance.currentActivePlayer.ToString()))
             {
                 SoundManager.instance.playSound(0, .75f);
                 switch (gameModeIndex)
@@ -196,11 +196,11 @@ public class MainMenu : MonoBehaviour
         #region player selection
         else if (currentState == menuState.playerSelect)
         {
-            if (Input.GetAxis("Vertical") != 0 && scrolling == false)
+            if (Input.GetAxis("VerticalStick" + multiplayerManager.instance.currentActivePlayer.ToString()) != 0 && scrolling == false)
             {
                 scrolling = true;
                 PlayerOptions[playerSelectionIndex].color = Color.white;
-                playerSelectionIndex -= (Input.GetAxis("Vertical") > 0 ? 1 : -1);
+                playerSelectionIndex -= (Input.GetAxis("VerticalStick" + multiplayerManager.instance.currentActivePlayer.ToString()) > 0 ? 1 : -1);
                 if (playerSelectionIndex < 1)
                     playerSelectionIndex = PlayerOptions.Length - 1;
                 if (playerSelectionIndex > PlayerOptions.Length - 1)
@@ -208,12 +208,12 @@ public class MainMenu : MonoBehaviour
                 SoundManager.instance.playSound(0, .75f);
                 PlayerOptions[playerSelectionIndex].color = Color.green;
             }
-            else if (Input.GetAxis("Vertical") == 0)
+            else if (Input.GetAxis("VerticalStick" + multiplayerManager.instance.currentActivePlayer.ToString()) == 0)
             {
                 scrolling = false;
             }
 
-            if (Input.GetButtonDown("Fire1"))
+            if (Input.GetButtonDown("Fire" + multiplayerManager.instance.currentActivePlayer.ToString()))
             {
                 SoundManager.instance.playSound(0, .75f);
                 switch (playerSelectionIndex)
@@ -352,7 +352,7 @@ public class MainMenu : MonoBehaviour
         while (Credits.rectTransform.anchoredPosition.y < 900)
         {
             Credits.rectTransform.anchoredPosition = Vector2.Lerp(-Vector2.up * 1000, Vector2.up * 1000, lerpy / 25);
-            if (Input.GetButton("Fire1"))
+            if (Input.GetButton("Fire" + multiplayerManager.instance.currentActivePlayer.ToString()))
                 lerpy += Time.deltaTime * 5;
 
             lerpy += Time.deltaTime;
@@ -379,7 +379,7 @@ public class MainMenu : MonoBehaviour
     IEnumerator LeaderBoard()
     {
         yield return StartCoroutine(SwitchViews(true));
-        yield return WaitForKeyDown("Fire1");
+        yield return WaitForKeyDown("Fire" + multiplayerManager.instance.currentActivePlayer.ToString());
         yield return StartCoroutine(SwitchViews(false));
         currentState = menuState.mainMenu;
     }

@@ -156,18 +156,20 @@ public class dayTimer : MonoBehaviour
 
         if (GameFinished)
         {
-            if (Input.GetButtonDown("Fire1"))
+            if (Input.GetButtonDown("Fire" + multiplayerManager.instance.currentActivePlayer.ToString()
+                ))
             {
                 continueText.SetActive(false);
                 StatsBox.gameObject.SetActive(false);
             }
-            if (Input.GetButtonUp("Fire1"))
+            if (Input.GetButtonUp("Fire" + multiplayerManager.instance.currentActivePlayer.ToString()))
             {
                 continueText.SetActive(true);
                 StatsBox.gameObject.SetActive(true);
             }
 
-            if (Input.GetButton("Fire1") && Input.GetAxis("Vertical") < 0)
+            if (Input.GetButton("Fire"+multiplayerManager.instance.currentActivePlayer.ToString()) 
+                && Input.GetAxis("VerticalStick" + multiplayerManager.instance.currentActivePlayer.ToString()) < 0)
             {
                 GameFinished = false;
                 continueText.SetActive(false);
@@ -181,7 +183,7 @@ public class dayTimer : MonoBehaviour
 
         if (GameStateManager.instance.GetState() == GameStates.STATE_DAYOVER && finishedDisplay)
         {
-            if(Input.GetButtonDown("Fire1") && !transitioning)
+            if (Input.GetButtonDown("Fire" + multiplayerManager.instance.currentActivePlayer.ToString()) && !transitioning)
             {
                 if (Player.instance.strikes[0] > 0 && Player.instance.strikes[1] > 0)
                     multiplayerManager.instance.NextPlayer();

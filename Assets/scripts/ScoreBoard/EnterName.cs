@@ -38,17 +38,18 @@ public class EnterName : MonoBehaviour
         box[selectBox].text = ((char)currentCharacter[selectBox]).ToString();
         ChangeTextColour();
         score.text = "Your Score: " + StatTracker.instance.GetScore().ToString();
-        if (Input.GetButtonDown("Fire1") && !finished)
+        if (Input.GetButtonDown("Fire" + multiplayerManager.instance.currentActivePlayer.ToString()) && !finished)
             SelectName();
     }
 
     void MenuInput()
     {
-        if (ConvertToPos("Horizontal", "Vertical"))
+        if (ConvertToPos("HorizontalStick" + multiplayerManager.instance.currentActivePlayer.ToString(),
+            "VerticalStick" + multiplayerManager.instance.currentActivePlayer.ToString()))
         {
-            if (Input.GetAxis("Horizontal") != 0 && SelectCoolDown())
+            if (Input.GetAxis("HorizontalStick" + multiplayerManager.instance.currentActivePlayer.ToString()) != 0 && SelectCoolDown())
             {
-                if (Input.GetAxis("Horizontal") > 0)
+                if (Input.GetAxis("HorizontalStick" + multiplayerManager.instance.currentActivePlayer.ToString()) > 0)
                 {
                     if (selectBox == box.Length - 1)
                     {
@@ -59,7 +60,7 @@ public class EnterName : MonoBehaviour
                         selectBox++;
                     }
                 }
-                else if (Input.GetAxis("Horizontal") < 0)
+                else if (Input.GetAxis("HorizontalStick" + multiplayerManager.instance.currentActivePlayer.ToString()) < 0)
                 {
                     if (selectBox == 0)
                     {
@@ -76,9 +77,9 @@ public class EnterName : MonoBehaviour
         }
         else
         {
-            if (Input.GetAxis("Vertical") != 0 && SelectCoolDown())
+            if (Input.GetAxis("VerticalStick" + multiplayerManager.instance.currentActivePlayer.ToString()) != 0 && SelectCoolDown())
             {
-                if (Input.GetAxis("Vertical") < 0)
+                if (Input.GetAxis("VerticalStick" + multiplayerManager.instance.currentActivePlayer.ToString()) < 0)
                 {
                     if (selectChar > 65)
                         selectChar--;
@@ -86,7 +87,7 @@ public class EnterName : MonoBehaviour
                     else
                         selectChar = 90;
                 }
-                else if (Input.GetAxis("Vertical") > 0)
+                else if (Input.GetAxis("VerticalStick" + multiplayerManager.instance.currentActivePlayer.ToString()) > 0)
                 {
                     if (selectChar < 90)
                         selectChar++;

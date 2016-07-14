@@ -26,7 +26,7 @@ public class gameOverScreen : MonoBehaviour
         }
         SoundManager.instance.playSound(sadTromboneSound);
 
-        while (!Input.GetButtonDown("Fire1"))
+        while (!Input.GetButtonDown("Fire" + multiplayerManager.instance.currentActivePlayer.ToString()))
             yield return null;
 
         StartCoroutine(MainMenu.instance.wholeScreenFade(true));

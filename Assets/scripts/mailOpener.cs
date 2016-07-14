@@ -348,12 +348,12 @@ public class mailOpener : MonoBehaviour
             || monitorAnimator.GetCurrentAnimatorStateInfo(0).IsName("mail_idle_right"))
         {
 
-            if (Input.GetAxis("Horizontal") != 0)
+            if (Input.GetAxis("HorizontalStick" + multiplayerManager.instance.currentActivePlayer.ToString()) != 0)
             {
-                moveEmail(Input.GetAxis("Horizontal") > 0 ? 1 : -1);
+                moveEmail(Input.GetAxis("HorizontalStick" + multiplayerManager.instance.currentActivePlayer.ToString()) > 0 ? 1 : -1);
             }
 
-            if (Input.GetButtonDown("Fire1") && emailPos !=0)
+            if (Input.GetButtonDown("Fire" + multiplayerManager.instance.currentActivePlayer.ToString()) && emailPos != 0)
             {
                 if (!soundPlaying)
                 {

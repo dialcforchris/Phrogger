@@ -67,7 +67,8 @@ public class Player : WorldObject
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetButtonDown("Fire1") && GameStateManager.instance.GetState() == GameStates.STATE_FROGGER)
+        if (Input.GetButtonDown("Fire" + multiplayerManager.instance.currentActivePlayer.ToString())
+            && GameStateManager.instance.GetState() == GameStates.STATE_FROGGER)
         {
             //Fade out all the sounds
             foreach (AudioSource a in originalFroggerSounds)
@@ -86,7 +87,8 @@ public class Player : WorldObject
                 HelpWorker();
                 if (joyOrDPad)
                 {
-                    ConvertToPos("HorizontalStick", "VerticalStick");
+                    ConvertToPos("HorizontalStick" + multiplayerManager.instance.currentActivePlayer.ToString(), 
+                        "VerticalStick" + multiplayerManager.instance.currentActivePlayer.ToString());
                     JoyStickMovement();
                     JoyMoveCoolDown();
                 }
@@ -108,7 +110,8 @@ public class Player : WorldObject
                 {
                     if (joyOrDPad)
                     {
-                        ConvertToPos("HorizontalStick", "VerticalStick");
+                        ConvertToPos("HorizontalStick" + multiplayerManager.instance.currentActivePlayer.ToString(),
+                            "VerticalStick" + multiplayerManager.instance.currentActivePlayer.ToString());
                         JoyStickMovement();
                         JoyMoveCoolDown();
                     }
@@ -212,7 +215,8 @@ public class Player : WorldObject
 
     void JoyStickMovement()
     {
-        if ((Input.GetAxis("VerticalStick") != 0 || Input.GetAxis("HorizontalStick") != 0) && !MoveCooldown())
+        if ((Input.GetAxis("VerticalStick" + multiplayerManager.instance.currentActivePlayer.ToString()) != 0
+            || Input.GetAxis("HorizontalStick" + multiplayerManager.instance.currentActivePlayer.ToString()) != 0) && !MoveCooldown())
             anim.Play("PlayerWalk");
 
         float moveX = 0;
@@ -220,10 +224,9 @@ public class Player : WorldObject
 
         if (hori > verti)
         {
-            if (Input.GetAxis("HorizontalStick") != 0 && JoyMoveCoolDown())
+            if (Input.GetAxis("HorizontalStick" + multiplayerManager.instance.currentActivePlayer.ToString()) != 0 && JoyMoveCoolDown())
             {
-                moveX = Input.GetAxis("HorizontalStick") > 0 ? 1 : -1;
-                //if (lastPos.x != moveX)
+                moveX = Input.GetAxis("HorizontalStick" + multiplayerManager.instance.currentActivePlayer.ToString()) > 0 ? 1 : -1;
                 {
                     Vector2 _newPos = new Vector2((transform.position.x + moveX), transform.position.y);
                     Tile _tile = TileManager.instance.GetTile(_newPos);
@@ -241,7 +244,7 @@ public class Player : WorldObject
                     }
 
                     SoundManager.instance.playSound(0);
-                    angle = Input.GetAxis("HorizontalStick") > 0 ? 270 : 90;
+                    angle = Input.GetAxis("HorizontalStick" + multiplayerManager.instance.currentActivePlayer.ToString()) > 0 ? 270 : 90;
                     coolDown = 0;
                     lastPos.x = moveX;
                 }
@@ -249,9 +252,9 @@ public class Player : WorldObject
         }
         else
         {
-            if (Input.GetAxis("VerticalStick") != 0 && JoyMoveCoolDown())
+            if (Input.GetAxis("VerticalStick" + multiplayerManager.instance.currentActivePlayer.ToString()) != 0 && JoyMoveCoolDown())
             {
-                moveY = Input.GetAxis("VerticalStick") > 0 ? 1 : -1;
+                moveY = Input.GetAxis("VerticalStick" + multiplayerManager.instance.currentActivePlayer.ToString()) > 0 ? 1 : -1;
              //   if (lastPos.y != moveY)
                 {
                     Vector2 _newPos = new Vector2(transform.position.x, (transform.position.y + moveY));
@@ -269,18 +272,18 @@ public class Player : WorldObject
                         }
                     }
                     SoundManager.instance.playSound(0);
-                    angle = Input.GetAxis("VerticalStick") > 0 ? 0 : 180;
+                    angle = Input.GetAxis("VerticalStick" + multiplayerManager.instance.currentActivePlayer.ToString()) > 0 ? 0 : 180;
                     coolDown = 0;
                     lastPos.y = moveY;
                 }
             }
         }
         transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
-        if (Input.GetAxis("HorizontalStick") == 0)
+        if (Input.GetAxis("HorizontalStick" + multiplayerManager.instance.currentActivePlayer.ToString()) == 0)
         {
             lastPos.x = 0;
         }
-        if (Input.GetAxis("VerticalStick") == 0)
+        if (Input.GetAxis("VerticalStick" + multiplayerManager.instance.currentActivePlayer.ToString()) == 0)
         {
             lastPos.y = 0;
         }
@@ -288,7 +291,8 @@ public class Player : WorldObject
 
     void Movement()
     {
-        if ((Input.GetAxis("Vertical") != 0 || Input.GetAxis("Horizontal") != 0) && !MoveCooldown())
+        if ((Input.GetAxis("VerticalStick" + multiplayerManager.instance.currentActivePlayer.ToString()) != 0
+            || Input.GetAxis("HorizontalStick" + multiplayerManager.instance.currentActivePlayer.ToString()) != 0) && !MoveCooldown())
             anim.Play("PlayerWalk");
 
         float moveX = 0;
@@ -296,9 +300,9 @@ public class Player : WorldObject
 
         if (hori > verti)
         {
-            if (Input.GetAxis("Horizontal") != 0 && MoveCooldown())
+            if (Input.GetAxis("HorizontalStick" + multiplayerManager.instance.currentActivePlayer.ToString()) != 0 && MoveCooldown())
             {
-                moveX = Input.GetAxis("Horizontal") > 0 ? 1 : -1;
+                moveX = Input.GetAxis("HorizontalStick" + multiplayerManager.instance.currentActivePlayer.ToString()) > 0 ? 1 : -1;
                 if (lastPos.x != moveX)
                 {
                     Vector2 _newPos = new Vector2((transform.position.x + moveX), transform.position.y);
@@ -317,7 +321,7 @@ public class Player : WorldObject
                     }
 
                     SoundManager.instance.playSound(0);
-                    angle = Input.GetAxis("Horizontal") > 0 ? 270 : 90;
+                    angle = Input.GetAxis("HorizontalStick" + multiplayerManager.instance.currentActivePlayer.ToString()) > 0 ? 270 : 90;
                     coolDown = 0;
                     lastPos.x = moveX;
                 }
@@ -325,9 +329,9 @@ public class Player : WorldObject
         }
         else
         {
-            if (Input.GetAxis("Vertical") != 0 && MoveCooldown())
+            if (Input.GetAxis("VerticalStick" + multiplayerManager.instance.currentActivePlayer.ToString()) != 0 && MoveCooldown())
             {
-                moveY = Input.GetAxis("Vertical") > 0 ? 1 : -1;
+                moveY = Input.GetAxis("VerticalStick" + multiplayerManager.instance.currentActivePlayer.ToString()) > 0 ? 1 : -1;
                 if (lastPos.y != moveY)
                 {
                     Vector2 _newPos = new Vector2(transform.position.x, (transform.position.y + moveY));
@@ -345,18 +349,18 @@ public class Player : WorldObject
                         }
                     }
                     SoundManager.instance.playSound(0);
-                    angle = Input.GetAxis("Vertical") > 0 ? 0 : 180;
+                    angle = Input.GetAxis("VerticalStick" + multiplayerManager.instance.currentActivePlayer.ToString()) > 0 ? 0 : 180;
                     coolDown = 0;
                     lastPos.y = moveY;
                 }
             }
         }
         transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
-        if (Input.GetAxis("Horizontal") == 0)
+        if (Input.GetAxis("HorizontalStick" + multiplayerManager.instance.currentActivePlayer.ToString()) == 0)
         {
             lastPos.x = 0;
         }
-        if (Input.GetAxis("Vertical") == 0)
+        if (Input.GetAxis("VerticalStick" + multiplayerManager.instance.currentActivePlayer.ToString()) == 0)
         {
             lastPos.y = 0;
         }
@@ -364,7 +368,7 @@ public class Player : WorldObject
     }
     bool JoyMoveCoolDown()
     {
-        if (coolDown< 0.8f)
+        if (coolDown< 0.4f)
         {
             coolDown += Time.deltaTime;
             return false;
@@ -527,7 +531,7 @@ public class Player : WorldObject
     }
     void HelpWorker()
     {
-        if (Input.GetButtonDown("Fire1"))
+        if (Input.GetButtonDown("Fire"+multiplayerManager.instance.currentActivePlayer.ToString()))
         {
             Tile _tile = TileManager.instance.GetTile(transform.position);
             _tile.Interaction(this);

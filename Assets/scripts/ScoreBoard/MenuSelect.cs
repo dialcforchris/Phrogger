@@ -26,9 +26,9 @@ public class MenuSelect : MonoBehaviour
 
     void MenuInput()
     {
-        if (Input.GetAxis("Vertical") != 0 && SelectCoolDown())
+        if (Input.GetAxis("VerticalStick" + multiplayerManager.instance.currentActivePlayer.ToString()) != 0 && SelectCoolDown())
         {
-            if (Input.GetAxis("Vertical") < 0)
+            if (Input.GetAxis("VerticalStick" + multiplayerManager.instance.currentActivePlayer.ToString()) < 0)
             {
                 selectBox++;
                 if (selectBox == box.Length)
@@ -36,7 +36,7 @@ public class MenuSelect : MonoBehaviour
                     selectBox = 0;
                 }
             }
-            else if (Input.GetAxis("Vertical") > 0)
+            else if (Input.GetAxis("VerticalStick" + multiplayerManager.instance.currentActivePlayer.ToString()) > 0)
             {
                 selectBox--;
                 if (selectBox < 0)

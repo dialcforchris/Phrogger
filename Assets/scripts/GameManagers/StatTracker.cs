@@ -212,7 +212,7 @@ public class StatTracker : MonoBehaviour
 
         }
 
-        while (!Input.GetButtonDown("Fire1"))
+        while (!Input.GetButtonDown("Fire" + multiplayerManager.instance.currentActivePlayer.ToString()))
             yield return null;
 
         GameOverUI.SetActive(false);
