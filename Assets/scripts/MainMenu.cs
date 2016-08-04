@@ -349,9 +349,9 @@ public class MainMenu : MonoBehaviour
 
         //Scroll credits up
         float lerpy = 0;
-        while (Credits.rectTransform.anchoredPosition.y < 900)
+        while (Credits.rectTransform.anchoredPosition.y < 1750)
         {
-            Credits.rectTransform.anchoredPosition = Vector2.Lerp(-Vector2.up * 1000, Vector2.up * 1000, lerpy / 25);
+            Credits.rectTransform.anchoredPosition = Vector2.Lerp(-Vector2.up * 750, Vector2.up * 1750, lerpy / 25);
             if (Input.GetButton("Fire" + multiplayerManager.instance.currentActivePlayer.ToString()))
                 lerpy += Time.deltaTime * 5;
 
@@ -360,7 +360,7 @@ public class MainMenu : MonoBehaviour
         }
 
         //Reset credit location
-        Credits.rectTransform.anchoredPosition = -Vector2.up * 1100;
+        Credits.rectTransform.anchoredPosition = -Vector2.up * 750;
 
         //Fade out credit backdrop
         while (creditBackdrop.color.a > 0f)
