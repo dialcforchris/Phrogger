@@ -40,7 +40,7 @@ public class MainMenu : MonoBehaviour
         StartCoroutine(wholeScreenFade(false));
     }
 
-    public IEnumerator wholeScreenFade(bool b) //False for fade in from black, true to fade to black and reload scene
+    public IEnumerator wholeScreenFade(bool b,int sceneToLoad=2) //False for fade in from black, true to fade to black and reload scene
     {
         yield return new WaitForSeconds(.25f);
         if (!b)
@@ -63,7 +63,7 @@ public class MainMenu : MonoBehaviour
                 yield return new WaitForFixedUpdate();
             }
             yield return new WaitForSeconds(.5f);
-            SceneManager.LoadScene(2);
+            SceneManager.LoadScene(sceneToLoad);
         }
     }
 
@@ -115,7 +115,7 @@ public class MainMenu : MonoBehaviour
                         StartCoroutine(runCredits());
                         break;
                     case 3:
-                        Application.Quit();
+                        //Application.Quit();
                         break;
                 }
             }
@@ -246,8 +246,24 @@ public class MainMenu : MonoBehaviour
             }
         }
         #endregion
-    }
 
+        if (!Input.anyKey && Input.GetAxis("VerticalStick0")<.1f && Input.GetAxis("VerticalStick1") < .1f)
+        {
+            idleTime += Time.deltaTime;
+        }
+        else
+        {
+            idleTime = 0;
+        }
+
+        if (idleTime > 150 && GameStateManager.instance.GetState() != GameStates.STATE_DAYOVER)
+        {
+            GameStateManager.instance.ChangeState(GameStates.STATE_DAYOVER);
+            StartCoroutine(wholeScreenFade(true, 0));
+        }
+    }
+    [SerializeField]
+    float idleTime;
     IEnumerator FadeInOutMainMenuUI(bool inOut,bool fadeLogo = true)//True for in, false for out
     {
         while ((inOut) ? menuItems[0].color.a < 1 : menuItems[0].color.a > 0)
