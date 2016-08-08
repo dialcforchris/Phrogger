@@ -448,7 +448,6 @@ public class Player : WorldObject
         {
             if (state == PlayerState.ACTIVE)
             {
-                Debug.Log("Boss kill");
                 StatTracker.instance.totalDeaths[multiplayerManager.instance.currentActivePlayer]++;
                 StatTracker.instance.bossDeaths[multiplayerManager.instance.currentActivePlayer]++;
                 StatTracker.instance.causeOfDeath.text = "Your boss stepped on you";
@@ -507,7 +506,11 @@ public class Player : WorldObject
             {
                 if (deathCool > maxDeathcool - .8f && !respawnParticles.isPlaying)
                 {
-                    respawnParticles.transform.position = playerSpawn.position;
+                    if (GameStateManager.instance.GetState() == GameStates.STATE_FROGGER)
+                        respawnParticles.transform.position = froggerSpawn.position;
+                    else
+                        respawnParticles.transform.position = playerSpawn.position;
+
                     respawnParticles.Play();
                     SoundManager.instance.playSound(spawn);
                 }
@@ -623,7 +626,6 @@ public class Player : WorldObject
         AddToWorld();
     }
 }
-
 
 public enum PlayerState
 {

@@ -9,17 +9,19 @@ public class WorkerManager : MonoBehaviour
     public static WorkerManager instance { get { return workerManager; } }
 
     private ObjectPool<Worker> workerPool = null;
-
+    
     [SerializeField]
     private Worker workerPrefab = null;
-
     [SerializeField]
     private string[] bodySprites = null;
     [SerializeField]
     private Sprite[] hairSprites = null;
     [SerializeField]
+    private Sprite[] hairSprites_w = null;
+    [SerializeField]
     private Cubicle[] cubicles = null;
-  
+    
+    public SkinHairCombo[] skinHairCombos;
 
     private const int numSeats = 40;
 
@@ -96,23 +98,50 @@ public class WorkerManager : MonoBehaviour
         }
         TileManager.instance.DefaultSpawnerLanes();
     }
+    
+    [System.Serializable]
+    public class SkinHairCombo
+    {
+        public Color Skintone;
+        public Sprite[] hairSprites;
+    }
 
     public Worker GetPooledWorker(bool _unique = false)
     {
         Worker _worker = workerPool.GetPooledObject();
         if (!_worker.GetIsSetup())
         {
-            string _s = bodySprites[Random.Range(0, bodySprites.Length)];
+            Worker.workerType _type = Worker.workerType.Standard;
+            bool sex=false;
+            Sprite hair=null;
             if (_unique)
             {
                 float _rand = Random.value;
-                _s = _rand < 0.35f ? "trolley" : _s;
-                _s = _rand < 0.25f ? "Spinning chairman" : _s;
-                _s = _rand < 0.15f ? "Janitor" : _s;
+                _type = _rand < 0.35f ? Worker.workerType.Trolley : _type;
+                _type = _rand < 0.25f ? Worker.workerType.Spinning : _type;
+                _type = _rand < 0.15f ? Worker.workerType.Janitor : _type;
             }
-            _worker.SetupWorker(_s, hairSprites[Random.Range(0, hairSprites.Length)]);
+            if (_type == Worker.workerType.Standard)
+            {
+                if (Random.value >= .5f)
+                    sex = true;
+            }
+            //Set up this bad boy
+            //...or bad girl, Spamphibian is an equal opportunity video game.
+
+            //WELL AT LEAST I TRIED THIS METHOD
+
+            //Color Skin = Random.ColorHSV(0.073f, 0.076f, 0.5f, 0.85f, 0.4f, 0.9f, 1, 1);
+            Color Skin = Random.ColorHSV(0.105f, 0.085f, 0.177f, 0.72f, 0.38f, 0.94f, 1, 1);
+            Color Clothes = Random.ColorHSV(0,1,.5f,1,.35f,1);
+            Color Eyes = Random.ColorHSV(.35f, .7f, .65f, 1, .65f, 1);
+            Eyes = Color.black;
+            SkinHairCombo shc = skinHairCombos[Random.Range(0, skinHairCombos.Length)];
+            Skin = shc.Skintone;
+            hair = shc.hairSprites[Random.Range(0, shc.hairSprites.Length)];
+            
+            _worker.SetupWorker(Skin, hair,sex,Clothes,Eyes,_type);
         }
         return _worker;
     }
 }
-  

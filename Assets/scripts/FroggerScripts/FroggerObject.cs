@@ -41,7 +41,7 @@ public class FroggerObject : WorldObject, IPoolable<FroggerObject>
 
     void OnTriggerEnter2D(Collider2D col)
     {
-        if (col.tag == "Player")
+        if (col.tag == "Player" && GameStateManager.instance.GetState() == GameStates.STATE_FROGGER)
         {
             SoundManager.instance.playSound(2);
         }

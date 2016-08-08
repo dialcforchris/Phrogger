@@ -15,12 +15,19 @@ public class Worker : WorldObject, IPoolable<Worker>
     #region IPoolable
     public PoolData<Worker> poolData { get; set; }
     #endregion
-       
+
     private bool isSetup = false;
-    [SerializeField] private SpriteRenderer hairSpriteRenderer = null;
-    [SerializeField] private Animator animator = null;
-    [SerializeField] private AnimationOverride animOverride= null;
-    
+
+    [Header("Standard worker sprites")]
+    [SerializeField]
+    private SpriteRenderer SkinSpriteRenderer = null;
+    [SerializeField]
+    private SpriteRenderer SkinSpriteRenderer_w = null;
+    [SerializeField]
+    private SpriteRenderer EyesSpriteRenderer = null, LegsSpriteRenderer = null, LegsSpriteRenderer_w = null, ClothesSpriteRenderer = null, HairSpriteRenderer = null;
+    [SerializeField]
+    private Animator animator = null;
+
     private Vector3 direction;
     private float speed = 5.0f;
     private WorkerState state;
@@ -46,12 +53,22 @@ public class Worker : WorldObject, IPoolable<Worker>
     public int chairId { get; set; }
     public int cubicleId { get; set; }
 
-    public bool isJanitor { get; set; }
-    public bool isSpinning { get; set; }
-    public bool isTrolley { get; set; }
+    public enum workerType
+    {
+        Janitor,
+        Spinning,
+        Trolley,
+        Standard
+    }
 
-    [SerializeField] private SpriteRenderer spinningRenderer = null;
-    [SerializeField] private Sprite[] spinningSprites = null;
+    public workerType type;
+    [Header("Spinning chair bits")]
+    [SerializeField]
+    private GameObject SpinningChairGO= null;
+    [SerializeField]
+    private SpriteRenderer chair_SkinSprite = null,chair_ClothesSprite = null;
+
+    [Header("Trolleys")]
     [SerializeField] private Sprite[] trolleySprites = null;
 
     private bool needHelp = false;
@@ -70,18 +87,26 @@ public class Worker : WorldObject, IPoolable<Worker>
         return isSetup;
     }
 
-    public void SetupWorker(string _animName, Sprite _hairSprite)
+    public void SetupWorker(Color Skincol, Sprite _hairSprite, bool sex, Color clothesCol,Color eyeCol, workerType _type) //For sex, true for male, false for female
     {
-        if(!isSetup)
+        if (!isSetup)
         {
-            hairSpriteRenderer.sprite = _hairSprite;
-            animOverride.SetSpriteSheet(_animName);
+            HairSpriteRenderer.sprite = _hairSprite;
             cubicleId = 100;
-            isSetup = true;
             maxSitCool = Random.Range(maxSitLowerCool, maxSitUpperCool);
-            isJanitor = _animName == "Janitor" ? true : false;
-            isSpinning = _animName == "Spinning chairman" ? true : false;
-            isTrolley = _animName == "trolley" ? true : false;
+
+            EyesSpriteRenderer.color = eyeCol;
+            SkinSpriteRenderer.enabled = sex;
+            SkinSpriteRenderer_w.enabled = !sex;
+            LegsSpriteRenderer.enabled = sex;
+            LegsSpriteRenderer_w.enabled = !sex;
+
+            SkinSpriteRenderer.color = Skincol;
+            SkinSpriteRenderer_w.color = Skincol;
+            ClothesSpriteRenderer.color = clothesCol;
+
+            type = _type;
+            isSetup = true;
         }
     }
 
@@ -100,20 +125,36 @@ public class Worker : WorldObject, IPoolable<Worker>
         targetIndex = 0;
         gameObject.SetActive(true);
         hasEnteredCubicle = false;
-        if(isSpinning)
+        if(type == workerType.Spinning)
         {
             animator.SetBool("sit", true);
             animator.SetBool("walk", false);
-            spinningRenderer.sprite = spinningSprites[Random.Range(0, spinningSprites.Length)];
-            spinningRenderer.gameObject.SetActive(true);
-            hairSpriteRenderer.gameObject.SetActive(false);
+
+            chair_ClothesSprite.color = Random.ColorHSV(0, 1, .5f, 1, .35f, 1);
+            chair_SkinSprite.color = Random.ColorHSV(0.073f, 0.076f, 0.5f, 0.85f, 0.4f, 0.9f, 1, 1);
+
+            //turn off standard guuuy
+            EyesSpriteRenderer.enabled = false;
+            ClothesSpriteRenderer.enabled = false;
+            SkinSpriteRenderer.enabled = false;
+            SkinSpriteRenderer_w.enabled = false;
+            LegsSpriteRenderer.enabled = false;
+            LegsSpriteRenderer_w.enabled = false;
+
+            SpinningChairGO.gameObject.SetActive(true);
+            HairSpriteRenderer.gameObject.SetActive(false);
         }
-        else if(isTrolley)
+        else if(type == workerType.Trolley)
         {
             animator.SetBool("sit", true);
             animator.SetBool("walk", false);
-            spriteRenderer.sprite = trolleySprites[Random.Range(0, trolleySprites.Length)];
-            hairSpriteRenderer.gameObject.SetActive(false);
+
+            //This is fine, just remember to reset it
+            HairSpriteRenderer.sprite = trolleySprites[Random.Range(0, trolleySprites.Length)];
+            LegsSpriteRenderer_w.enabled = false;
+            EyesSpriteRenderer.enabled = false;
+            ClothesSpriteRenderer.enabled = false;
+            //HairSpriteRenderer.gameObject.SetActive(false);
         }
     }
 
@@ -150,9 +191,9 @@ public class Worker : WorldObject, IPoolable<Worker>
     {
         transform.position += direction * Time.deltaTime * speed;
         transform.rotation = Quaternion.LookRotation(Vector3.forward, direction);
-        if (isSpinning)
+        if (type == workerType.Spinning)
         {
-            spinningRenderer.gameObject.transform.Rotate(new Vector3(0.0f, 0.0f, 90.0f * Time.deltaTime));
+            SpinningChairGO.transform.Rotate(new Vector3(0.0f, 0.0f, 90.0f * Time.deltaTime));
         }
         Tile _tile = TileManager.instance.GetTile(transform.position);
         if (_tile != tiles[0])
@@ -161,11 +202,6 @@ public class Worker : WorldObject, IPoolable<Worker>
             AddToWorld();
             _tile.Interaction(this);
         }
-
-    }
-    private void LateUpdate()
-    {
-        animOverride.UpdateSprite();
     }
 
     //The behavior of an object when something tries to interact with it
@@ -208,9 +244,9 @@ public class Worker : WorldObject, IPoolable<Worker>
         sitCool = 0.0f;
         targetIndex = 0;
         StopAllCoroutines();
-        if (isSpinning)
+        if (type == workerType.Spinning)
         {
-            spinningRenderer.gameObject.SetActive(false);
+            SpinningChairGO.SetActive(false);
         }
         needHelp = false;
         helpMe.SetActive(false);

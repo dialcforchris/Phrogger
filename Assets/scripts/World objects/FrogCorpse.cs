@@ -13,7 +13,7 @@ public class FrogCorpse : WorldObject
     {
         if (_obj.tag == "Worker")
         {
-            if (((Worker)_obj).isJanitor)
+            if (((Worker)_obj).type == Worker.workerType.Janitor)
             {
                 Reset();
             }
