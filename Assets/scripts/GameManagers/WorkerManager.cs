@@ -26,6 +26,7 @@ public class WorkerManager : MonoBehaviour
     private void Awake()
     {
         workerManager = this;
+        Worker.numPeopleNeedHelp = 0;
         workerPool = new ObjectPool<Worker>(workerPrefab, 50, transform);
         cubicles = FindObjectsOfType<Cubicle>();
 
@@ -35,6 +36,7 @@ public class WorkerManager : MonoBehaviour
             cubicles[i].cubicleId = i;
             for (int j = 0; j < cubicles[i].GetChairs(); ++j)
             {
+                
                 Worker _worker = GetPooledWorker();
                 _worker.SetupCubicle(i, j);
                 cubicles[i].AssignWorkerPositionData(_worker);

@@ -438,6 +438,7 @@ public class Player : WorldObject
         {
             if (state == PlayerState.ACTIVE)
             {
+                Debug.Log("worker kill");
                 StatTracker.instance.totalDeaths[multiplayerManager.instance.currentActivePlayer]++;
                 StatTracker.instance.causeOfDeath.text = "A co-worker stepped on you";
                 Die();
@@ -447,6 +448,7 @@ public class Player : WorldObject
         {
             if (state == PlayerState.ACTIVE)
             {
+                Debug.Log("Boss kill");
                 StatTracker.instance.totalDeaths[multiplayerManager.instance.currentActivePlayer]++;
                 StatTracker.instance.bossDeaths[multiplayerManager.instance.currentActivePlayer]++;
                 StatTracker.instance.causeOfDeath.text = "Your boss stepped on you";

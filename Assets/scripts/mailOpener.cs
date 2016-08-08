@@ -226,7 +226,12 @@ public class mailOpener : MonoBehaviour
 
             //When we're done with the frog mail, for a player, don't remove the messages from the list, just make them inaccessable for that player.
             if (selectedList.index[multiplayerManager.instance.currentActivePlayer] > selectedList.messages.Count)
-                frogStory[multiplayerManager.instance.currentActivePlayer] = false;
+            {
+             //   if (selectedList.name == "Frog Mail")
+                {
+                    frogStory[multiplayerManager.instance.currentActivePlayer] = false;
+                }
+            }
         }
 
         emailContent.sprite = currentMail.image;
