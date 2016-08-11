@@ -63,7 +63,7 @@ public class MainMenu : MonoBehaviour
                 yield return new WaitForFixedUpdate();
             }
             yield return new WaitForSeconds(.5f);
-            SceneManager.LoadScene(sceneToLoad);
+            SceneManager.LoadScene(0);
         }
     }
 

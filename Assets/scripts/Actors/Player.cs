@@ -89,8 +89,10 @@ public class Player : WorldObject
                 {
                     ConvertToPos("HorizontalStick" + multiplayerManager.instance.currentActivePlayer.ToString(), 
                         "VerticalStick" + multiplayerManager.instance.currentActivePlayer.ToString());
-                    JoyStickMovement();
-                    JoyMoveCoolDown();
+                    //JoyStickMovement();
+                    //JoyMoveCoolDown();
+                    Movement();
+                    MoveCooldown();
                 }
                 else
                 {
@@ -112,14 +114,15 @@ public class Player : WorldObject
                     {
                         ConvertToPos("HorizontalStick" + multiplayerManager.instance.currentActivePlayer.ToString(),
                             "VerticalStick" + multiplayerManager.instance.currentActivePlayer.ToString());
-                        JoyStickMovement();
-                        JoyMoveCoolDown();
+                        //JoyStickMovement();
+                        //JoyMoveCoolDown();
+                        Movement();
+                        MoveCooldown();
                     }
                     else
                     {
                         ConvertToPos("Horizontal", "Vertical");
-                        Movement();
-                        MoveCooldown();
+                      
                     }
                     if (!transform.parent)
                     {
@@ -438,7 +441,6 @@ public class Player : WorldObject
         {
             if (state == PlayerState.ACTIVE)
             {
-                Debug.Log("worker kill");
                 StatTracker.instance.totalDeaths[multiplayerManager.instance.currentActivePlayer]++;
                 StatTracker.instance.causeOfDeath.text = "A co-worker stepped on you";
                 Die();

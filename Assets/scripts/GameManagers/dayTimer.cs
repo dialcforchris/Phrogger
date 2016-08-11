@@ -44,7 +44,9 @@ public class dayTimer : MonoBehaviour
     [SerializeField]
     private Text StatsTitle;
     [SerializeField]
-    private Text StatsDeath,StatsEmail,StatsProf,StatsBossAnger,StatsBossDeath,ContinuePrompt,PlayerText;
+    private Text StatsDeath,StatsEmail,StatsProf,StatsBossAnger,StatsBossDeath,PlayerText;
+    [SerializeField]
+    private GameObject ContinuePrompt;
     [SerializeField]
     private Image endingScreen,StatsBox;
     [SerializeField]
@@ -156,20 +158,18 @@ public class dayTimer : MonoBehaviour
 
         if (GameFinished)
         {
-            if (Input.GetButtonDown("Fire" + multiplayerManager.instance.currentActivePlayer.ToString()
-                ))
+            if  (Input.GetAxis("VerticalStick" + multiplayerManager.instance.currentActivePlayer.ToString()) < 0)
             {
                 continueText.SetActive(false);
                 StatsBox.gameObject.SetActive(false);
             }
-            if (Input.GetButtonUp("Fire" + multiplayerManager.instance.currentActivePlayer.ToString()))
+            if (Input.GetAxis("VerticalStick" + multiplayerManager.instance.currentActivePlayer.ToString()) < 0)
             {
                 continueText.SetActive(true);
                 StatsBox.gameObject.SetActive(true);
             }
 
-            if (Input.GetButton("Fire"+multiplayerManager.instance.currentActivePlayer.ToString()) 
-                && Input.GetAxis("VerticalStick" + multiplayerManager.instance.currentActivePlayer.ToString()) < 0)
+            if (Input.GetButton("Fire"+multiplayerManager.instance.currentActivePlayer.ToString())) 
             {
                 GameFinished = false;
                 continueText.SetActive(false);
@@ -439,9 +439,16 @@ public class dayTimer : MonoBehaviour
         dayCompletedHeader.text = string.Empty;
         dayCompletedHeader.enabled = false;
         filedText.enabled = false;
-        for (int i = 0; i < todaysEmails.Count; i++)
+        //for (int i =emailObjects.Count;i>0; i++)
+        //{
+        //    Destroy(emailObjects[i]); 
+        //}
+        ////int i = 0;
+        foreach (GameObject g in emailObjects)
         {
-            Destroy(emailObjects[i]);
+
+            Destroy(g);
+           
         }
         todaysEmails.Clear();
         emailObjects.Clear();
