@@ -24,8 +24,9 @@ public class mailOpener : MonoBehaviour
     public List<mailColection> messages; //All the possible emails the player might have to deal with
 
     public float multi;
-
+    [SerializeField]
     private mailColection selectedList;
+    [SerializeField]
     private mail currentMail;
     [SerializeField]
     AudioClip good, bad;
@@ -191,6 +192,7 @@ public class mailOpener : MonoBehaviour
 
     int[] nonFrogMail;
     bool[] frogStory;
+
     void pickEmail()
     {
         
@@ -225,11 +227,15 @@ public class mailOpener : MonoBehaviour
             selectedList.index[multiplayerManager.instance.currentActivePlayer]++;
 
             //When we're done with the frog mail, for a player, don't remove the messages from the list, just make them inaccessable for that player.
-            if (selectedList.index[multiplayerManager.instance.currentActivePlayer] > selectedList.messages.Count)
+            if (selectedList.index[multiplayerManager.instance.currentActivePlayer] > selectedList.messages.Count-1)
             {
-             //   if (selectedList.name == "Frog Mail")
+                if (selectedList.name == "Frog Mail") 
                 {
                     frogStory[multiplayerManager.instance.currentActivePlayer] = false;
+                }
+                else if ( selectedList.name == "TypeFighter Cheats")
+                {
+                    messages.Remove(selectedList);
                 }
             }
         }
@@ -363,7 +369,7 @@ public class mailOpener : MonoBehaviour
             {
                 if (!soundPlaying)
                 {
-                    SoundManager.instance.playSound(keypressSounds[Random.Range(0, keypressSounds.Length)]);
+                    SoundManager.instance.playSound(keypressSounds[Random.Range(0, keypressSounds.Length-1)]);
                     soundPlaying = true;
                     Invoke("allowSounds", .5f);
                 }
