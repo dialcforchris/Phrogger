@@ -28,6 +28,13 @@ public class Worker : WorldObject, IPoolable<Worker>
     [SerializeField]
     private Animator animator = null;
 
+    [Header("Big man sprites")]
+    [SerializeField]
+    private SpriteRenderer SkinSpriteRenderer_big = null;
+    [SerializeField]
+    private SpriteRenderer LegsSpriteRenderer_big, ClothesSpriteRenderer_big = null;
+    bool bigLad;
+
     private Vector3 direction;
     private float speed = 5.0f;
     private WorkerState state;
@@ -62,11 +69,18 @@ public class Worker : WorldObject, IPoolable<Worker>
     }
 
     public workerType type;
+    
     [Header("Spinning chair bits")]
     [SerializeField]
     private GameObject SpinningChairGO= null;
     [SerializeField]
     private SpriteRenderer chair_SkinSprite = null,chair_ClothesSprite = null;
+
+    [Header("Janitor")]
+    [SerializeField]
+    private SpriteRenderer janitorSkin;
+    [SerializeField]
+    private SpriteRenderer janitorOutfit;
 
     [Header("Trolleys")]
     [SerializeField] private Sprite[] trolleySprites = null;
@@ -87,10 +101,11 @@ public class Worker : WorldObject, IPoolable<Worker>
         return isSetup;
     }
 
-    public void SetupWorker(Color Skincol, Sprite _hairSprite, bool sex, Color clothesCol,Color eyeCol, workerType _type) //For sex, true for male, false for female
+    public void SetupWorker(Color Skincol, Sprite _hairSprite, bool sex, Color clothesCol,Color eyeCol, workerType _type,bool big) //For sex, true for male, false for female
     {
         if (!isSetup)
         {
+            bigLad = big;
             HairSpriteRenderer.sprite = _hairSprite;
             cubicleId = 100;
             maxSitCool = Random.Range(maxSitLowerCool, maxSitUpperCool);
@@ -103,7 +118,24 @@ public class Worker : WorldObject, IPoolable<Worker>
 
             SkinSpriteRenderer.color = Skincol;
             SkinSpriteRenderer_w.color = Skincol;
+            janitorSkin.color = Skincol;
             ClothesSpriteRenderer.color = clothesCol;
+
+            if (big)
+            {
+                SkinSpriteRenderer_big.enabled = true;
+                LegsSpriteRenderer_big.enabled = true;
+                ClothesSpriteRenderer_big.enabled = true;
+
+                SkinSpriteRenderer_big.color = Skincol;
+                ClothesSpriteRenderer_big.color = clothesCol;
+
+                SkinSpriteRenderer.enabled = false;
+                SkinSpriteRenderer_w.enabled = false;
+                LegsSpriteRenderer.enabled = false;
+                LegsSpriteRenderer_w.enabled = false;
+                ClothesSpriteRenderer.enabled = false;
+            }
 
             type = _type;
             isSetup = true;
@@ -125,6 +157,20 @@ public class Worker : WorldObject, IPoolable<Worker>
         targetIndex = 0;
         gameObject.SetActive(true);
         hasEnteredCubicle = false;
+
+        if (bigLad)
+        {
+            SkinSpriteRenderer_big.enabled = true;
+            LegsSpriteRenderer_big.enabled = true;
+            ClothesSpriteRenderer_big.enabled = true;
+
+            SkinSpriteRenderer.enabled = false;
+            SkinSpriteRenderer_w.enabled = false;
+            LegsSpriteRenderer.enabled = false;
+            LegsSpriteRenderer_w.enabled = false;
+            ClothesSpriteRenderer.enabled = false;
+        }
+
         if(type == workerType.Spinning)
         {
             animator.SetBool("sit", true);
@@ -155,6 +201,18 @@ public class Worker : WorldObject, IPoolable<Worker>
             EyesSpriteRenderer.enabled = false;
             ClothesSpriteRenderer.enabled = false;
             //HairSpriteRenderer.gameObject.SetActive(false);
+        }
+        else if(type == workerType.Janitor)
+        {   
+            janitorOutfit.enabled = true;
+            janitorSkin.enabled = true;
+            //Turn standard things off
+            EyesSpriteRenderer.enabled = false;
+            ClothesSpriteRenderer.enabled = false;
+            SkinSpriteRenderer.enabled = false;
+            SkinSpriteRenderer_w.enabled = false;
+            LegsSpriteRenderer.enabled = false;
+            LegsSpriteRenderer_w.enabled = false;
         }
     }
 

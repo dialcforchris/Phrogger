@@ -438,9 +438,13 @@ public class Player : WorldObject
         {
             if (state == PlayerState.ACTIVE)
             {
-                Debug.Log("worker kill");
                 StatTracker.instance.totalDeaths[multiplayerManager.instance.currentActivePlayer]++;
-                StatTracker.instance.causeOfDeath.text = "A co-worker stepped on you";
+
+                if (_obj.GetComponent<Worker>().type == Worker.workerType.Trolley)
+                    StatTracker.instance.causeOfDeath.text = "A rogue trolley ran you over";
+                else
+                    StatTracker.instance.causeOfDeath.text = "A co-worker stepped on you";
+
                 Die();
             }
         }

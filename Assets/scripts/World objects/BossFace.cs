@@ -143,7 +143,7 @@ public class BossFace :MonoBehaviour
             else
             {
                 slacker = true;
-                XPtoAdd += bossAngerAddition;
+                XPtoAdd += bossAngerAddition/2;
                 workCool = 0;
             }
         }

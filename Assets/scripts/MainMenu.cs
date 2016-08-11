@@ -40,7 +40,7 @@ public class MainMenu : MonoBehaviour
         StartCoroutine(wholeScreenFade(false));
     }
 
-    public IEnumerator wholeScreenFade(bool b,int sceneToLoad=2) //False for fade in from black, true to fade to black and reload scene
+    public IEnumerator wholeScreenFade(bool b,int sceneToLoad=0) //False for fade in from black, true to fade to black and reload scene
     {
         yield return new WaitForSeconds(.25f);
         if (!b)

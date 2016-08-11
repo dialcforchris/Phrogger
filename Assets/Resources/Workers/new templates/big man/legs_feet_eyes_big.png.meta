@@ -1,15 +1,15 @@
 fileFormatVersion: 2
-guid: c6427c1e60022ce4baaaac9f5127b0e2
-timeCreated: 1470651430
+guid: 26892c14f85706841b60116615239899
+timeCreated: 1470930847
 licenseType: Pro
 TextureImporter:
   fileIDToRecycleName:
-    21300000: eyes_w_0
-    21300002: eyes_w_1
-    21300004: eyes_w_2
-    21300006: eyes_w_3
-    21300008: eyes_w_4
-    21300010: eyes_w_5
+    21300000: legs_feet_eyes_big_0
+    21300002: legs_feet_eyes_big_1
+    21300004: legs_feet_eyes_big_2
+    21300006: legs_feet_eyes_big_3
+    21300008: legs_feet_eyes_big_4
+    21300010: legs_feet_eyes_big_5
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -56,7 +56,7 @@ TextureImporter:
   buildTargetSettings: []
   spriteSheet:
     sprites:
-    - name: eyes_w_0
+    - name: legs_feet_eyes_big_0
       rect:
         serializedVersion: 2
         x: 0
@@ -79,7 +79,23 @@ TextureImporter:
         - {x: 6, y: 5}
         - {x: 5, y: 8}
         - {x: 2, y: 8}
-    - name: eyes_w_1
+      - - {x: -8, y: 21}
+        - {x: -12, y: 17}
+        - {x: -12, y: 8}
+        - {x: -11, y: 7}
+        - {x: -1, y: 7}
+        - {x: 0, y: 8}
+        - {x: 0, y: 14}
+        - {x: -3, y: 21}
+      - - {x: 5, y: 21}
+        - {x: 0, y: 20}
+        - {x: 0, y: 9}
+        - {x: 1, y: 8}
+        - {x: 4, y: 7}
+        - {x: 12, y: 7}
+        - {x: 12, y: 19}
+        - {x: 10, y: 21}
+    - name: legs_feet_eyes_big_1
       rect:
         serializedVersion: 2
         x: 64
@@ -102,7 +118,7 @@ TextureImporter:
         - {x: 6, y: 5}
         - {x: 5, y: 8}
         - {x: 2, y: 8}
-    - name: eyes_w_2
+    - name: legs_feet_eyes_big_2
       rect:
         serializedVersion: 2
         x: 128
@@ -113,6 +129,14 @@ TextureImporter:
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline:
+      - - {x: -10, y: -7}
+        - {x: -12, y: -9}
+        - {x: -12, y: -10}
+        - {x: -8, y: -14}
+        - {x: -4, y: -14}
+        - {x: -1, y: -11}
+        - {x: -1, y: -9}
+        - {x: -3, y: -7}
       - - {x: -6, y: 6}
         - {x: -5, y: 3}
         - {x: -2, y: 3}
@@ -125,7 +149,12 @@ TextureImporter:
         - {x: 6, y: 5}
         - {x: 5, y: 8}
         - {x: 2, y: 8}
-    - name: eyes_w_3
+      - - {x: -1, y: 16}
+        - {x: -1, y: 8}
+        - {x: 10, y: 8}
+        - {x: 10, y: 15}
+        - {x: 7, y: 16}
+    - name: legs_feet_eyes_big_3
       rect:
         serializedVersion: 2
         x: 192
@@ -136,6 +165,12 @@ TextureImporter:
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline:
+      - - {x: -10, y: -9}
+        - {x: -9, y: -12}
+        - {x: -4, y: -12}
+        - {x: -2, y: -10}
+        - {x: -3, y: -7}
+        - {x: -8, y: -7}
       - - {x: -6, y: 6}
         - {x: -5, y: 3}
         - {x: -2, y: 3}
@@ -148,7 +183,7 @@ TextureImporter:
         - {x: 6, y: 5}
         - {x: 5, y: 8}
         - {x: 2, y: 8}
-    - name: eyes_w_4
+    - name: legs_feet_eyes_big_4
       rect:
         serializedVersion: 2
         x: 256
@@ -159,6 +194,12 @@ TextureImporter:
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline:
+      - - {x: 2, y: -9}
+        - {x: 3, y: -12}
+        - {x: 8, y: -12}
+        - {x: 10, y: -10}
+        - {x: 9, y: -7}
+        - {x: 4, y: -7}
       - - {x: -6, y: 6}
         - {x: -5, y: 3}
         - {x: -2, y: 3}
@@ -171,7 +212,7 @@ TextureImporter:
         - {x: 6, y: 5}
         - {x: 5, y: 8}
         - {x: 2, y: 8}
-    - name: eyes_w_5
+    - name: legs_feet_eyes_big_5
       rect:
         serializedVersion: 2
         x: 320
@@ -182,6 +223,13 @@ TextureImporter:
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline:
+      - - {x: 1, y: -9}
+        - {x: 1, y: -11}
+        - {x: 4, y: -14}
+        - {x: 8, y: -14}
+        - {x: 12, y: -10}
+        - {x: 11, y: -7}
+        - {x: 3, y: -7}
       - - {x: -6, y: 6}
         - {x: -5, y: 3}
         - {x: -2, y: 3}
@@ -194,6 +242,14 @@ TextureImporter:
         - {x: 6, y: 5}
         - {x: 5, y: 8}
         - {x: 2, y: 8}
+      - - {x: -6, y: 16}
+        - {x: -10, y: 12}
+        - {x: -10, y: 10}
+        - {x: -8, y: 8}
+        - {x: -1, y: 8}
+        - {x: 1, y: 10}
+        - {x: 1, y: 13}
+        - {x: -2, y: 16}
     outline: []
   spritePackingTag: 
   userData: 

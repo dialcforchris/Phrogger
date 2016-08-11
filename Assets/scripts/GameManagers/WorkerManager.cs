@@ -13,12 +13,6 @@ public class WorkerManager : MonoBehaviour
     [SerializeField]
     private Worker workerPrefab = null;
     [SerializeField]
-    private string[] bodySprites = null;
-    [SerializeField]
-    private Sprite[] hairSprites = null;
-    [SerializeField]
-    private Sprite[] hairSprites_w = null;
-    [SerializeField]
     private Cubicle[] cubicles = null;
     
     public SkinHairCombo[] skinHairCombos;
@@ -112,7 +106,7 @@ public class WorkerManager : MonoBehaviour
         if (!_worker.GetIsSetup())
         {
             Worker.workerType _type = Worker.workerType.Standard;
-            bool sex=false;
+            bool sex=false,big=false;
             Sprite hair=null;
             if (_unique)
             {
@@ -125,6 +119,9 @@ public class WorkerManager : MonoBehaviour
             {
                 if (Random.value >= .5f)
                     sex = true;
+                if (Random.value >= .8f)
+                    big = true;
+                    
             }
             //Set up this bad boy
             //...or bad girl, Spamphibian is an equal opportunity video game.
@@ -140,7 +137,7 @@ public class WorkerManager : MonoBehaviour
             Skin = shc.Skintone;
             hair = shc.hairSprites[Random.Range(0, shc.hairSprites.Length)];
             
-            _worker.SetupWorker(Skin, hair,sex,Clothes,Eyes,_type);
+            _worker.SetupWorker(Skin, hair,sex,Clothes,Eyes,_type,big);
         }
         return _worker;
     }

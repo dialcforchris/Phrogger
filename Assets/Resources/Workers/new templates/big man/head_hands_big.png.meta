@@ -1,19 +1,19 @@
 fileFormatVersion: 2
-guid: b02ea6ed9ffeb8e47b3b7a887e9982bb
-timeCreated: 1470651472
+guid: cf4391c839494b1428ed4dca7cad49e1
+timeCreated: 1470930841
 licenseType: Pro
 TextureImporter:
   fileIDToRecycleName:
-    21300000: head_hands_w_0
-    21300002: head_hands_w_1
-    21300004: head_hands_w_2
-    21300006: head_hands_w_3
-    21300008: head_hands_w_4
-    21300010: head_hands_w_5
+    21300000: head_hands_big_0
+    21300002: head_hands_big_1
+    21300004: head_hands_big_2
+    21300006: head_hands_big_3
+    21300008: head_hands_big_4
+    21300010: head_hands_big_5
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
-    enableMipMap: 1
+    enableMipMap: 0
     linearTexture: 0
     correctGamma: 0
     fadeOut: 0
@@ -36,7 +36,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     filterMode: 0
-    aniso: 16
+    aniso: -1
     mipBias: -1
     wrapMode: 1
   nPOTScale: 0
@@ -56,7 +56,7 @@ TextureImporter:
   buildTargetSettings: []
   spriteSheet:
     sprites:
-    - name: head_hands_w_0
+    - name: head_hands_big_0
       rect:
         serializedVersion: 2
         x: 0
@@ -79,22 +79,6 @@ TextureImporter:
         - {x: 6, y: -9}
         - {x: 9, y: -6}
         - {x: 10, y: -3}
-      - - {x: -9, y: 19}
-        - {x: -12, y: 17}
-        - {x: -12, y: 12}
-        - {x: -10, y: 10}
-        - {x: -4, y: 10}
-        - {x: -3, y: 12}
-        - {x: -3, y: 16}
-        - {x: -5, y: 19}
-      - - {x: 5, y: 19}
-        - {x: 3, y: 14}
-        - {x: 3, y: 11}
-        - {x: 5, y: 10}
-        - {x: 10, y: 10}
-        - {x: 12, y: 11}
-        - {x: 12, y: 15}
-        - {x: 10, y: 19}
       - - {x: -12, y: 29}
         - {x: -16, y: 29}
         - {x: -17, y: 26}
@@ -111,7 +95,7 @@ TextureImporter:
         - {x: 17, y: 22}
         - {x: 17, y: 26}
         - {x: 14, y: 29}
-    - name: head_hands_w_1
+    - name: head_hands_big_1
       rect:
         serializedVersion: 2
         x: 64
@@ -122,16 +106,19 @@ TextureImporter:
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline:
-      - - {x: -6, y: 10}
-        - {x: -16, y: 4}
-        - {x: -16, y: -1}
-        - {x: -12, y: -9}
+      - - {x: 10, y: 3}
+        - {x: 9, y: 6}
+        - {x: 6, y: 9}
+        - {x: 3, y: 10}
+        - {x: -6, y: 10}
+        - {x: -10, y: 5}
+        - {x: -10, y: -4}
         - {x: -6, y: -10}
-        - {x: 6, y: -10}
-        - {x: 16, y: 0}
-        - {x: 16, y: 4}
-        - {x: 7, y: 10}
-    - name: head_hands_w_2
+        - {x: 4, y: -10}
+        - {x: 6, y: -9}
+        - {x: 9, y: -6}
+        - {x: 10, y: -3}
+    - name: head_hands_big_2
       rect:
         serializedVersion: 2
         x: 128
@@ -148,14 +135,18 @@ TextureImporter:
         - {x: 17, y: -15}
         - {x: 16, y: -12}
         - {x: 10, y: -12}
-      - - {x: 1, y: 14}
-        - {x: -7, y: 11}
+      - - {x: 10, y: 3}
+        - {x: 9, y: 6}
+        - {x: 6, y: 9}
+        - {x: 3, y: 10}
+        - {x: -6, y: 10}
         - {x: -10, y: 5}
-        - {x: -10, y: -9}
-        - {x: -9, y: -10}
-        - {x: 7, y: -10}
-        - {x: 11, y: -9}
-        - {x: 11, y: 14}
+        - {x: -10, y: -4}
+        - {x: -6, y: -10}
+        - {x: 4, y: -10}
+        - {x: 6, y: -9}
+        - {x: 9, y: -6}
+        - {x: 10, y: -3}
       - - {x: -16, y: 16}
         - {x: -18, y: 13}
         - {x: -18, y: 10}
@@ -163,7 +154,7 @@ TextureImporter:
         - {x: -10, y: 12}
         - {x: -10, y: 13}
         - {x: -13, y: 16}
-    - name: head_hands_w_3
+    - name: head_hands_big_3
       rect:
         serializedVersion: 2
         x: 192
@@ -198,7 +189,7 @@ TextureImporter:
         - {x: -12, y: 9}
         - {x: -15, y: 9}
         - {x: -18, y: 6}
-    - name: head_hands_w_4
+    - name: head_hands_big_4
       rect:
         serializedVersion: 2
         x: 256
@@ -234,7 +225,7 @@ TextureImporter:
         - {x: 18, y: 6}
         - {x: 15, y: 9}
         - {x: 13, y: 9}
-    - name: head_hands_w_5
+    - name: head_hands_big_5
       rect:
         serializedVersion: 2
         x: 320
@@ -251,15 +242,18 @@ TextureImporter:
         - {x: -9, y: -15}
         - {x: -10, y: -12}
         - {x: -16, y: -12}
-      - - {x: -8, y: 14}
-        - {x: -9, y: 12}
-        - {x: -10, y: 7}
-        - {x: -10, y: -5}
+      - - {x: 10, y: 3}
+        - {x: 9, y: 6}
+        - {x: 6, y: 9}
+        - {x: 3, y: 10}
+        - {x: -6, y: 10}
+        - {x: -10, y: 5}
+        - {x: -10, y: -4}
         - {x: -6, y: -10}
-        - {x: 5, y: -10}
-        - {x: 10, y: -7}
-        - {x: 10, y: 8}
-        - {x: -4, y: 14}
+        - {x: 4, y: -10}
+        - {x: 6, y: -9}
+        - {x: 9, y: -6}
+        - {x: 10, y: -3}
       - - {x: 13, y: 16}
         - {x: 10, y: 13}
         - {x: 10, y: 12}
