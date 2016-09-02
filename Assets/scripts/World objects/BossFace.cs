@@ -20,7 +20,7 @@ public class BossFace :MonoBehaviour
     float emailTimeLeniency = 0;
     float emailMaxCool = 20;
     float playerCool = 0;
-    float playerMaxCool = 1.5f;
+    float playerMaxCool = 5;
     float workCool = 0;
     float maxWorkCool = 10;
     float bossAngerExp = 0;
@@ -105,7 +105,7 @@ public class BossFace :MonoBehaviour
                     if (emailCool < emailMaxCool)
                     {
                        
-                        emailCool += Time.deltaTime;
+                        emailCool += Time.deltaTime* ((StatTracker.instance.numOfDaysCompleted[multiplayerManager.instance.currentActivePlayer]+2)/2f);
                         mailOpener.instance.angerMeter.value = emailCool;
                         //Anger bar colour lerp from green to red
                         //ColorBlock cols = mailOpener.instance.angerMeter.colors;
@@ -119,6 +119,7 @@ public class BossFace :MonoBehaviour
         {
             emailTimeLeniency = 0;
             emailCool = 0;
+            playerMaxCool = 4 - (StatTracker.instance.numOfDaysCompleted[multiplayerManager.instance.currentActivePlayer]/2);
             if (playerCool < playerMaxCool)
             {
                 if (playerCool == 0)

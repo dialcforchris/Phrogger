@@ -95,6 +95,10 @@ public class SoundManager : MonoBehaviour
                 audioSrcs[c].volume = volume * volumeMultiplayer;
                 break;
             }
+            if (audioSrcs[c].isPlaying && c == (audioSrcs.Count - 1))
+            {
+                audioSrcs.Add(gameObject.AddComponent<AudioSource>());
+            }
             else
             {
                 c++;
@@ -159,8 +163,8 @@ public class SoundManager : MonoBehaviour
                         else
                         {
                             audioSrcs[c].pitch = pitch;
-                            audioSrcs[c].PlayOneShot(moveSounds[moveSounds.Count - 1]);
                             audioSrcs[c].volume = volumeMultiplayer * .4f;
+                            audioSrcs[c].PlayOneShot(moveSounds[moveSounds.Count - 1]);
                         }
                         break;
                     case 1:
@@ -175,6 +179,10 @@ public class SoundManager : MonoBehaviour
                         break;
                 }
                 break;
+            }
+            if (audioSrcs[c].isPlaying && c == (audioSrcs.Count - 1))
+            {
+                audioSrcs.Add(gameObject.AddComponent<AudioSource>());
             }
             else
             {

@@ -79,11 +79,11 @@ public class MainMenu : MonoBehaviour
                 menuItems[menuIndex].color = Color.white;
                 menuIndex -= (Input.GetAxis("VerticalStick" + multiplayerManager.instance.currentActivePlayer.ToString()) > 0 ? 1 : -1);
                 if (menuIndex < 0)
-                    menuIndex = menuItems.Length - 1;
-                if (menuIndex > menuItems.Length - 1)
+                    menuIndex = menuItems.Length - 2;
+                if (menuIndex > menuItems.Length - 2)
                     menuIndex = 0;
-
-                SoundManager.instance.playSound(0, .75f);
+                
+                SoundManager.instance.playSound(0, Random.Range(.7f, .8f));
                 menuItems[menuIndex].color = Color.green;
             }
             else if (Input.GetAxis("VerticalStick" + multiplayerManager.instance.currentActivePlayer.ToString()) == 0)
@@ -93,7 +93,7 @@ public class MainMenu : MonoBehaviour
 
             if (Input.GetButtonDown("Fire"+multiplayerManager.instance.currentActivePlayer.ToString()))
             {
-                SoundManager.instance.playSound(0, .75f);
+                SoundManager.instance.playSound(0, Random.Range(.7f,.8f));
                 switch (menuIndex)
                 {
                     case 0:
