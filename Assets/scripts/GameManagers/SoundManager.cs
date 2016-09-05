@@ -6,6 +6,7 @@ using DG.Tweening;
 public class SoundManager : MonoBehaviour
 {
 
+    public bool HasRyanBeenPaid;
     public static SoundManager instance;
     public int numberOfSources;
     public float volumeMultiplayer = 1,musicVolume=1;

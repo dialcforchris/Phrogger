@@ -20,8 +20,7 @@ public class Boss : WorldObject
     [SerializeField] private Player player = null;
 
     [SerializeField] private ParticleSystem steam;
-    [SerializeField]
-    AudioClip anger;
+    public AudioClip anger;
 
     private bool chasePlayer = false;
     protected override void Awake()

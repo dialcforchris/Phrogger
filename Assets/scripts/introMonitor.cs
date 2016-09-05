@@ -274,7 +274,7 @@ public class introMonitor : MonoBehaviour
                     tickCross.sprite = Cross;
                     //Do animation for email being destroyed
                     monitorAnimator.Play("mail_junk");
-
+                    SoundManager.instance.playSound(Boss.instance.anger);
                     if (currentMail.isJunk)
                     {
                         StopCoroutine("zoomInOut");
