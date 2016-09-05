@@ -52,7 +52,6 @@ public class dayTimer : MonoBehaviour
     [SerializeField]
     private Sprite PromotionScreen, FiredScreen, BossDeathScreen, DeathScreen, Unproffessional, Average, Friends;
     [SerializeField]
-    private GameObject continueTexteEOD;
     bool once = true;
 
     [System.Serializable]
@@ -188,7 +187,7 @@ public class dayTimer : MonoBehaviour
                 if (Player.instance.strikes[0] > 0 && Player.instance.strikes[1] > 0)
                     multiplayerManager.instance.NextPlayer();
 
-                continueTexteEOD.SetActive(false);
+                ContinuePrompt.SetActive(false);
                 StatTracker.instance.CalculateProfessionalism();
                 if (StatTracker.instance.numOfDaysCompleted[multiplayerManager.instance.currentActivePlayer] < maxDays)
                 {
@@ -668,6 +667,6 @@ public class dayTimer : MonoBehaviour
 
         yield return new WaitForSeconds(0.5f);
         transitioning = false;
-        continueTexteEOD.SetActive(true);
+        ContinuePrompt.SetActive(true);
     }
 }

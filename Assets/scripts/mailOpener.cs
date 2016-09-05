@@ -392,16 +392,19 @@ public class mailOpener : MonoBehaviour
                 {
                     activeCountdown = false;
                     BossFace.instance.addEmailAngerXP();
-                    if (selectedList == messages[0])
-                        frogStory[multiplayerManager.instance.currentActivePlayer] = false;
 
                     //Do animation for email being destroyed
                     monitorAnimator.Play("mail_junk");
 
-                    if (selectedList.name == "Junk mail")
+                    Debug.Log(selectedList.name);
+                    Debug.Log(messages.Count);
+                    if (selectedList.name == "Drunk mail")
                     {
                         messages.Remove(selectedList);
                     }
+                    Debug.Log(messages.Count);
+                    if (selectedList == messages[0])
+                        frogStory[multiplayerManager.instance.currentActivePlayer] = false;
 
                     #region if it's junk
                     if (currentMail.isJunk)
