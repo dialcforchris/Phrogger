@@ -87,6 +87,11 @@ public class SoundManager : MonoBehaviour
         //changeVolume(volume);
         while (c < audioSrcs.Count)
         {
+            if (audioSrcs[c].isPlaying && c == (audioSrcs.Count - 1))
+            {
+                audioSrcs.Add(gameObject.AddComponent<AudioSource>());
+            }
+
             if (!audioSrcs[c].isPlaying)
             {
                 audioSrcs[c].clip = sound;
@@ -94,10 +99,6 @@ public class SoundManager : MonoBehaviour
                 audioSrcs[c].PlayOneShot(sound);
                 audioSrcs[c].volume = volume * volumeMultiplayer;
                 break;
-            }
-            if (audioSrcs[c].isPlaying && c == (audioSrcs.Count - 1))
-            {
-                audioSrcs.Add(gameObject.AddComponent<AudioSource>());
             }
             else
             {
@@ -142,8 +143,13 @@ public class SoundManager : MonoBehaviour
         int c = 0;
         while (c < audioSrcs.Count)
         {
+            if (audioSrcs[c].isPlaying && c == (audioSrcs.Count - 1))
+            {
+                audioSrcs.Add(gameObject.AddComponent<AudioSource>());
+            }
             if (!audioSrcs[c].isPlaying)
             {
+                #region sound type
                 switch (type)
                 {
                     case 0:
@@ -178,11 +184,8 @@ public class SoundManager : MonoBehaviour
                         audioSrcs[c].volume = volumeMultiplayer * 1f;
                         break;
                 }
+                #endregion
                 break;
-            }
-            if (audioSrcs[c].isPlaying && c == (audioSrcs.Count - 1))
-            {
-                audioSrcs.Add(gameObject.AddComponent<AudioSource>());
             }
             else
             {

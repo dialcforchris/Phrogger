@@ -72,6 +72,7 @@ public class mailOpener : MonoBehaviour
     {
         if (InOut)
         {
+            angryParticles.Stop();
             pop = false;
             angerMeter.value = 0;
         }
@@ -86,6 +87,7 @@ public class mailOpener : MonoBehaviour
 
         float lerpy = 0;
 
+        #region camera effect transition
         //TEMPOARY SHIT
         lerpy = 1;
         while (lerpy > 0)
@@ -100,10 +102,12 @@ public class mailOpener : MonoBehaviour
             }
             yield return new WaitForEndOfFrame();
         }
+        #endregion
 
         //Zoom in
         if (InOut)
         {
+        #region zoomin in
             while (lerpy < 1)
             {
                 lerpy += Time.deltaTime*2.5f;
@@ -128,11 +132,14 @@ public class mailOpener : MonoBehaviour
                 Camera.main.orthographicSize = Mathf.Lerp(9, 2, lerpy);
                 mainCamTransition.transform.localScale = Vector3.Lerp(new Vector3(32, 18, 1), new Vector3(7.15f, 4, 1), lerpy);
             }
+        #endregion
         }
 
+        #region change over camera
         yield return new WaitForSeconds(0.1f);
         mainCam.enabled = !InOut;
         monitorCamera.enabled = InOut;
+        #endregion
         
         lerpy = 0;
         while (lerpy < 1)
@@ -187,7 +194,6 @@ public class mailOpener : MonoBehaviour
             }
             GameStateManager.instance.ChangeState(GameStates.STATE_GAMEPLAY);
         }
-        angryParticles.Stop();
     }
 
     int[] nonFrogMail;
