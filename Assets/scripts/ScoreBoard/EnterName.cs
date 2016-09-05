@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
@@ -7,6 +8,8 @@ public class EnterName : MonoBehaviour
 {
     public Text[] box;
     int[] currentCharacter;
+    [SerializeField]
+    Image[] charArrows = new Image[6];
     public Text score;
     int selectBox = 0;
     int selectChar= 65;
@@ -81,6 +84,9 @@ public class EnterName : MonoBehaviour
             {
                 if (Input.GetAxis("VerticalStick" + multiplayerManager.instance.currentActivePlayer.ToString()) < 0)
                 {
+                    charArrows[(selectBox * 2) + 1].color = Color.grey;
+                    charArrows[(selectBox * 2) + 1].rectTransform.sizeDelta = new Vector2(60,200);
+                    StartCoroutine(revertImageColour(charArrows[(selectBox * 2) + 1]));
                     if (selectChar > 65)
                         selectChar--;
 
@@ -89,6 +95,9 @@ public class EnterName : MonoBehaviour
                 }
                 else if (Input.GetAxis("VerticalStick" + multiplayerManager.instance.currentActivePlayer.ToString()) > 0)
                 {
+                    charArrows[selectBox * 2].color = Color.grey;
+                    charArrows[selectBox * 2].rectTransform.sizeDelta = new Vector2(60, 200);
+                    StartCoroutine(revertImageColour(charArrows[selectBox * 2]));
                     if (selectChar < 90)
                         selectChar++;
 
@@ -108,6 +117,13 @@ public class EnterName : MonoBehaviour
                 currentCharacter[selectBox] = selectChar;
             }
         }
+    }
+
+    IEnumerator revertImageColour(Image i)
+    {
+        yield return new WaitForSeconds(0.075f);
+        i.color = Color.white;
+        i.rectTransform.sizeDelta = new Vector2(42, 200);
     }
 
     bool SelectCoolDown()

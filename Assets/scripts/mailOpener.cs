@@ -87,7 +87,7 @@ public class mailOpener : MonoBehaviour
 
         float lerpy = 0;
 
-        #region camera effect transition
+        #region camera effect transition, IN
         //TEMPOARY SHIT
         lerpy = 1;
         while (lerpy > 0)
@@ -136,11 +136,13 @@ public class mailOpener : MonoBehaviour
         }
 
         #region change over camera
+        angryParticles.Stop();
         yield return new WaitForSeconds(0.1f);
         mainCam.enabled = !InOut;
         monitorCamera.enabled = InOut;
         #endregion
-        
+
+        #region camera effect transition, OUT
         lerpy = 0;
         while (lerpy < 1)
         {
@@ -155,6 +157,7 @@ public class mailOpener : MonoBehaviour
 
             yield return new WaitForEndOfFrame();
         }
+        #endregion
 
         if (InOut)
         {
@@ -201,7 +204,7 @@ public class mailOpener : MonoBehaviour
 
     void pickEmail()
     {
-        
+        #region Select a list   
         if (nonFrogMail[multiplayerManager.instance.currentActivePlayer] > 5 && frogStory[multiplayerManager.instance.currentActivePlayer])
         {
             nonFrogMail[multiplayerManager.instance.currentActivePlayer] = 0;
@@ -213,6 +216,7 @@ public class mailOpener : MonoBehaviour
             selectedList = messages[Random.Range(1, messages.Count)];
             nonFrogMail[multiplayerManager.instance.currentActivePlayer]++;
         }
+        #endregion
 
         if (selectedList.randomSelection)
         {
@@ -239,7 +243,11 @@ public class mailOpener : MonoBehaviour
                 {
                     frogStory[multiplayerManager.instance.currentActivePlayer] = false;
                 }
-                else if ( selectedList.name == "TypeFighter Cheats")
+                else if (selectedList.name == "TypeFighter Cheats")
+                {
+                    messages.Remove(selectedList);
+                }
+                else if (selectedList.name == "Drunk mail")
                 {
                     messages.Remove(selectedList);
                 }
@@ -379,6 +387,7 @@ public class mailOpener : MonoBehaviour
                     soundPlaying = true;
                     Invoke("allowSounds", .5f);
                 }
+                #region if junk
                 if (emailPos > 0) //If email is in the JUNK zone
                 {
                     activeCountdown = false;
@@ -389,6 +398,12 @@ public class mailOpener : MonoBehaviour
                     //Do animation for email being destroyed
                     monitorAnimator.Play("mail_junk");
 
+                    if (selectedList.name == "Junk mail")
+                    {
+                        messages.Remove(selectedList);
+                    }
+
+                    #region if it's junk
                     if (currentMail.isJunk)
                     {
                         tickCross.sprite = Tick;
@@ -404,15 +419,17 @@ public class mailOpener : MonoBehaviour
 
                         StopCoroutine("zoomInOut");
                         StartCoroutine(zoomInOut(11));
-                        Invoke("exitView",2.5f);
+                        Invoke("exitView", 2.5f);
                         SoundManager.instance.playSound(good);
                     }
+                    #endregion
+                    #region if not...
                     else
                     {
                         tickCross.sprite = Cross;
                         //You put a safe email in the junk pile
                         //oooooo
-                        StatTracker.instance.scoreToAdd[multiplayerManager.instance.currentActivePlayer] -= (int)(.8f*selectedList.score);
+                        StatTracker.instance.scoreToAdd[multiplayerManager.instance.currentActivePlayer] -= (int)(.8f * selectedList.score);
                         StatTracker.instance.safeEmailsWrong[multiplayerManager.instance.currentActivePlayer]++;
                         BossFace.instance.CheckEmails(false);
                         dayTimer.completedEmail newMail;
@@ -425,9 +442,11 @@ public class mailOpener : MonoBehaviour
 
                         Invoke("exitView", 2.5f);
                         SoundManager.instance.playSound(bad);
-
                     }
+                    #endregion
                 }
+                #endregion
+                #region if safe
                 else if (emailPos < 0) //If email is in the SAFE zone
                 {
                     activeCountdown = false;
@@ -475,6 +494,7 @@ public class mailOpener : MonoBehaviour
                         SoundManager.instance.playSound(good);
                     }
                 }
+                #endregion
             }
         }
     }
