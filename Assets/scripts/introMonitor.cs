@@ -173,7 +173,7 @@ public class introMonitor : MonoBehaviour
             monitorCamera.orthographicSize = Mathf.Lerp(monitorCamera.orthographicSize, newSize, Time.deltaTime * 2);
             if (GameStateManager.instance.GetState() == GameStates.STATE_GAMEPLAY)
             {
-                monitorCamera.orthographicSize = 11;
+                monitorCamera.orthographicSize = 10.9f;
                 break;
             }
             yield return new WaitForEndOfFrame();

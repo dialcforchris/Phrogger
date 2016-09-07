@@ -171,6 +171,9 @@ public class mailOpener : MonoBehaviour
         }
         else
         {
+            angryParticles.Stop();
+            angryParticles.Clear();    
+            angerMeter.value = 0;
             while (Camera.main.orthographicSize < 9)
             {
                 lerpy -= Time.deltaTime*1.5f;
@@ -265,7 +268,7 @@ public class mailOpener : MonoBehaviour
             monitorCamera.orthographicSize = Mathf.Lerp(monitorCamera.orthographicSize, newSize, Time.deltaTime*2);
             if (GameStateManager.instance.GetState() == GameStates.STATE_GAMEPLAY)
             {
-                monitorCamera.orthographicSize = 11;
+                monitorCamera.orthographicSize = 10.9f;
                 break;
             }
             yield return new WaitForEndOfFrame();
@@ -396,13 +399,10 @@ public class mailOpener : MonoBehaviour
                     //Do animation for email being destroyed
                     monitorAnimator.Play("mail_junk");
 
-                    Debug.Log(selectedList.name);
-                    Debug.Log(messages.Count);
                     if (selectedList.name == "Drunk mail")
                     {
                         messages.Remove(selectedList);
                     }
-                    Debug.Log(messages.Count);
                     if (selectedList == messages[0])
                         frogStory[multiplayerManager.instance.currentActivePlayer] = false;
 
