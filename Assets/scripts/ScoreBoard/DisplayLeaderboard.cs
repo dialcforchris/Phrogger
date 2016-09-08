@@ -15,6 +15,7 @@ public class DisplayLeaderboard : MonoBehaviour
     {
 	    if (!once)
         {
+#if !UNITY_WEBGL
             List<KeyValuePair<string,int>> k = LeaderBoard.instance.ReturnLeaderBoard();
             for (int i=0;i<k.Count;i++)
             {
@@ -25,6 +26,7 @@ public class DisplayLeaderboard : MonoBehaviour
                 scores[i].color = Color.Lerp(Color.green, Color.red, (float)(i * 0.05f));
                 names[i].color = Color.Lerp(Color.green, Color.red, (float)(i * 0.05f));
             }
+#endif
         }
 	}
 }
