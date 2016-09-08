@@ -40,6 +40,13 @@ public class MainMenu : MonoBehaviour
         StartCoroutine(wholeScreenFade(false));
     }
 
+    void Start()
+    {
+#if UNITY_WEBGL
+        menuItems[1].color = new Color(120, 120, 120);
+#endif
+    }
+
     public IEnumerator wholeScreenFade(bool b,int sceneToLoad=0) //False for fade in from black, true to fade to black and reload scene
     {
         yield return new WaitForSeconds(.25f);
@@ -70,18 +77,26 @@ public class MainMenu : MonoBehaviour
     bool scrolling;
     void Update ()
     {
-        #region main menu
+#region main menu
         if (currentState == menuState.mainMenu)
         {
             if (Input.GetAxis("VerticalStick" + multiplayerManager.instance.currentActivePlayer.ToString()) != 0 && scrolling == false)
             {
                 scrolling = true;
                 menuItems[menuIndex].color = Color.white;
-                menuIndex -= (Input.GetAxis("VerticalStick" + multiplayerManager.instance.currentActivePlayer.ToString()) > 0 ? 1 : -1);
+                int _change = (Input.GetAxis("VerticalStick" + multiplayerManager.instance.currentActivePlayer.ToString()) > 0 ? 1 : -1);
+                menuIndex -= _change;
                 if (menuIndex < 0)
                     menuIndex = menuItems.Length - 2;
                 if (menuIndex > menuItems.Length - 2)
                     menuIndex = 0;
+                #if UNITY_WEBGL
+                if(menuIndex == 1)
+                {
+                    menuIndex += _change;
+                }
+                #endif
+
                 
                 SoundManager.instance.playSound(0, Random.Range(.7f, .8f));
                 menuItems[menuIndex].color = Color.green;
@@ -120,8 +135,8 @@ public class MainMenu : MonoBehaviour
                 }
             }
         }
-        #endregion
-        #region gamemode selection
+#endregion
+#region gamemode selection
         else if (currentState == menuState.modeSelect)
         {
             if (Input.GetAxis("VerticalStick" + multiplayerManager.instance.currentActivePlayer.ToString()) != 0 && scrolling == false)
@@ -192,8 +207,8 @@ public class MainMenu : MonoBehaviour
                 }
             }
         }
-        #endregion
-        #region player selection
+#endregion
+#region player selection
         else if (currentState == menuState.playerSelect)
         {
             if (Input.GetAxis("VerticalStick" + multiplayerManager.instance.currentActivePlayer.ToString()) != 0 && scrolling == false)
@@ -245,7 +260,7 @@ public class MainMenu : MonoBehaviour
                 }
             }
         }
-        #endregion
+#endregion
 
         if (!Input.anyKey && Input.GetAxis("VerticalStick0")<.1f && Input.GetAxis("VerticalStick1") < .1f)
         {
