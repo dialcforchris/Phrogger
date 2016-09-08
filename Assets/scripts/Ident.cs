@@ -3,8 +3,10 @@ using UnityEngine.SceneManagement;
 
 public class Ident : MonoBehaviour
 {
- public   AudioClip[] honks;
+    public AudioClip[] honks;
     public AudioSource honkSound;
+    [SerializeField] private GameObject blackScreen = null;
+    private bool skip = false;
     
     private void Awake()
     {
@@ -23,9 +25,14 @@ public class Ident : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetButton("Fire0") || Input.GetButton("Fire1"))
+        if (skip)
         {
             loadLevel(3);
         }
+        if (Input.GetButton("Fire0") || Input.GetButton("Fire1"))
+        {
+            blackScreen.gameObject.SetActive(true);
+            skip = true;
+        } 
     }
 }

@@ -9,6 +9,8 @@ public class PlayWestSplash : MonoBehaviour {
 
     public string levelToLoad;
     public float splashDuration;
+    [SerializeField] private GameObject blackScreen = null;
+    private bool skip = false;
 
 	// Use this for initialization
 	void Start () {
@@ -29,9 +31,14 @@ public class PlayWestSplash : MonoBehaviour {
 
     private void Update()
     {
-        if (Input.GetButton("Fire0") || Input.GetButton("Fire1"))
+        if (skip)
         {
             SceneManager.LoadScene(3);
+        }
+        if (Input.GetButton("Fire0") || Input.GetButton("Fire1"))
+        {
+            blackScreen.gameObject.SetActive(true);
+            skip = true;
         }
     }
 }
