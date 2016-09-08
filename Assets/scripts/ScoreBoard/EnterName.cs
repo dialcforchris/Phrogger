@@ -20,6 +20,7 @@ public class EnterName : MonoBehaviour
   
 	void Start ()
     {
+        selectBox = 0;
         coolDown = maxCool;
         currentCharacter = new int[box.Length];
         finished = false;
@@ -163,7 +164,7 @@ public class EnterName : MonoBehaviour
         LeaderBoard.instance.SetName(theName);
         LeaderBoard.instance.AddNewScoreToLB();
         finished = true;
-
+        selectBox = 0;
         //Reset this whole thing
         Start();
         gameObject.SetActive(false);
