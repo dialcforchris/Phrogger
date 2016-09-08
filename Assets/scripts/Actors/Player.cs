@@ -525,6 +525,7 @@ public class Player : WorldObject
                         respawnParticles.transform.position = froggerSpawn.position;
                     else
                         respawnParticles.transform.position = playerSpawn.position;
+                    WhereAmI();
 
                     respawnParticles.Play();
                     SoundManager.instance.playSound(spawn);
@@ -639,6 +640,16 @@ public class Player : WorldObject
         anim.SetBool("Dead", false);
         spriteRenderer.enabled = true;
         AddToWorld();
+    }
+
+    void WhereAmI()
+    {
+        Vector3 massive = new Vector3(100, 100, 100);
+        Vector3 normal = transform.localScale;
+        transform.localScale = massive;
+        transform.DOScale(normal, 1);
+
+        
     }
 }
 

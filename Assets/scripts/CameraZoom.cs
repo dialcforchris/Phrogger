@@ -1,10 +1,10 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-//using UnityEditor;
 using System.Collections;
 using DG.Tweening;
 
-public class CameraZoom : MonoBehaviour {
+public class CameraZoom : MonoBehaviour
+{
 
     public static CameraZoom instance;
     Vector2 origin;
