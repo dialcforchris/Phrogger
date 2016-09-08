@@ -26,4 +26,12 @@ public class PlayWestSplash : MonoBehaviour {
 
         SceneManager.LoadScene(levelToLoad);
     }
+
+    private void Update()
+    {
+        if (Input.GetButton("Fire0") || Input.GetButton("Fire1"))
+        {
+            SceneManager.LoadScene(3);
+        }
+    }
 }

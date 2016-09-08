@@ -269,7 +269,7 @@ public class Worker : WorldObject, IPoolable<Worker>
         {
             if (state == WorkerState.WALKING || state == WorkerState.STANDING)
             {
-                ((Player)_obj).Die();
+                ((Player)_obj).Interaction(this);
             }
         }
     }

@@ -108,7 +108,7 @@ public class Boss : WorldObject
         if (_obj.tag == "Player")
         {
             EndChase();
-            ((Player)_obj).Die();
+            ((Player)_obj).Interaction(this);
         }
     }
 

@@ -55,7 +55,6 @@ public class GameStateManager : MonoBehaviour
         {
             _obj.gameObject.SetActive(false);
         }
-        Cursor.visible = false;
     }
 
     private void Update()

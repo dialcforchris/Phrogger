@@ -20,7 +20,7 @@ public class KillBox : WorldObject
             case KillBoxAffects.PLAYER:
                 if (_obj.tag == "Player")
                 {
-                    ((Player)_obj).Die();
+                    ((Player)_obj).Interaction(this);
                 }
                 break;
             case KillBoxAffects.WORKER:
@@ -32,7 +32,7 @@ public class KillBox : WorldObject
             case KillBoxAffects.EVERYTHING:
                 if (_obj.tag == "Player")
                 {
-                    ((Player)_obj).Die();
+                    ((Player)_obj).Interaction(this);
                 }
                 else if (_obj.tag == "Worker")
                 {

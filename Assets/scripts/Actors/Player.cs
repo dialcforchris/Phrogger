@@ -471,6 +471,14 @@ public class Player : WorldObject
                 }
             }
         }
+        else if(_obj.tag == "PlayerKillBox")
+        {
+            StatTracker.instance.totalDeaths[multiplayerManager.instance.currentActivePlayer]++;
+
+            StatTracker.instance.causeOfDeath.text = "...Where did you go?";
+
+            Die();
+        }
     }
 
     public void OriginalFroggerDeath(FroggerDeathType _deathType)
