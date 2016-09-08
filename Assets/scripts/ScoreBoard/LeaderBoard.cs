@@ -26,6 +26,7 @@ public class LeaderBoard : MonoBehaviour
         {
             leader = this;
         }
+#if !UNITY_WEBGL
         if (CheckScoreFile())
         {
             ReadScoreFile();
@@ -34,7 +35,8 @@ public class LeaderBoard : MonoBehaviour
         {
             CreateScoreFile();
         }
-	}
+#endif
+    }
 
     /// <summary>
     /// adds new score to list
@@ -199,6 +201,9 @@ public class LeaderBoard : MonoBehaviour
 
     public bool CheckIfHighScore(int _score)
     {
+#if UNITY_WEBGL
+        return false;
+#endif
         for (int i = scores.Count-1; i >0 ;i-- )
         { 
             if (scores[i].Value < _score)

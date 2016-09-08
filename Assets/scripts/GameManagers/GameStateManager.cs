@@ -25,6 +25,11 @@ public class GameStateManager : MonoBehaviour
 
     public bool bossTransitioning;
 
+    public const bool isArcade = true;
+
+    [SerializeField] private GameObject[] buttonIcons = null;
+    [SerializeField] private GameObject[] textIcons = null;
+
     private void Awake()
     {
         if (singleton)
@@ -43,7 +48,14 @@ public class GameStateManager : MonoBehaviour
             states[(int)GameStates.STATE_SPLASH] = new SplashScreenState();
             ChangeState(GameStates.STATE_SPLASH);
         }
-        
+#if UNITY_WEBGL
+        isArcade = false;
+#endif
+        foreach (GameObject _obj in (isArcade ? textIcons : buttonIcons))
+        {
+            _obj.gameObject.SetActive(false);
+        }
+        Cursor.visible = false;
     }
 
     private void Update()
