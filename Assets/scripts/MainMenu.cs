@@ -256,7 +256,7 @@ public class MainMenu : MonoBehaviour
             idleTime = 0;
         }
 
-        if (idleTime > 150 && GameStateManager.instance.GetState() != GameStates.STATE_DAYOVER)
+        if (idleTime > 60)
         {
             GameStateManager.instance.ChangeState(GameStates.STATE_DAYOVER);
             StartCoroutine(wholeScreenFade(true, 0));

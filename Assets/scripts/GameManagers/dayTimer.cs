@@ -37,7 +37,7 @@ public class dayTimer : MonoBehaviour
     [SerializeField]
     private Slider timeSlider;
     [SerializeField]
-    private Text emailTargetText,CurrentPlayer;
+    private Text emailTargetText,CurrentPlayer,CurrentDay;
     [SerializeField]
     AudioClip tick;
     [Header("Ending stats")]
@@ -361,6 +361,8 @@ public class dayTimer : MonoBehaviour
 
         //Set the number of target emails for the day
         emailTargetText.text = "Target: " + (3 + StatTracker.instance.numOfDaysCompleted[multiplayerManager.instance.currentActivePlayer]) + "x";
+        CurrentDay.text = (weekDays)StatTracker.instance.numOfDaysCompleted[multiplayerManager.instance.currentActivePlayer]+"";
+        CurrentDay.text = CurrentDay.text.ToUpper();
         if (multiplayerManager.instance.numberOfPlayers > 1)
         {
             if (multiplayerManager.instance.currentActivePlayer == 0)
