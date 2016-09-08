@@ -25,7 +25,7 @@ public class GameStateManager : MonoBehaviour
 
     public bool bossTransitioning;
 
-    public const bool isArcade = true;
+    public bool isArcade = true;
 
     [SerializeField] private GameObject[] buttonIcons = null;
     [SerializeField] private GameObject[] textIcons = null;
