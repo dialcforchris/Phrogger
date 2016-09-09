@@ -122,6 +122,11 @@ public class Boss : WorldObject
     {
         AngryBossText.Play("bossText_in");
     }
+    void StartBossMusic()
+    {
+        SoundManager.instance.bossMusic.Play();
+        SoundManager.instance.bossMusic.volume = SoundManager.instance.musicVolume;
+    }
 
     public void BeginChase()
     {
@@ -130,6 +135,7 @@ public class Boss : WorldObject
         CameraZoom.instance.doAZoom(false, transform);
         SoundManager.instance.playSound(anger);
         Invoke("animateMe", .5f);
+        Invoke("StartBossMusic", 1.75f);
         tileSearch = player.GetRouteToPlayer();
         transform.position = tileSearch[0].transform.position;
         AddToWorld();

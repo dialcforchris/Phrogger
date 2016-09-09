@@ -82,6 +82,13 @@ public class SoundManager : MonoBehaviour
         }      
     }
 
+    public void ChangeMusicVolume(float _vol)
+    {
+        musicVolume = _vol;
+        music.volume = musicVolume;
+        bossMusic.volume = musicVolume;
+    }
+
     public void playSound(AudioClip sound,float volume = 1)
     {
         int c = 0;

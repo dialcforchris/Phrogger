@@ -35,6 +35,8 @@ public class BossFace :MonoBehaviour
     AudioClip grunt;
     FaceState faceState;
     bool emailgrowl = false;
+    [SerializeField]
+    AudioClip bossJingle;
 
     // Use this for initialization
     private void Awake()
@@ -243,7 +245,10 @@ public class BossFace :MonoBehaviour
 
     void bossChase()
     {
-        Boss.instance.BeginChase();
+        SoundManager.instance.music.Pause();
+        SoundManager.instance.music.volume = 0;
+        SoundManager.instance.playSound(bossJingle);
+;        Boss.instance.BeginChase();
     }
 
     public void ChangeStateBack()

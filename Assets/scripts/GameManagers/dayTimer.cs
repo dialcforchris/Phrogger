@@ -449,9 +449,7 @@ public class dayTimer : MonoBehaviour
         ////int i = 0;
         foreach (GameObject g in emailObjects)
         {
-
-            Destroy(g);
-           
+            Destroy(g);           
         }
         todaysEmails.Clear();
         emailObjects.Clear();
@@ -502,6 +500,7 @@ public class dayTimer : MonoBehaviour
     {
         SoundManager.instance.officeAmbience.DOFade(0, 5);
         SoundManager.instance.music.DOFade(0, 5);
+        SoundManager.instance.bossMusic.DOFade(0, 5);
 
         //play some sort of sound
         GameStateManager.instance.ChangeState(GameStates.STATE_DAYOVER);

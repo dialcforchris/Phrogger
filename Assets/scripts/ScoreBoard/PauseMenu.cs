@@ -76,8 +76,7 @@ public class PauseMenu : MenuSelect
             else
                 musicSlider.value += Input.GetAxis("HorizontalStick" + multiplayerManager.instance.currentActivePlayer.ToString()) * 10;
 
-            SoundManager.instance.music.volume = musicSlider.value;
-            SoundManager.instance.musicVolume = musicSlider.value;
+            SoundManager.instance.ChangeMusicVolume(musicSlider.value);
 
         }
     }

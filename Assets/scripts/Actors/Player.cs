@@ -458,6 +458,10 @@ public class Player : WorldObject
                 StatTracker.instance.totalDeaths[multiplayerManager.instance.currentActivePlayer]++;
                 StatTracker.instance.bossDeaths[multiplayerManager.instance.currentActivePlayer]++;
                 StatTracker.instance.causeOfDeath.text = "Your boss stepped on you";
+
+                SoundManager.instance.bossMusic.Stop();
+                SoundManager.instance.music.UnPause();
+                SoundManager.instance.music.DOFade(SoundManager.instance.musicVolume, 3);
                 Die();
             }
         }
@@ -644,12 +648,10 @@ public class Player : WorldObject
 
     void WhereAmI()
     {
-        Vector3 massive = new Vector3(100, 100, 100);
+        Vector3 massive = new Vector3(50, 50, 50);
         Vector3 normal = transform.localScale;
         transform.localScale = massive;
-        transform.DOScale(normal, 1);
-
-        
+        transform.DOScale(normal, 1f);
     }
 }
 
