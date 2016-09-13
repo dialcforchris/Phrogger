@@ -62,7 +62,6 @@ public class CameraZoom : MonoBehaviour
         }
         else
         {
-            if (SoundManager.instance.HasRyanBeenPaid)
             {
                 SoundManager.instance.music.Play();
                 SoundManager.instance.music.DOFade(1, 5);

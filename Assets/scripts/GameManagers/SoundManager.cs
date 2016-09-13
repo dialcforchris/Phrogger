@@ -6,10 +6,9 @@ using DG.Tweening;
 public class SoundManager : MonoBehaviour
 {
 
-    public bool HasRyanBeenPaid;
     public static SoundManager instance;
     public int numberOfSources;
-    public float volumeMultiplayer = 1,musicVolume=1;
+    public float volumeMultiplayer = 0.75f,musicVolume=0.75f;
     public AudioSource music,bossMusic,officeAmbience;
 
     public List<managedSource> managedAudioSources = new List<managedSource>();

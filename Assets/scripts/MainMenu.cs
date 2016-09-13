@@ -7,7 +7,7 @@ public class MainMenu : MonoBehaviour
 {
     public static MainMenu instance;
 
-    int menuIndex,gameModeIndex=1,playerSelectionIndex=1;
+    [SerializeField] int menuIndex,gameModeIndex=1,playerSelectionIndex=1;
     public menuState currentState = menuState.mainMenu;
     public enum menuState
     {
@@ -89,17 +89,17 @@ public class MainMenu : MonoBehaviour
                 _change /= Mathf.Abs(_change) > 1 ? 2 : 1;
                 menuIndex -= _change;
                 if (menuIndex < 0)
-                    menuIndex = menuItems.Length - 2;
-                if (menuIndex > menuItems.Length - 2)
+                    menuIndex = menuItems.Length - 1;
+                if (menuIndex > menuItems.Length - 1)
                     menuIndex = 0;
-                #if UNITY_WEBGL
+#if UNITY_WEBGL
                 if(menuIndex == 1)
                 {
                     menuIndex += _change;
                 }
-                #endif
+#endif
 
-                
+
                 SoundManager.instance.playSound(0, Random.Range(.7f, .8f));
                 menuItems[menuIndex].color = Color.green;
             }
@@ -132,7 +132,7 @@ public class MainMenu : MonoBehaviour
                         StartCoroutine(runCredits());
                         break;
                     case 3:
-                        //Application.Quit();
+                        Application.Quit();
                         break;
                 }
             }

@@ -90,7 +90,6 @@ public class dayTimer : MonoBehaviour
         }
         else
         {
-            transitioning = false; if (SoundManager.instance.HasRyanBeenPaid)
             {
                 SoundManager.instance.music.Play();
                 SoundManager.instance.music.DOFade(1, 5);

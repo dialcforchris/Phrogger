@@ -26,6 +26,7 @@ public class GameOverState : GameState
     public override void OnStateActivate()
     {
         SoundManager.instance.music.volume = 0;
+        SoundManager.instance.bossMusic.volume = 0;
         StatTracker.instance.StartCoroutine(StatTracker.instance.GameOverUIReveal());
     }
 
